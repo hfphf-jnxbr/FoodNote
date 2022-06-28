@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    app:startDestination="@id/notesFragment">
+
+    <fragment
+        android:id="@+id/notesFragment"
+        android:name="com.example.foodnote.view.NotesFragment"
+        android:label="fragment_first"
+        tools:layout="@layout/fragment_notes"/>
+
+    <fragment
+        android:id="@+id/calorieCalculatorFragment"
+        android:name="com.example.foodnote.view.CalorieCalculatorFragment"
+        android:label="fragment_second"
+        tools:layout="@layout/fragment_calorie_calculator"/>
+
+    <fragment
+        android:id="@+id/recipesFragment"
+        android:name="com.example.foodnote.view.RecipesFragment"
+        android:label="fragment_recipes"
+        tools:layout="@layout/fragment_recipes"/>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.foodnote.view.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings"/>
+
+    <fragment
+        android:id="@+id/anotherFragment"
+        android:name="com.example.foodnote.view.AnotherFragment"
+        android:label="fragment_another"
+        tools:layout="@layout/fragment_another"/>
+
+</navigation>
