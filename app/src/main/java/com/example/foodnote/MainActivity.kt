@@ -16,7 +16,6 @@ import com.example.foodnote.interfaces.OnBackPressedListener
 import com.example.foodnote.viewModels.MainViewModel
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
-
     private val viewModel: MainViewModel by viewModels()
     private var navHostFragment: NavHostFragment? = null
     private lateinit var binding: ActivityMainBinding
