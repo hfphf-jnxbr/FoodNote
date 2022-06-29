@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/calorieCalculatorFragment"
-        android:name="com.example.foodnote.ui.CalorieCalculatorFragment.CalorieCalculatorFragment"
+        android:name="com.example.foodnote.ui.calorie_calculator_fragment.CalorieCalculatorFragment"
         android:label="fragment_second"
         tools:layout="@layout/fragment_calorie_calculator"/>
 

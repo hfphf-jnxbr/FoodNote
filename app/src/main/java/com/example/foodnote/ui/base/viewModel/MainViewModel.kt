@@ -1,7 +1,7 @@
 package com.example.foodnote.ui.base.viewModel
 
-import androidx.lifecycle.ViewModel
+import com.example.foodnote.data.base.AppState
 
-class MainViewModel: ViewModel() {
+class MainViewModel : BaseViewModel<AppState<*>>() {
     var selectedItemId: Int? = null
 }
