@@ -13,7 +13,7 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.example.foodnote.databinding.ActivityMainBinding
 import com.example.foodnote.ui.base.interfaces.OnBackPressedListener
-import com.example.foodnote.viewModels.MainViewModel
+import com.example.foodnote.ui.base.viewModel.MainViewModel
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
     private val viewModel: MainViewModel by viewModels()
