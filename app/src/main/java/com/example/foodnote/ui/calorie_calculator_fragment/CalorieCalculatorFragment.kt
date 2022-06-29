@@ -1,4 +1,4 @@
-package com.example.foodnote.ui.CalorieCalculatorFragment
+package com.example.foodnote.ui.calorie_calculator_fragment
 
 
 import com.example.foodnote.databinding.FragmentCalorieCalculatorBinding
