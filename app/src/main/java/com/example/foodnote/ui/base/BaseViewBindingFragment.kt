@@ -1,4 +1,4 @@
-package com.example.foodnote.view
+package com.example.foodnote.ui.base
 
 import android.os.Bundle
 import android.view.LayoutInflater
