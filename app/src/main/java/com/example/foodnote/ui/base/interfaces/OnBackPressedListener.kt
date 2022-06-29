@@ -1,4 +1,4 @@
-package com.example.foodnote.interfaces
+package com.example.foodnote.ui.base.interfaces
 
 import android.app.Activity
 import androidx.fragment.app.Fragment

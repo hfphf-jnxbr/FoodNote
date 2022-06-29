@@ -7,31 +7,31 @@
 
     <fragment
         android:id="@+id/notesFragment"
-        android:name="com.example.foodnote.view.NotesFragment"
+        android:name="com.example.foodnote.ui.notes_fragment.NotesFragment"
         android:label="fragment_first"
         tools:layout="@layout/fragment_notes"/>
 
     <fragment
         android:id="@+id/calorieCalculatorFragment"
-        android:name="com.example.foodnote.view.CalorieCalculatorFragment"
+        android:name="com.example.foodnote.ui.CalorieCalculatorFragment.CalorieCalculatorFragment"
         android:label="fragment_second"
         tools:layout="@layout/fragment_calorie_calculator"/>
 
     <fragment
         android:id="@+id/recipesFragment"
-        android:name="com.example.foodnote.view.RecipesFragment"
+        android:name="com.example.foodnote.ui.recipes_fragment.RecipesFragment"
         android:label="fragment_recipes"
         tools:layout="@layout/fragment_recipes"/>
 
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.foodnote.view.SettingsFragment"
+        android:name="com.example.foodnote.ui.settings_fragment.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings"/>
 
     <fragment
         android:id="@+id/anotherFragment"
-        android:name="com.example.foodnote.view.AnotherFragment"
+        android:name="com.example.foodnote.ui.antother_fragment.AnotherFragment"
         android:label="fragment_another"
         tools:layout="@layout/fragment_another"/>
 

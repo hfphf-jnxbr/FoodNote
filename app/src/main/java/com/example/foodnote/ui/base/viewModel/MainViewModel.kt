@@ -1,4 +1,4 @@
-package com.example.foodnote.viewModels
+package com.example.foodnote.ui.base.viewModel
 
 import androidx.lifecycle.ViewModel
 
