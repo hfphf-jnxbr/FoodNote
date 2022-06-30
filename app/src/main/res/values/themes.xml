@@ -22,6 +22,24 @@
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
 
+        <!-- My Color -->
+        <item name="strokeColorCard">#E4E4E4</item>
+        <item name="clearWhite">#FFFFFF</item>
+        <item name="strokeColorCardConstructor">#E37777</item>
+        <item name="textColorLightGray">#B3B3B3</item>
+        <item name="textColorLightGray2">#CCCCCC</item>
+        <item name="buttonCreateConstructor">#79DDC6</item>
+
+        <item name="backgroundNoteBook">#F8F8F8</item>
+        <item name="myGray">#979595</item>
+
+        <item name="colorCardGreen">#E9FBD6</item>
+        <item name="colorCardPink">#FBE6E6</item>
+        <item name="colorCardYellow">#FAF4C4</item>
+        <item name="colorCardWhite">#FFFFFF</item>
+        <item name="colorCardGray">#EFEFEF</item>
+        <item name="colorCardBlue">#D7EEFA</item>
+
     </style>
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>

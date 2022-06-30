@@ -9,7 +9,7 @@
         android:id="@+id/notesFragment"
         android:name="com.example.foodnote.ui.notes_fragment.NotesFragment"
         android:label="fragment_first"
-        tools:layout="@layout/fragment_notes"/>
+        tools:layout="@layout/notebook_fragment"/>
 
     <fragment
         android:id="@+id/calorieCalculatorFragment"

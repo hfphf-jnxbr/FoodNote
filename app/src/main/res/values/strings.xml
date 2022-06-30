@@ -1,5 +1,25 @@
 <resources>
     <string name="app_name">FoodNote</string>
+
     <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="notebook">NoteBook</string>
+    <string name="add_note">+ Add Note</string>
+
+    <string name="value_30_100">value 30–100%</string>
+    <string name="background_card">Background Card</string>
+    <string name="height">height =</string>
+    <string name="width">width =</string>
+    <string name="create_note">Create Note</string>
+    <string name="note">Note</string>
+
+    <string name="standard_notes">Standard notes</string>
+    <string name="food_notes">Food notes</string>
+    <string name="paint_notes">Paint notes</string>
+    <string name="range_error">Range ERROR</string>
+    <string name="nuber_format_error_message">NumberF format ERROR</string>
+    <string name="empty_field_error_messange">Empty field ERROR</string>
+
 </resources>
