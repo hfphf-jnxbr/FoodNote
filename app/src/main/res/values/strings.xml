@@ -21,5 +21,6 @@
     <string name="range_error">Range ERROR</string>
     <string name="nuber_format_error_message">NumberF format ERROR</string>
     <string name="empty_field_error_messange">Empty field ERROR</string>
+    <string name="max_notes_massenge">Max limited notes</string>
 
 </resources>

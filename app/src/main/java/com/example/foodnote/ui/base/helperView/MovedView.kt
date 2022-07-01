@@ -16,10 +16,11 @@ class MovedView(private val listView : ArrayList<View>, root : ConstraintLayout)
     private var dx = 0f
     private var dy = 0f
     private var flag = true
+    private var flagBlock = true
     private val listElevation = ArrayList<View>()
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-        if (event != null) {
+        if (event != null && flagBlock) {
 
             when (event.action) {
                 0 -> focusView(event)
@@ -92,6 +93,10 @@ class MovedView(private val listView : ArrayList<View>, root : ConstraintLayout)
 
     override fun removeView(view: View) {
         listView.remove(view)
+    }
+
+    override fun blockMove(flag: Boolean) {
+        flagBlock = flag
     }
 }
 

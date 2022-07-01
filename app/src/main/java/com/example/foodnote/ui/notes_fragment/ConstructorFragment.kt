@@ -2,6 +2,7 @@ package com.example.foodnote.ui.notes_fragment
 
 import android.graphics.Color
 import android.os.Bundle
+import android.text.InputFilter
 import android.view.View
 import android.widget.Toast
 import com.example.foodnote.R
@@ -27,12 +28,31 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
 
         chekButton()
         chekColor()
+        editTextFilter()
+    }
+
+    private fun editTextFilter() {
+        val filterArray = Array<InputFilter>(1 , { InputFilter.LengthFilter(2)})
+        binding.editWidth.filters = filterArray
+        binding.editHeight.filters = filterArray
     }
 
     private fun chekButton() = with(binding) {
         buttonCreate.setOnClickListener {
             if(flag){
                 createNote()
+                flag = false
+
+                scope.launch {
+                    delay(1550)
+                    flag = true
+                }
+            }
+        }
+
+        back.setOnClickListener {
+            if(flag){
+                fragment.constructorFragmentClose()
                 flag = false
 
                 scope.launch {

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.View
 import android.view.animation.AnticipateOvershootInterpolator
+import android.widget.Toast
 import androidx.core.view.updateLayoutParams
 import com.example.foodnote.R
 import com.example.foodnote.databinding.CardNotesBinding
@@ -16,16 +17,21 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
     private lateinit var movedView: MovedView
     private var widthScreen = 0
 
+    private val listCardNotes : ArrayList<View> = ArrayList()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        movedView = MovedView(ArrayList(),binding.root)
+        setWidthPixels()
+        setFragmentConstructor()
+        checkChip()
+    }
+
+    private fun setWidthPixels() {
         val metrics = DisplayMetrics()
         requireActivity().windowManager.defaultDisplay.getMetrics(metrics)
         widthScreen = metrics.widthPixels
-
-        movedView = MovedView(ArrayList(),binding.root)
-        setFragmentConstructor()
-        checkChip()
     }
 
     private fun checkChip() {
@@ -40,6 +46,7 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
             interpolator = AnticipateOvershootInterpolator(1f)
             start()
         }
+        movedView.blockMove(false)
     }
 
     override fun constructorFragmentClose() {
@@ -48,28 +55,38 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
             interpolator = AnticipateOvershootInterpolator(1f)
             start()
         }
+        movedView.blockMove(true)
     }
 
     override fun setDataCreteNote(widthCard: Int, heightCard: Int, colorCard: Int, note : String) {
-        val cardNoteViewBind = CardNotesBinding.inflate(layoutInflater,binding.root,false)
-        val cardNoteView = cardNoteViewBind.root
 
-        cardNoteView.updateLayoutParams {
-            height = (heightCard * widthScreen) / 100
-            width  = (widthCard * widthScreen) / 100
+        if(listCardNotes.size < 10) {
+
+            val cardNoteViewBind = CardNotesBinding.inflate(layoutInflater, binding.root, false)
+            val cardNoteView = cardNoteViewBind.root
+
+            cardNoteView.updateLayoutParams {
+                height = (heightCard * widthScreen) / 100
+                width = (widthCard * widthScreen) / 100
+            }
+
+            cardNoteView.elevation = 17f
+            cardNoteView.setCardBackgroundColor(colorCard)
+            cardNoteViewBind.textNote.text = note
+
+            cardNoteViewBind.buttonDelete.setOnClickListener {
+                binding.root.removeView(cardNoteView)
+                movedView.removeView(cardNoteView)
+                listCardNotes.remove(cardNoteView)
+            }
+
+            listCardNotes.add(cardNoteView)
+            binding.root.addView(cardNoteView)
+            movedView.addView(cardNoteView)
+        } else {
+
+            Toast.makeText(requireContext(),getString(R.string.max_notes_massenge),Toast.LENGTH_SHORT).show()
         }
-
-        cardNoteView.elevation = 17f
-        cardNoteView.setCardBackgroundColor(colorCard)
-        cardNoteViewBind.textNote.text = note
-
-        cardNoteViewBind.buttonDelete.setOnClickListener {
-            binding.root.removeView(cardNoteView)
-            movedView.removeView(cardNoteView)
-        }
-
-        binding.root.addView(cardNoteView)
-        movedView.addView(cardNoteView)
     }
 
     private fun setFragmentConstructor() {
