@@ -15,7 +15,7 @@
         android:backgroundTint="?attr/clearWhite"
         android:text="@string/standard_notes"
         android:textSize="11sp"
-        app:chipStrokeColor="?attr/strokeColorCard"
+        app:chipStrokeColor="?attr/myGray"
         app:chipStrokeWidth="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -29,7 +29,7 @@
         android:backgroundTint="?attr/clearWhite"
         android:text="@string/food_notes"
         android:textSize="11sp"
-        app:chipStrokeColor="?attr/strokeColorCard"
+        app:chipStrokeColor="?attr/myGray"
         app:chipStrokeWidth="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -42,7 +42,7 @@
         android:backgroundTint="?attr/clearWhite"
         android:text="@string/paint_notes"
         android:textSize="11sp"
-        app:chipStrokeColor="?attr/strokeColorCard"
+        app:chipStrokeColor="?attr/myGray"
         app:chipStrokeWidth="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/chipFoodNote"
