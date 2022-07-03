@@ -52,6 +52,5 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="colorAccent">@color/black</item>
-        <item name="cornerRadius">16dp</item>
     </style>
 </resources>
