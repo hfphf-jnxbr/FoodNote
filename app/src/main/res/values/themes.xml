@@ -47,6 +47,7 @@
         <item name="colorCardGray">#EFEFEF</item>
         <item name="colorCardBlue">#D7EEFA</item>
 
+
     </style>
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>

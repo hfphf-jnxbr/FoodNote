@@ -1,14 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.notes_fragment.NotesFragment">
 
-    <TextView
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="Калькулятор" />
+        android:layout_height="200dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:elevation="15dp"
+        app:cardCornerRadius="25dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-</FrameLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.example.foodnote.ui.base.customView.CircleDiagramView
+                android:id="@+id/circleDiagramView"
+                android:layout_width="190dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/burn_title_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:text="@string/burning_weight"
+                app:layout_constraintStart_toEndOf="@+id/eat_title_text_view"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/burn_value_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/zero"
+                app:layout_constraintEnd_toEndOf="@+id/eat_title_text_view"
+                app:layout_constraintStart_toStartOf="@+id/eat_title_text_view"
+                app:layout_constraintTop_toBottomOf="@+id/eat_title_text_view" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/eat_title_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/eating_weight"
+                app:layout_constraintStart_toEndOf="@+id/circleDiagramView"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/eat_value_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/zero"
+                app:layout_constraintEnd_toEndOf="@+id/burn_title_text_view"
+                app:layout_constraintStart_toStartOf="@+id/burn_title_text_view"
+                app:layout_constraintTop_toBottomOf="@+id/burn_title_text_view" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/protain_title_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/protain"
+                app:layout_constraintStart_toEndOf="@+id/circleDiagramView"
+                app:layout_constraintTop_toBottomOf="@+id/burn_value_text_view" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/protain_value_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="@+id/protain_title_text_view"
+                app:layout_constraintStart_toStartOf="@+id/protain_title_text_view"
+                app:layout_constraintTop_toBottomOf="@+id/protain_title_text_view"
+                tools:text="14/83г" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/fats_title_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/fats"
+                app:layout_constraintStart_toEndOf="@+id/protain_title_text_view"
+                app:layout_constraintTop_toTopOf="@+id/protain_title_text_view" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/fats_value_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="@+id/fats_title_text_view"
+                app:layout_constraintStart_toStartOf="@+id/fats_title_text_view"
+                app:layout_constraintTop_toBottomOf="@+id/fats_title_text_view"
+                tools:text="14/83г" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/carbohydrates_title_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/carbohydrates"
+                app:layout_constraintStart_toEndOf="@+id/fats_title_text_view"
+                app:layout_constraintTop_toTopOf="@+id/fats_title_text_view" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/carbohydrates_value_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="@+id/carbohydrates_title_text_view"
+                app:layout_constraintStart_toStartOf="@+id/carbohydrates_title_text_view"
+                app:layout_constraintTop_toBottomOf="@+id/carbohydrates_title_text_view"
+                tools:text="14/83г" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/day_week_material_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView"
+        tools:text="понедельник 27.июн" />
+</androidx.constraintlayout.widget.ConstraintLayout>
