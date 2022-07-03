@@ -22,5 +22,9 @@
     <string name="nuber_format_error_message">NumberF format ERROR</string>
     <string name="empty_field_error_messange">Empty field ERROR</string>
     <string name="max_notes_massenge">Max limited notes</string>
+    <string name="calculator">Калькулятор</string>
+    <string name="recipes">Рецепты</string>
+    <string name="settings">Настройки</string>
+    <string name="other">Другой</string>
 
 </resources>
