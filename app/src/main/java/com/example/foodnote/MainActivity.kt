@@ -2,6 +2,7 @@ package com.example.foodnote
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.foodnote.databinding.ActivityMainBinding
@@ -30,5 +31,3 @@ class MainActivity : AppCompatActivity() {
         private const val KEY_SELECTED_ITEM = "key_selected_item"
     }
 
-
-}

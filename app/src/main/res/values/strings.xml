@@ -22,6 +22,15 @@
     <string name="nuber_format_error_message">NumberF format ERROR</string>
     <string name="empty_field_error_messange">Empty field ERROR</string>
     <string name="max_notes_massenge">Max limited notes</string>
+    <string name="paint">Paint</string>
+    <string name="canvas_open">open canvas</string>
+    <string name="canvas">Canvas</string>
+    <string name="clear">clear</string>
+    <string name="pix">pix</string>
+    <string name="brash">Brash</string>
+    <string name="not_permission">not permission</string>
+    <string name="max_20">max 20</string>
+    <string name="save_image">save image</string>
     <string name="calculator">Калькулятор</string>
     <string name="recipes">Рецепты</string>
     <string name="settings">Настройки</string>
@@ -38,4 +47,7 @@
     <string name="Name">Название</string>
     <string name="calorie">Калории</string>
     <string name="time">Время</string>
+    <string name="cancel">cancel</string>
+    <string name="saved_mess">Saved: </string>
+
 </resources>
