@@ -5,10 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.foodnote.R
 import com.example.foodnote.data.base.AppState
+import com.example.foodnote.data.model.DiaryItem
 import com.example.foodnote.databinding.FragmentCalorieCalculatorBinding
 import com.example.foodnote.ui.base.BaseViewBindingFragment
+import com.example.foodnote.ui.calorie_calculator_fragment.adapter.CalorieCalculatorAdapter
+import com.example.foodnote.ui.calorie_calculator_fragment.adapter.ItemClickListener
 import com.example.foodnote.ui.calorie_calculator_fragment.viewModel.CalorieCalculatorViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.time.LocalDate
@@ -19,8 +23,12 @@ import java.util.*
 
 
 class CalorieCalculatorFragment :
-    BaseViewBindingFragment<FragmentCalorieCalculatorBinding>(FragmentCalorieCalculatorBinding::inflate) {
+    BaseViewBindingFragment<FragmentCalorieCalculatorBinding>(FragmentCalorieCalculatorBinding::inflate),
+    ItemClickListener {
     private val viewModel: CalorieCalculatorViewModel by viewModel()
+    private val adapter by lazy {
+        CalorieCalculatorAdapter(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,6 +44,7 @@ class CalorieCalculatorFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.initCalorie()
+        viewModel.initRandomList()
         initDate()
     }
 
@@ -74,10 +83,26 @@ class CalorieCalculatorFragment :
                         val (protein, fat, carbohydrates) = state.data as Triple<Pair<Int, Int>, Pair<Int, Int>, Pair<Int, Int>>
                         initCalories(protein, fat, carbohydrates)
                     }
+
+                    is List<*> -> {
+                        when (val item = state.data.firstOrNull()) {
+                            is DiaryItem -> {
+                                initRcView(state.data as ArrayList<DiaryItem>)
+                            }
+                        }
+                    }
                 }
             }
 
             else -> {}
         }
+    }
+
+    private fun initRcView(list: ArrayList<DiaryItem>) {
+        adapter.setItem(list)
+        binding.diaryContainerRcView.layoutManager = LinearLayoutManager(context)
+        binding.diaryContainerRcView.adapter = adapter
+        binding.diaryContainerRcView.itemAnimator?.changeDuration = 0
+
     }
 }

@@ -35,4 +35,7 @@
     <string name="protain">Белки</string>
     <string name="fats">Жиры</string>
     <string name="carbohydrates">Углеводы</string>
+    <string name="Name">Название</string>
+    <string name="calorie">Калории</string>
+    <string name="time">Время</string>
 </resources>
