@@ -125,11 +125,11 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
 
     private fun line(angle : Float, canvas : Canvas, text : String) {
         if(angle > 0) {
-            val x = width/2f + (width/2f - radiuse/2) * cos(- (angle * 2 * PI) / 360).toFloat()
-            val y = width/2f - (width/2f - radiuse/2) * sin(- (angle * 2 * PI) / 360).toFloat()
+            val x = width/2f + (width/2f - radiuse/2 - 32) * cos(- (angle * 2 * PI) / 360).toFloat()
+            val y = width/2f - (width/2f - radiuse/2 - 32) * sin(- (angle * 2 * PI) / 360).toFloat()
 
-            val x2 = width/2f + (width/2f - radiuse/2 + 15) * cos(- (angle * 2 * PI) / 360).toFloat()
-            val y2 = width/2f - (width/2f - radiuse/2 + 15) * sin(- (angle * 2 * PI) / 360).toFloat()
+            val x2 = width/2f + (width/2f - radiuse/2 ) * cos(- (angle * 2 * PI) / 360).toFloat()
+            val y2 = width/2f - (width/2f - radiuse/2 ) * sin(- (angle * 2 * PI) / 360).toFloat()
 
             canvas.drawLine(width/2f,width/2f, x, y, paintLine)
             canvas.drawCircle(x, y,10f,paintLine)
@@ -137,7 +137,7 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
             if(angle <= 180) {
                 canvas.drawText(text,x2 - 90f,y2 + 32f,paintSmallText)
             } else {
-                canvas.drawText(text,x2 - 90f,y2 - 15f ,paintSmallText)
+                canvas.drawText(text,x2 - 90f,y2 - 10f ,paintSmallText)
             }
         }
     }
