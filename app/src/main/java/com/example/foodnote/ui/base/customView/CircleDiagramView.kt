@@ -18,6 +18,7 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val width = MeasureSpec.getSize(widthMeasureSpec)
 
+        createRect(width)
         setMeasuredDimension(width, width)
     }
 
@@ -99,10 +100,6 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
         super.onDraw(canvas)
         canvas!!
 
-        if(flag){
-            createRect()
-            flag = false
-        }
         angleSpeed()
         drawCircles(canvas)
         drawText(canvas)
@@ -156,7 +153,7 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
         angleSpeed3 = angleSpeedStart3 * ( length3 - angle3)
     }
 
-    private fun createRect() {
+    private fun createRect(width: Int) {
         rectF = RectF(0f + radiuse,0f + radiuse, width.toFloat() - radiuse, width.toFloat() - radiuse)
         rectF2 = RectF(widthDiagram + radiuse,widthDiagram + radiuse,width.toFloat() - widthDiagram - radiuse,width.toFloat() - widthDiagram - radiuse)
         rectF3 = RectF(widthDiagram*2 + radiuse,widthDiagram*2 + radiuse,width.toFloat() - widthDiagram*2 - radiuse,width.toFloat() - widthDiagram*2 - radiuse)
