@@ -139,9 +139,9 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
             canvas.drawCircle(x, y,10f,paintLine)
 
             if(angle <= 180) {
-                canvas.drawText(text,x2 - 20f,y2 + 32f,paintSmallText)
+                canvas.drawText(text,x2 - 90f,y2 + 32f,paintSmallText)
             } else {
-                canvas.drawText(text,x2 - 20f,y2 - 5f ,paintSmallText)
+                canvas.drawText(text,x2 - 90f,y2 - 15f ,paintSmallText)
             }
         }
     }
