@@ -27,7 +27,5 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
     }
 
-    companion object {
-        private const val KEY_SELECTED_ITEM = "key_selected_item"
-    }
+}
 
