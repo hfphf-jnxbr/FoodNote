@@ -128,20 +128,24 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
 
     private fun line(angle : Float, canvas : Canvas, text : String) {
         if(angle > 0) {
+            val coaf = 1.6f
+            val x =
+                width / 2f + (width / 2f - radiuse / coaf) * cos(-(angle * 2 * PI) / 360).toFloat()
+            val y =
+                width / 2f - (width / 2f - radiuse / coaf) * sin(-(angle * 2 * PI) / 360).toFloat()
 
-            val x = width/2f + (width/2f - radiuse/2) * cos(- (angle * 2 * PI) / 360).toFloat()
-            val y = width/2f - (width/2f - radiuse/2) * sin(- (angle * 2 * PI) / 360).toFloat()
+            val x2 =
+                width / 2f + (width / 2f - radiuse / coaf + 15) * cos(-(angle * 2 * PI) / 360).toFloat()
+            val y2 =
+                width / 2f - (width / 2f - radiuse / coaf + 15) * sin(-(angle * 2 * PI) / 360).toFloat()
 
-            val x2 = width/2f + (width/2f - radiuse/2 + 15) * cos(- (angle * 2 * PI) / 360).toFloat()
-            val y2 = width/2f - (width/2f - radiuse/2 + 15) * sin(- (angle * 2 * PI) / 360).toFloat()
+            canvas.drawLine(width / 2f, width / 2f, x, y, paintLine)
+            canvas.drawCircle(x, y, 10f, paintLine)
 
-            canvas.drawLine(width/2f,width/2f, x, y, paintLine)
-            canvas.drawCircle(x, y,10f,paintLine)
-
-            if(angle <= 180) {
-                canvas.drawText(text,x2 - 20f,y2 + 32f,paintSmallText)
+            if (angle <= 180) {
+                canvas.drawText(text, x2 - 20f, y2 + 32f, paintSmallText)
             } else {
-                canvas.drawText(text,x2 - 20f,y2 - 5f ,paintSmallText)
+                canvas.drawText(text, x2 - 37f, y2 - 15f, paintSmallText)
             }
         }
     }
@@ -161,7 +165,7 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
         rectF2 = RectF(widthDiagram + radiuse,widthDiagram + radiuse,width.toFloat() - widthDiagram - radiuse,width.toFloat() - widthDiagram - radiuse)
         rectF3 = RectF(widthDiagram*2 + radiuse,widthDiagram*2 + radiuse,width.toFloat() - widthDiagram*2 - radiuse,width.toFloat() - widthDiagram*2 - radiuse)
 
-        this.radiuse = width / 6f
+        this.radiuse = width / 5f
     }
 
     private fun drawText(canvas: Canvas) {
