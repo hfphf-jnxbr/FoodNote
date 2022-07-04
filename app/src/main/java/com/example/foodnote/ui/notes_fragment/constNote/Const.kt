@@ -18,7 +18,7 @@ object Const {
     const val CARD_NOTE_DP = 30
     const val CARD_NOTE_SPLASH_DP = 70
 
-    const val MAX_CANVAS_HEIGHT_DP = 600
+    const val MAX_CANVAS_HEIGHT_DP = 500
     const val MARGIN_CANVAS_DP = 32
 
     const val MAX_NOTES = 10

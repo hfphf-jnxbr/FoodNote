@@ -30,6 +30,8 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        flagBlockChip = true
+
         initMovedView()
         setWidthPixels()
         checkChip()

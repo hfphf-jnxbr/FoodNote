@@ -39,10 +39,10 @@ class EditorPaintNoteFragment : BaseViewBindingFragment<PaintNoteEditorBinding>(
     }
 
     fun loadImage() {
-        binding.image.setImageBitmap( BitmapFactory.decodeFile(Environment.getExternalStorageDirectory().toString() + File.separator + "DCIM" + File.separator + "image.png") )
+        binding.image.setImageBitmap( BitmapFactory.decodeFile(Environment.getExternalStorageDirectory().toString() + File.separator +  Environment.DIRECTORY_DCIM + File.separator + "image2.png") )
     }
 
-    fun getImage(): Bitmap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory().toString() + File.separator + "DCIM" + File.separator + "image.png")
+    fun getImage(): Bitmap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory().toString() + File.separator +  Environment.DIRECTORY_DCIM + File.separator + "image2.png")
 
     companion object {
         fun newInstance(fragment : ConstructorFragment) : EditorPaintNoteFragment {

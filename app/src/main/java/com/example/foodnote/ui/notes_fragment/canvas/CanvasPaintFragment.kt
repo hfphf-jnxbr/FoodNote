@@ -1,5 +1,6 @@
 package com.example.foodnote.ui.notes_fragment.canvas
 
+import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.*
 import android.graphics.Color.WHITE
@@ -9,6 +10,7 @@ import android.text.InputFilter
 import android.util.DisplayMetrics
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
@@ -122,12 +124,6 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
         }
 
         binding.saveButton.setOnClickListener {
-            requireActivity().supportFragmentManager
-                .beginTransaction()
-                .setCustomAnimations(R.anim.anim_layout_2,R.anim.anim_layout)
-                .replace(R.id.containerCanvas, Fragment())
-                .commit()
-
             saveImage()
         }
 
@@ -158,33 +154,32 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
         }
     }
 
+    private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { saveImage() }
+
+    private fun requestLocationPermissions() = permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
     private fun saveImage() {
-        if(ActivityCompat.checkSelfPermission(requireContext(),android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+
+        if(ActivityCompat.checkSelfPermission(requireContext(),Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 
             val bitmap1 = viewCanvasPaint.getBitmap()
-            bitmapToFile(bitmap1,"image.png")
+            bitmapToFile(bitmap1,"image2.png")
+
+            requireActivity().supportFragmentManager
+                .beginTransaction()
+                .setCustomAnimations(R.anim.anim_layout_2,R.anim.anim_layout)
+                .replace(R.id.containerCanvas, Fragment())
+                .commit()
+
         } else {
-            ActivityCompat.requestPermissions(requireActivity(),arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 100)
+            requestLocationPermissions()
         }
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-
-        if (requestCode == 100 && grantResults.size == 1) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                saveImage()
-            } else {
-                Toast.makeText(requireContext(),getString(R.string.not_permission),Toast.LENGTH_SHORT).show()
-            }
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun bitmapToFile(bitmap: Bitmap, fileNameToSave: String): File? {
         var file: File? = null
         return try {
-            val name = Environment.getExternalStorageDirectory().toString() + File.separator + "DCIM" + File.separator + fileNameToSave
+            val name = Environment.getExternalStorageDirectory().toString() + File.separator + Environment.DIRECTORY_DCIM + File.separator + fileNameToSave
 
             file = File(name)
             file.createNewFile()
