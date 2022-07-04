@@ -128,7 +128,6 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
 
     private fun line(angle : Float, canvas : Canvas, text : String) {
         if(angle > 0) {
-
             val x = width/2f + (width/2f - radiuse/2) * cos(- (angle * 2 * PI) / 360).toFloat()
             val y = width/2f - (width/2f - radiuse/2) * sin(- (angle * 2 * PI) / 360).toFloat()
 
@@ -161,7 +160,7 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
         rectF2 = RectF(widthDiagram + radiuse,widthDiagram + radiuse,width.toFloat() - widthDiagram - radiuse,width.toFloat() - widthDiagram - radiuse)
         rectF3 = RectF(widthDiagram*2 + radiuse,widthDiagram*2 + radiuse,width.toFloat() - widthDiagram*2 - radiuse,width.toFloat() - widthDiagram*2 - radiuse)
 
-        this.radiuse = width / 6f
+        this.radiuse = width / 5f
     }
 
     private fun drawText(canvas: Canvas) {

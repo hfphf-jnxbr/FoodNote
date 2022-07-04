@@ -35,7 +35,19 @@
     <string name="recipes">Рецепты</string>
     <string name="settings">Настройки</string>
     <string name="other">Другой</string>
+    <string name="age">Возраст</string>
+    <string name="weight">вес</string>
+    <string name="burning_weight">Сожжено</string>
+    <string name="eating_weight">Cъедено</string>
+    <string name="zero">0</string>
+    <string name="format_challenge">%d/%d</string>
+    <string name="protain">Белки</string>
+    <string name="fats">Жиры</string>
+    <string name="carbohydrates">Углеводы</string>
+    <string name="Name">Название</string>
+    <string name="calorie">Калории</string>
+    <string name="time">Время</string>
     <string name="cancel">cancel</string>
-    <string name="saved_mess">\"Saved: \"</string>
+    <string name="saved_mess">Saved: </string>
 
 </resources>

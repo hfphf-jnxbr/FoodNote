@@ -2,6 +2,7 @@ package com.example.foodnote.app
 
 import android.app.Application
 import com.example.foodnote.di.applicationModule
+import com.example.foodnote.di.calorieCalculatorScreenModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -14,7 +15,8 @@ class App : Application() {
             androidContext(this@App)
             modules(
                 listOf(
-                    applicationModule
+                    applicationModule,
+                    calorieCalculatorScreenModule
                 )
             )
         }

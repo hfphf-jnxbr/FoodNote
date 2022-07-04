@@ -19,7 +19,7 @@ abstract class BaseViewBindingFragment<VB : ViewBinding>(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = inflate(inflater, container, false)
         return binding.root
     }
