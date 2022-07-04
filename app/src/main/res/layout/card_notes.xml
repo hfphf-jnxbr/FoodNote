@@ -33,6 +33,15 @@
                 android:src="@drawable/ic_baseline_more_horiz_24"
                 tools:ignore="RtlHardcoded" />
 
+            <ImageView
+                android:id="@+id/buttonDelete"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:layout_gravity="center|start"
+                android:layout_marginStart="@dimen/margin_16dp"
+                android:alpha="0.5"
+                android:src="@drawable/ic_baseline_delete_24" />
+
         </com.google.android.material.card.MaterialCardView>
 
         <TextView
@@ -43,23 +52,20 @@
             android:layout_marginHorizontal="@dimen/margin_16dp"
             android:layout_marginTop="8dp"
             android:textSize="18sp"
-            app:layout_constraintBottom_toTopOf="@+id/buttonDelete"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/materialCardView"
             tools:ignore="RtlHardcoded" />
 
         <ImageView
-            android:id="@+id/buttonDelete"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_gravity="bottom"
-            android:alpha="0.5"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:src="@drawable/ic_baseline_delete_24"
+            android:id="@+id/imageNote"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/materialCardView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
