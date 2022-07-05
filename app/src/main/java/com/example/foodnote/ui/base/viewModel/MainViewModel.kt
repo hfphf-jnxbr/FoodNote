@@ -1,7 +1,7 @@
 package com.example.foodnote.ui.base.viewModel
 
-import com.example.foodnote.data.base.AppState
+import com.example.foodnote.data.base.SampleState
 
-class MainViewModel : BaseViewModel<AppState<*>>() {
+class MainViewModel : BaseViewModel<SampleState>() {
 
 }
