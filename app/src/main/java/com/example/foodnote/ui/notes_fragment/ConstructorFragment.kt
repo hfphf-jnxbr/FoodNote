@@ -16,10 +16,11 @@ import com.example.foodnote.ui.notes_fragment.constNote.Const.STROKE_WIDTH_FOCUS
 import com.example.foodnote.ui.notes_fragment.constNote.ConstType
 import com.example.foodnote.ui.notes_fragment.editorNote.EditorPaintNoteFragment
 import com.example.foodnote.ui.notes_fragment.editorNote.EditorStandardNoteFragment
+import com.example.foodnote.ui.notes_fragment.interfaces.ConstructorFragmentInterface
 import com.example.foodnote.ui.notes_fragment.interfaces.NoteBookFragmentInterface
 import kotlinx.coroutines.*
 
-class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(ConstructorNoteBinding::inflate) {
+class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(ConstructorNoteBinding::inflate) , ConstructorFragmentInterface{
 
     private lateinit var fragment: NoteBookFragmentInterface
 
@@ -118,7 +119,7 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
         }
     }
 
-    fun getHeight() : Int = with(binding){
+    override fun getHeight() : Int = with(binding){
         val inputH = editHeight.text.toString()
 
         if (inputH.isNotEmpty()) {
@@ -136,7 +137,7 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
         return -1
     }
 
-    fun getWidth() : Int = with(binding){
+    override fun getWidth() : Int = with(binding){
         val inputW = editWidth.text.toString()
 
         if (inputW.isNotEmpty()) {
@@ -172,6 +173,8 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
         }
     }
 
+    override fun getColorBackgroundCard() = colorCard
+
     private fun createNote(height : Int, width : Int) {
         when (typeNote) {
             ConstType.STANDARD_TYPE -> {
@@ -179,8 +182,8 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
                 fragment.setDataCreateStandardNote(width, height, colorCard, string)
             }
             ConstType.PAINT_TYPE  ->    {
-                val bitmap = editorPaintNoteFragmentEditor.getImage()
-                fragment.setDataCreatePaintNote(width, height, colorCard, bitmap)
+                val bitmapURL = editorPaintNoteFragmentEditor.getImageURL()
+                fragment.setDataCreatePaintNote(width, height, colorCard, bitmapURL)
             }
             else -> {}
         }
