@@ -157,7 +157,7 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
         rectF2 = RectF(widthDiagram + radiuse,widthDiagram + radiuse,width.toFloat() - widthDiagram - radiuse,width.toFloat() - widthDiagram - radiuse)
         rectF3 = RectF(widthDiagram*2 + radiuse,widthDiagram*2 + radiuse,width.toFloat() - widthDiagram*2 - radiuse,width.toFloat() - widthDiagram*2 - radiuse)
 
-        this.radiuse = width / 5f
+        this.radiuse = width / 6f
     }
 
     private fun drawText(canvas: Canvas) {
