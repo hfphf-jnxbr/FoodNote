@@ -11,6 +11,7 @@ import java.util.*
 import kotlin.random.Random
 
 class CalorieCalculatorViewModel() : BaseViewModel<AppState<*>>() {
+
     fun initCalorie() {
         viewModelScope.launch {
             kotlin.runCatching {
@@ -29,7 +30,7 @@ class CalorieCalculatorViewModel() : BaseViewModel<AppState<*>>() {
                     ),
                 )
             }.onSuccess {
-                stateLiveData.value = AppState.Success(it)
+                stateLiveData.postValue(AppState.Success(it))
             }.onFailure {
                 stateLiveData.value = AppState.Error(it)
             }
@@ -40,7 +41,7 @@ class CalorieCalculatorViewModel() : BaseViewModel<AppState<*>>() {
         viewModelScope.launch {
             kotlin.runCatching {
                 val list = ArrayList<DiaryItem>(10)
-                for (i in 0..10) {
+                for (i in 0..3) {
                     list.add(
                         DiaryItem(
                             "item $i",
@@ -51,7 +52,7 @@ class CalorieCalculatorViewModel() : BaseViewModel<AppState<*>>() {
                 }
                 list
             }.onSuccess {
-                stateLiveData.value = AppState.Success(it)
+                stateLiveData.postValue(AppState.Success(it))
             }.onFailure {
                 stateLiveData.value = AppState.Error(it)
             }

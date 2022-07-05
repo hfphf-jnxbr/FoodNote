@@ -14,6 +14,7 @@ import com.example.foodnote.ui.base.BaseViewBindingFragment
 import com.example.foodnote.ui.calorie_calculator_fragment.adapter.CalorieCalculatorAdapter
 import com.example.foodnote.ui.calorie_calculator_fragment.adapter.ItemClickListener
 import com.example.foodnote.ui.calorie_calculator_fragment.viewModel.CalorieCalculatorViewModel
+import com.example.foodnote.utils.showToast
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -43,8 +44,6 @@ class CalorieCalculatorFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.initCalorie()
-        viewModel.initRandomList()
         initDate()
     }
 
@@ -93,7 +92,9 @@ class CalorieCalculatorFragment :
                     }
                 }
             }
-
+            is AppState.Error -> {
+                context?.showToast(state.error?.message)
+            }
             else -> {}
         }
     }
