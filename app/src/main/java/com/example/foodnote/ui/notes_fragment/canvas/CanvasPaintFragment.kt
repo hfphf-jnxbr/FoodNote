@@ -26,10 +26,13 @@ import com.example.foodnote.ui.notes_fragment.editorNote.EditorPaintNoteFragment
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.lang.Math.random
+import kotlin.random.Random
 
 class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(CanvasFragmentBinding::inflate) {
 
     private var colorCard = WHITE
+    private var colorCardBackground = Color.RED
     private lateinit var viewCanvasPaint : CanvasPaint
     private lateinit var fragment: EditorPaintNoteFragment
 
@@ -42,8 +45,9 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewCanvasPaint = CanvasPaint(requireContext())
+        viewCanvasPaint = CanvasPaint(requireContext(),colorCardBackground)
         binding.viewCanvasContainer.addView(viewCanvasPaint)
+        binding.viewCanvas.setCardBackgroundColor(colorCardBackground)
 
         setWidthPixels()
         setSizeCanvas()
@@ -55,11 +59,12 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
     }
 
     companion object {
-        fun newInstance(fragment: EditorPaintNoteFragment,height: Int,width: Int) : CanvasPaintFragment {
+        fun newInstance(fragment: EditorPaintNoteFragment, height: Int, width: Int, color : Int) : CanvasPaintFragment {
             val canvasPaint = CanvasPaintFragment()
             canvasPaint.canvasHeight = height
             canvasPaint.canvasWidth = width
             canvasPaint.fragment = fragment
+            canvasPaint.colorCardBackground = color
 
             return canvasPaint
         }
@@ -94,6 +99,7 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
     private fun convertDpToPixels( dp: Int) = (dp * requireContext().resources.displayMetrics.density).toInt()
 
     private fun chekColor() = with(binding){
+
         val list = listOf(colorBlue,colorPink,colorYellow,colorGray,colorWhite,colorBlack,colorPurple,colorGreen)
 
         list.forEach { view ->
@@ -155,15 +161,14 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
     }
 
     private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { saveImage() }
-
     private fun requestLocationPermissions() = permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
     private fun saveImage() {
 
         if(ActivityCompat.checkSelfPermission(requireContext(),Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 
-            val bitmap1 = viewCanvasPaint.getBitmap()
-            bitmapToFile(bitmap1,"image2.png")
+            val bitmap = viewCanvasPaint.getBitmap()
+            bitmapToFile(bitmap, getRandomName())
 
             requireActivity().supportFragmentManager
                 .beginTransaction()
@@ -175,6 +180,8 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
             requestLocationPermissions()
         }
     }
+
+    private fun getRandomName() = "image${Random(9999999999)}.png"
 
     private fun bitmapToFile(bitmap: Bitmap, fileNameToSave: String): File? {
         var file: File? = null
@@ -188,6 +195,7 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
 
             val bos = ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos)
+
             val bitmapData = bos.toByteArray()
 
             val fos = FileOutputStream(file)
@@ -195,7 +203,7 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
             fos.flush()
             fos.close()
 
-            fragment.loadImage()
+            fragment.loadImage(fileNameToSave)
 
             file
         } catch (e: Exception) {

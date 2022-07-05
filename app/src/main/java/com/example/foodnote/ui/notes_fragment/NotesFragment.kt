@@ -2,7 +2,9 @@ package com.example.foodnote.ui.notes_fragment
 
 import android.animation.ObjectAnimator
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.os.Environment
 import android.util.DisplayMetrics
 import android.view.View
 import android.view.animation.AnticipateOvershootInterpolator
@@ -19,6 +21,7 @@ import com.example.foodnote.ui.notes_fragment.constNote.Const.NOTES_ELEVATION
 import com.example.foodnote.ui.notes_fragment.constNote.ConstType
 import com.example.foodnote.ui.notes_fragment.interfaces.NoteBookFragmentInterface
 import com.google.android.material.card.MaterialCardView
+import java.io.File
 
 class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookFragmentBinding::inflate) , NoteBookFragmentInterface {
     private lateinit var movedView: MovedView
@@ -37,7 +40,7 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
         checkChip()
     }
 
-    private fun initMovedView(){
+    private fun initMovedView() {
         movedView = MovedView(ArrayList(),binding.root)
     }
 
@@ -107,12 +110,12 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
         }
     }
 
-    override fun setDataCreatePaintNote(widthCard: Int, heightCard: Int, colorCard: Int, bitmap: Bitmap) {
+    override fun setDataCreatePaintNote(widthCard: Int, heightCard: Int, colorCard: Int, fileName: String) {
         if(listCardNotes.size < MAX_NOTES) {
             val cardNoteViewBind = CardNotesBinding.inflate(layoutInflater, binding.root, false)
             val cardNoteView = cardNoteViewBind.root
 
-            cardNoteViewBind.imageNote.setImageBitmap(bitmap)
+            cardNoteViewBind.imageNote.setImageBitmap( BitmapFactory.decodeFile(Environment.getExternalStorageDirectory().toString() + File.separator +  Environment.DIRECTORY_DCIM + File.separator + fileName) )
             createNote(cardNoteView, cardNoteViewBind, widthCard, heightCard, colorCard)
         }
     }
