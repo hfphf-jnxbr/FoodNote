@@ -86,6 +86,7 @@ class CalorieCalculatorFragment :
         if (state.diaryList.isNotEmpty()) {
             val diaryList = state.diaryList
             initRcView(diaryList)
+            viewModel.getDiary()
         }
     }
 

@@ -1,6 +1,12 @@
 package com.example.foodnote.di
 
 import com.example.foodnote.data.base.RetrofitImpl
+import com.example.foodnote.data.datasource.calorire_datasource.firebase.FireBaseCalorieDataSourceImpl
+import com.example.foodnote.data.datasource.calorire_datasource.firebase.FirebaseCalorieDataSource
+import com.example.foodnote.data.interactor.CalorieCalculatorInteractor
+import com.example.foodnote.data.interactor.CalorieCalculatorInteractorImpl
+import com.example.foodnote.data.repository.CalorieRepository
+import com.example.foodnote.data.repository.CalorieRepositoryImpl
 import com.example.foodnote.ui.calorie_calculator_fragment.viewModel.CalorieCalculatorViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -24,10 +30,18 @@ val applicationModule = module {
 }
 
 val calorieCalculatorScreenModule = module {
-    factory {
-        FirebaseFirestore.getInstance()
+    factory<FirebaseCalorieDataSource> {
+        FireBaseCalorieDataSourceImpl(get(named(NAME_DATASOURCE_FIREBASE)))
+    }
+
+    factory<CalorieRepository> {
+        CalorieRepositoryImpl(get())
+    }
+
+    factory<CalorieCalculatorInteractor> {
+        CalorieCalculatorInteractorImpl(get())
     }
     viewModel {
-        CalorieCalculatorViewModel()
+        CalorieCalculatorViewModel(get())
     }
 }

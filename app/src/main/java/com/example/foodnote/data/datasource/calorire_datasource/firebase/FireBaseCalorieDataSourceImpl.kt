@@ -6,11 +6,13 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 
 class FireBaseCalorieDataSourceImpl(private val db: FirebaseFirestore) : FirebaseCalorieDataSource {
-    override fun saveDiaryItem(diaryItem: DiaryItem, idUser: String, date: String) {
+    override fun saveDiaryItem(diaryItem: DiaryItem) {
         db.collection("Diary")
+            .document(diaryItem.idUser)
+            .collection(diaryItem.date)
             .add(diaryItem)
-            .addOnSuccessListener { documentReference ->
-                Log.d("DB_SAVE", "DocumentSnapshot added with ID: ${documentReference.id}")
+            .addOnSuccessListener {
+                Log.d("DB_SAVE", "DocumentSnapshot add")
             }
             .addOnFailureListener { e ->
                 Log.w("DB_SAVE_ERROR", "Error adding document", e)
@@ -19,7 +21,7 @@ class FireBaseCalorieDataSourceImpl(private val db: FirebaseFirestore) : Firebas
     }
 
     override fun getDiaryCollection(idUser: String, date: String): MutableList<DiaryItem> {
-        db.collection("Diary")
+        db.collection("/Diary/$idUser/$date")
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
