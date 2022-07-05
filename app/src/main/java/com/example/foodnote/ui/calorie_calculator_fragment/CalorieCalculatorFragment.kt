@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.foodnote.R
-import com.example.foodnote.data.base.AppState
+import com.example.foodnote.data.base.SampleState
 import com.example.foodnote.data.model.DiaryItem
 import com.example.foodnote.databinding.FragmentCalorieCalculatorBinding
 import com.example.foodnote.ui.base.BaseViewBindingFragment
@@ -35,7 +35,7 @@ class CalorieCalculatorFragment :
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel.getStateLiveData().observe(viewLifecycleOwner) { appState: AppState<*> ->
+        viewModel.getStateLiveData().observe(viewLifecycleOwner) { appState: SampleState ->
             setState(appState)
         }
         return super.onCreateView(inflater, container, savedInstanceState)
@@ -43,9 +43,9 @@ class CalorieCalculatorFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initDate()
         viewModel.initCalorie()
         viewModel.initRandomList()
-        initDate()
     }
 
     override fun onResume() {
@@ -75,26 +75,17 @@ class CalorieCalculatorFragment :
                 resources.getString(R.string.format_challenge, carb.first, carb.second)
         }
 
-    private fun setState(state: AppState<*>) {
-        when (state) {
-            is AppState.Success -> {
-                when (state.data) {
-                    is Triple<*, *, *> -> {
-                        val (protein, fat, carbohydrates) = state.data as Triple<Pair<Int, Int>, Pair<Int, Int>, Pair<Int, Int>>
-                        initCalories(protein, fat, carbohydrates)
-                    }
+    private fun setState(state: SampleState) {
 
-                    is List<*> -> {
-                        when (val item = state.data.firstOrNull()) {
-                            is DiaryItem -> {
-                                initRcView(state.data as ArrayList<DiaryItem>)
-                            }
-                        }
-                    }
-                }
-            }
+        if (state.calorie != null) {
+            val calorie = state.calorie
+            initCalories(calorie.first, calorie.second, calorie.third)
+        }
 
-            else -> {}
+
+        if (state.diaryList.isNotEmpty()) {
+            val diaryList = state.diaryList
+            initRcView(diaryList)
         }
     }
 

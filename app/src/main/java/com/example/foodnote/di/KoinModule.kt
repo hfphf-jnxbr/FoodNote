@@ -10,11 +10,17 @@ import org.koin.dsl.module
 val applicationModule = module {
 
     // Получаем сервис
-    single(named(NAME_SERVICE_SARAWAN)) {
+    single(named(NAME_DATASOURCE_REMOTE)) {
         get<RetrofitImpl>(
             qualifier = named(NAME_DATASOURCE_REMOTE)
         ).getService()
     }
+
+    // FireStore db
+    single(named(NAME_DATASOURCE_FIREBASE)) {
+        FirebaseFirestore.getInstance()
+    }
+
 }
 
 val calorieCalculatorScreenModule = module {
