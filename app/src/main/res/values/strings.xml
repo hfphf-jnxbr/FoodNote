@@ -1,5 +1,53 @@
 <resources>
     <string name="app_name">FoodNote</string>
+
     <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="notebook">NoteBook</string>
+    <string name="add_note">+ Add Note</string>
+
+    <string name="value_30_100">value 30–100%</string>
+    <string name="background_card">Background Card</string>
+    <string name="height">height =</string>
+    <string name="width">width =</string>
+    <string name="create_note">Create Note</string>
+    <string name="note">Note</string>
+
+    <string name="standard_notes">Standard notes</string>
+    <string name="food_notes">Food notes</string>
+    <string name="paint_notes">Paint notes</string>
+    <string name="range_error">Range ERROR</string>
+    <string name="nuber_format_error_message">NumberF format ERROR</string>
+    <string name="empty_field_error_messange">Empty field ERROR</string>
+    <string name="max_notes_massenge">Max limited notes</string>
+    <string name="paint">Paint</string>
+    <string name="canvas_open">open canvas</string>
+    <string name="canvas">Canvas</string>
+    <string name="clear">clear</string>
+    <string name="pix">pix</string>
+    <string name="brash">Brash</string>
+    <string name="not_permission">not permission</string>
+    <string name="max_20">max 20</string>
+    <string name="save_image">save image</string>
+    <string name="calculator">Калькулятор</string>
+    <string name="recipes">Рецепты</string>
+    <string name="settings">Настройки</string>
+    <string name="other">Другой</string>
+    <string name="age">Возраст</string>
+    <string name="weight">вес</string>
+    <string name="burning_weight">Сожжено</string>
+    <string name="eating_weight">Cъедено</string>
+    <string name="zero">0</string>
+    <string name="format_challenge">%d/%d</string>
+    <string name="protain">Белки</string>
+    <string name="fats">Жиры</string>
+    <string name="carbohydrates">Углеводы</string>
+    <string name="Name">Название</string>
+    <string name="calorie">Калории</string>
+    <string name="time">Время</string>
+    <string name="cancel">cancel</string>
+    <string name="saved_mess">Saved: </string>
+
 </resources>

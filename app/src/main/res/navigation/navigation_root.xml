@@ -2,36 +2,36 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/navigation_root"
     app:startDestination="@id/notesFragment">
 
     <fragment
         android:id="@+id/notesFragment"
-        android:name="com.example.foodnote.view.NotesFragment"
+        android:name="com.example.foodnote.ui.notes_fragment.NotesFragment"
         android:label="fragment_first"
-        tools:layout="@layout/fragment_notes"/>
+        tools:layout="@layout/notebook_fragment"/>
 
     <fragment
         android:id="@+id/calorieCalculatorFragment"
-        android:name="com.example.foodnote.view.CalorieCalculatorFragment"
+        android:name="com.example.foodnote.ui.calorie_calculator_fragment.CalorieCalculatorFragment"
         android:label="fragment_second"
         tools:layout="@layout/fragment_calorie_calculator"/>
 
     <fragment
         android:id="@+id/recipesFragment"
-        android:name="com.example.foodnote.view.RecipesFragment"
+        android:name="com.example.foodnote.ui.recipes_fragment.RecipesFragment"
         android:label="fragment_recipes"
         tools:layout="@layout/fragment_recipes"/>
 
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.foodnote.view.SettingsFragment"
+        android:name="com.example.foodnote.ui.settings_fragment.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings"/>
 
     <fragment
         android:id="@+id/anotherFragment"
-        android:name="com.example.foodnote.view.AnotherFragment"
+        android:name="com.example.foodnote.ui.antother_fragment.AnotherFragment"
         android:label="fragment_another"
         tools:layout="@layout/fragment_another"/>
 
