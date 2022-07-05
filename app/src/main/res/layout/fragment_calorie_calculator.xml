@@ -10,24 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/circle_diag_car_view"
+        <com.example.foodnote.ui.base.customView.CircleDiagramView
+            android:id="@+id/circleDiagramView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:elevation="15dp"
-            app:cardCornerRadius="30dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <com.example.foodnote.ui.base.customView.CircleDiagramView
-                android:id="@+id/circleDiagramView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </androidx.cardview.widget.CardView>
+            android:layout_height="match_parent" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/day_week_material_text_view"
@@ -37,7 +23,7 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/circle_diag_car_view"
+            app:layout_constraintTop_toBottomOf="@+id/circleDiagramView"
             tools:text="понедельник 27.июн" />
 
         <androidx.cardview.widget.CardView
