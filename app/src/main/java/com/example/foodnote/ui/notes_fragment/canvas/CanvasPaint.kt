@@ -7,7 +7,7 @@ import android.view.View
 import com.example.foodnote.ui.notes_fragment.constNote.Const
 import com.example.foodnote.ui.notes_fragment.interfaces.CanvasInterface
 
-class CanvasPaint(context: Context) : View(context) , View.OnTouchListener , CanvasInterface {
+class CanvasPaint(context: Context,private val colorCardBackground: Int) : View(context) , View.OnTouchListener , CanvasInterface {
 
     init {
         this.setOnTouchListener(this)
@@ -24,9 +24,10 @@ class CanvasPaint(context: Context) : View(context) , View.OnTouchListener , Can
 
     private val paint = Paint().apply { isAntiAlias = true }
 
-    private lateinit var bitmap1 : Bitmap
+    private lateinit var bitmap : Bitmap
     private lateinit var myCanvas : Canvas
     private var color = Color.WHITE
+    private var colorBackground = Color.WHITE
     private var size = Const.DEFAULT_SIZE_BRUSH
 
     override fun onDraw(canvas: Canvas?) {
@@ -34,7 +35,7 @@ class CanvasPaint(context: Context) : View(context) , View.OnTouchListener , Can
         canvas!!
 
         createBitmap()
-        canvas.drawBitmap(bitmap1, null, Rect(0, 0, width, height), paint)
+        canvas.drawBitmap(bitmap, null, Rect(0, 0, width, height), paint)
 
         invalidate()
     }
@@ -58,9 +59,9 @@ class CanvasPaint(context: Context) : View(context) , View.OnTouchListener , Can
 
     private fun createBitmap() {
         if(flag) {
-            bitmap1 = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-            myCanvas = Canvas(bitmap1)
-            myCanvas.drawColor(Color.WHITE)
+            bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            myCanvas = Canvas(bitmap)
+            myCanvas.drawColor(colorCardBackground)
 
             flag = false
         }
@@ -68,11 +69,13 @@ class CanvasPaint(context: Context) : View(context) , View.OnTouchListener , Can
 
     override fun setColor(color: Int) { this.color = color }
 
+    override fun setColorBackground(color: Int) { this.color = color }
+
     override fun setSize(size: Float) { this.size = size }
 
-    override fun clearCanvas() { myCanvas.drawColor(Color.WHITE) }
+    override fun clearCanvas() { myCanvas.drawColor(colorCardBackground) }
 
-    override fun getBitmap() = bitmap1
+    override fun getBitmap() = bitmap
 
     override fun onTouch(view: View?, event: MotionEvent?): Boolean {
         if (event != null) {
