@@ -1,7 +1,6 @@
 package com.example.foodnote.ui.notes_fragment
 
 import android.animation.ObjectAnimator
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Environment
@@ -10,8 +9,10 @@ import android.view.View
 import android.view.animation.AnticipateOvershootInterpolator
 import androidx.core.view.updateLayoutParams
 import com.example.foodnote.R
+import com.example.foodnote.data.databaseRoom.dao.DaoDB
 import com.example.foodnote.databinding.CardNotesBinding
 import com.example.foodnote.databinding.NotebookFragmentBinding
+import com.example.foodnote.di.DATA_BASE
 import com.example.foodnote.ui.base.BaseViewBindingFragment
 import com.example.foodnote.ui.base.helperView.MovedView
 import com.example.foodnote.ui.notes_fragment.constNote.Const.CARD_NOTE_DP
@@ -21,6 +22,9 @@ import com.example.foodnote.ui.notes_fragment.constNote.Const.NOTES_ELEVATION
 import com.example.foodnote.ui.notes_fragment.constNote.ConstType
 import com.example.foodnote.ui.notes_fragment.interfaces.NoteBookFragmentInterface
 import com.google.android.material.card.MaterialCardView
+import org.koin.android.ext.android.inject
+import org.koin.core.parameter.parametersOf
+import org.koin.core.qualifier.named
 import java.io.File
 
 class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookFragmentBinding::inflate) , NoteBookFragmentInterface {
@@ -29,6 +33,8 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
     private var flagBlockChip = true
 
     private val listCardNotes : ArrayList<View> = ArrayList()
+
+    private val notesDao: DaoDB by inject(named(DATA_BASE)) { parametersOf(requireActivity()) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -12,8 +12,8 @@ object Const {
     const val MAX_NOTE_SIZE = 99
     const val MIN_NOTE_SIZE = 30
 
-    const val MAX_BRUSH_SIZE = 20
-    const val DEFAULT_SIZE_BRUSH = 20f
+    const val MAX_BRUSH_SIZE = 50
+    const val DEFAULT_SIZE_BRUSH = 16
 
     const val CARD_NOTE_DP = 30
     const val CARD_NOTE_SPLASH_DP = 70
