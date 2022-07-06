@@ -158,6 +158,29 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
                 Toast.makeText(requireContext(),getString(R.string.empty_field_error_messange), Toast.LENGTH_SHORT).show()
             }
         }
+
+        sizeEditAlpha.setOnClickListener {
+            val input = sizeEditAlpha.text.toString()
+
+            if (input.isNotEmpty()) {
+                val inp = input.toInt()
+
+                if(inp in 0..255) {
+                    viewCanvasPaint.setAlphaColor(inp)
+                } else {
+                    if(inp !in 0..255) sizeEditAlpha.error = getString(R.string.range_error)
+                }
+            } else {
+                Toast.makeText(requireContext(),getString(R.string.empty_field_error_messange), Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
+
+
+
+
+
     }
 
     private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { saveImage() }

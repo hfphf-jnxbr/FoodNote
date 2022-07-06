@@ -42,8 +42,10 @@
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardSplash" />
+                app:layout_constraintTop_toBottomOf="@+id/cardSplash"
+                app:layout_constraintVertical_bias="1.0" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardSplash"
@@ -119,22 +121,22 @@
         android:layout_height="wrap_content"
         android:text="@string/pix"
         android:textColor="#292929"
-        android:textSize="15sp"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/sizeEdit"
         app:layout_constraintStart_toEndOf="@+id/sizeEdit"
         app:layout_constraintTop_toTopOf="@+id/sizeEdit" />
 
+
     <TextView
-        android:id="@+id/textHint"
+        android:id="@+id/textAlpha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="@string/max_20"
-        android:textColor="#B8B8B8"
-        android:textSize="11sp"
-        app:layout_constraintBottom_toBottomOf="@+id/sizeEdit"
-        app:layout_constraintStart_toEndOf="@+id/textPix"
-        app:layout_constraintTop_toTopOf="@+id/sizeEdit" />
+        android:text="alpha"
+        android:textColor="#292929"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/sizeEditAlpha"
+        app:layout_constraintStart_toEndOf="@+id/sizeEditAlpha"
+        app:layout_constraintTop_toTopOf="@+id/sizeEditAlpha" />
 
     <TextView
         android:id="@+id/text"
@@ -143,7 +145,7 @@
         android:layout_marginStart="32dp"
         android:text="@string/brash"
         android:textColor="#292929"
-        android:textSize="15sp"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/sizeEdit"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/sizeEdit" />
@@ -155,6 +157,15 @@
         android:inputType="number"
         app:layout_constraintStart_toEndOf="@+id/text"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <EditText
+        android:id="@+id/sizeEditAlpha"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        app:layout_constraintBottom_toBottomOf="@+id/sizeEdit"
+        app:layout_constraintStart_toEndOf="@+id/textPix"
+        app:layout_constraintTop_toTopOf="@+id/sizeEdit" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/colorGreen"

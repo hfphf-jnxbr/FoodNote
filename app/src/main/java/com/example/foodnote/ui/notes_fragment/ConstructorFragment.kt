@@ -146,7 +146,7 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
             if(inW in MIN_NOTE_SIZE..MAX_NOTE_SIZE) {
                 return inW
             } else {
-                if(inW !in MIN_NOTE_SIZE..MAX_NOTE_SIZE) editHeight.error = getString(R.string.range_error)
+                if(inW !in MIN_NOTE_SIZE..MAX_NOTE_SIZE) editWidth.error = getString(R.string.range_error)
             }
         } else {
             if(inputW.isEmpty()) editWidth.error = getString(R.string.empty_field_error_messange)
