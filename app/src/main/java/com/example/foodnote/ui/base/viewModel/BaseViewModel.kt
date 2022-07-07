@@ -3,9 +3,8 @@ package com.example.foodnote.ui.base.viewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.foodnote.data.base.SampleState
 
-abstract class BaseViewModel<T : SampleState>(
+abstract class BaseViewModel<T>(
     protected val stateLiveData: MutableLiveData<T> = MutableLiveData()
 ) : ViewModel() {
 

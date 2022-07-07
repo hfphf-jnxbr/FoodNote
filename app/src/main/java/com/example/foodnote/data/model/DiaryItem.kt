@@ -1,9 +1,10 @@
 package com.example.foodnote.data.model
 
-class DiaryItem(
-    val name: String,
-    val calories: Int,
-    val time: String,
-    val date: String,
-    val idUser: String
+data class DiaryItem(
+    val name: String? = null,
+    val calories: Long? = null,
+    val time: String? = null,
+    val date: String? = null,
+    val idUser: String? = null,
+    val dbId: String? = null
 )
