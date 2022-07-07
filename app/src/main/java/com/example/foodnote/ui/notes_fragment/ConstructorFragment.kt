@@ -25,7 +25,7 @@ import java.util.*
 
 class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(ConstructorNoteBinding::inflate) , ConstructorFragmentInterface{
 
-    private lateinit var fragment: NoteBookFragmentInterface
+    private lateinit var fragmentNoteBook: NoteBookFragmentInterface
 
     private lateinit var editorStandardNoteFragmentEditor: EditorStandardNoteFragment
     private lateinit var editorPaintNoteFragmentEditor: EditorPaintNoteFragment
@@ -80,7 +80,7 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
 
         back.setOnClickListener {
             if(flag){
-                fragment.constructorFragmentClose()
+                fragmentNoteBook.constructorFragmentClose()
                 flag = false
                 timeOutButton()
             }
@@ -92,7 +92,7 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
             delay(DELAY_BUTTON)
 
             flag = true
-            fragment.setFlagBlockChip(true)
+            fragmentNoteBook.setFlagBlockChip(true)
         }
     }
 
@@ -107,7 +107,7 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
             if((inH in MIN_NOTE_SIZE..MAX_NOTE_SIZE) && (inW in MIN_NOTE_SIZE..MAX_NOTE_SIZE)) {
 
                 createNote(inH,inW)
-                fragment.constructorFragmentClose()
+                fragmentNoteBook.constructorFragmentClose()
             } else {
                 if(inH !in MIN_NOTE_SIZE..MAX_NOTE_SIZE) editHeight.error = getString(R.string.range_error)
                 if(inW !in MIN_NOTE_SIZE..MAX_NOTE_SIZE) editWidth.error = getString(R.string.range_error)
@@ -181,12 +181,12 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
             ConstType.STANDARD_TYPE -> {
                 val string = editorStandardNoteFragmentEditor.getNoteText()
                 val randomId = Random().nextInt(RANDOM_ID)
-                fragment.saveToDataAndCreateStandardNote(width, height, colorCard, string,0,0, randomId, NOTES_ELEVATION)
+                fragmentNoteBook.saveAndCreateDataNotesStandard(width, height, colorCard, string,0,0, randomId, NOTES_ELEVATION)
             }
             ConstType.PAINT_TYPE  ->    {
                 val bitmapURL = editorPaintNoteFragmentEditor.getImageURL()
                 val randomId = Random().nextInt(RANDOM_ID)
-                fragment.saveToDataAndCreatePaintNote(width, height, colorCard, bitmapURL,0 ,0, randomId, NOTES_ELEVATION)
+                fragmentNoteBook.saveAndCreateDataNotesPaint(width, height, colorCard, bitmapURL,0 ,0, randomId, NOTES_ELEVATION)
             }
             else -> {}
         }
@@ -195,7 +195,7 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
     companion object {
         fun newInstance(fragmentNotes: NotesFragment, typeNotes: ConstType) : ConstructorFragment{
             val fragment = ConstructorFragment()
-            fragment.fragment = fragmentNotes
+            fragment.fragmentNoteBook = fragmentNotes
             fragment.typeNote = typeNotes
             return fragment
         }

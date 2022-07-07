@@ -6,9 +6,9 @@ interface NoteBookFragmentInterface {
 
     fun constructorFragmentClose()
 
-    fun saveToDataAndCreatePaintNote(widthCard: Int, heightCard: Int, colorCard: Int, fileName: String, posX : Int, posY : Int, id : Int, elevation: Float)
+    fun saveAndCreateDataNotesPaint(widthCard: Int, heightCard: Int, colorCard: Int, fileName: String, posX : Int, posY : Int, id : Int, elevation: Float)
 
-    fun saveToDataAndCreateStandardNote(widthCard: Int, heightCard: Int, colorCard: Int, note: String, posX : Int, posY : Int, id : Int, elevation: Float)
+    fun saveAndCreateDataNotesStandard(widthCard: Int, heightCard: Int, colorCard: Int, note: String, posX : Int, posY : Int, id : Int, elevation: Float)
 
     fun setFlagBlockChip(boolean: Boolean)
 
