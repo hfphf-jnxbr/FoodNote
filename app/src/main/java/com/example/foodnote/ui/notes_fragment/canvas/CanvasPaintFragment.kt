@@ -22,6 +22,7 @@ import com.example.foodnote.ui.notes_fragment.constNote.Const.CARD_NOTE_SPLASH_D
 import com.example.foodnote.ui.notes_fragment.constNote.Const.MARGIN_CANVAS_DP
 import com.example.foodnote.ui.notes_fragment.constNote.Const.MAX_BRUSH_SIZE
 import com.example.foodnote.ui.notes_fragment.constNote.Const.MAX_CANVAS_HEIGHT_DP
+import com.example.foodnote.ui.notes_fragment.constNote.Const.SEED
 import com.example.foodnote.ui.notes_fragment.editorNote.EditorPaintNoteFragment
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -58,18 +59,6 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
         buttonChek()
     }
 
-    companion object {
-        fun newInstance(fragment: EditorPaintNoteFragment, height: Int, width: Int, color : Int) : CanvasPaintFragment {
-            val canvasPaint = CanvasPaintFragment()
-            canvasPaint.canvasHeight = height
-            canvasPaint.canvasWidth = width
-            canvasPaint.fragment = fragment
-            canvasPaint.colorCardBackground = color
-
-            return canvasPaint
-        }
-    }
-
     private fun setWidthPixels() {
         val metrics = DisplayMetrics()
         requireActivity().windowManager.defaultDisplay.getMetrics(metrics)
@@ -99,7 +88,6 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
     private fun convertDpToPixels( dp: Int) = (dp * requireContext().resources.displayMetrics.density).toInt()
 
     private fun chekColor() = with(binding){
-
         val list = listOf(colorBlue,colorPink,colorYellow,colorGray,colorWhite,colorBlack,colorPurple,colorGreen)
 
         list.forEach { view ->
@@ -174,13 +162,6 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
                 Toast.makeText(requireContext(),getString(R.string.empty_field_error_messange), Toast.LENGTH_SHORT).show()
             }
         }
-
-
-
-
-
-
-
     }
 
     private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { saveImage() }
@@ -204,7 +185,7 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
         }
     }
 
-    private fun getRandomName() = "image${Random(9999999999)}.png"
+    private fun getRandomName() = "image${Random(SEED)}.png"
 
     private fun bitmapToFile(bitmap: Bitmap, fileNameToSave: String): File? {
         var file: File? = null
@@ -235,4 +216,15 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
         }
     }
 
+    companion object {
+        fun newInstance(fragment: EditorPaintNoteFragment, height: Int, width: Int, color : Int) : CanvasPaintFragment {
+            val canvasPaint = CanvasPaintFragment()
+            canvasPaint.canvasHeight = height
+            canvasPaint.canvasWidth = width
+            canvasPaint.fragment = fragment
+            canvasPaint.colorCardBackground = color
+
+            return canvasPaint
+        }
+    }
 }

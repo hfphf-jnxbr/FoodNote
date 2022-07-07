@@ -4,9 +4,11 @@ import android.annotation.SuppressLint
 import android.view.MotionEvent
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.example.foodnote.data.databaseRoom.dao.DaoDB
+import com.example.foodnote.ui.notes_fragment.NotesFragment
 
 @SuppressLint("ClickableViewAccessibility")
-class MovedView(private val listView : ArrayList<View>, root : ConstraintLayout) : View.OnTouchListener , MovedViewInterface{
+class MovedView(private val listView : ArrayList<View>, root : ConstraintLayout, private val fragment: NotesFragment) : View.OnTouchListener , MovedViewInterface{
 
     init {
         root.setOnTouchListener(this)
@@ -79,11 +81,17 @@ class MovedView(private val listView : ArrayList<View>, root : ConstraintLayout)
                 if(isPressed) {
                     isPressed = false
                     elevation = 16f
+
+                    fragment.setNewCardCoordinatesData(view.x.toInt(),view.y.toInt(),view)
+                    fragment.setElevationView(view)
                 } else {
                     elevation = 15f
+
+                    fragment.setElevationView(view)
                 }
             }
         }
+
         flag = true
     }
 
