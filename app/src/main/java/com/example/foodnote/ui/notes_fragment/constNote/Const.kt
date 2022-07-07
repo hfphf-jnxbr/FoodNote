@@ -23,4 +23,10 @@ object Const {
 
     const val MAX_NOTES = 10
     const val NOTES_ELEVATION = 17f
+
+    const val SEED = 9999999999
+    const val RANDOM_ID = 999999999
+
+    const val TABLE_PAINT = "notePaint"
+    const val TABLE_STANDARD = "noteStandard"
 }

@@ -11,6 +11,8 @@ import com.example.foodnote.ui.base.BaseViewBindingFragment
 import com.example.foodnote.ui.notes_fragment.constNote.Const.DELAY_BUTTON
 import com.example.foodnote.ui.notes_fragment.constNote.Const.MAX_NOTE_SIZE
 import com.example.foodnote.ui.notes_fragment.constNote.Const.MIN_NOTE_SIZE
+import com.example.foodnote.ui.notes_fragment.constNote.Const.NOTES_ELEVATION
+import com.example.foodnote.ui.notes_fragment.constNote.Const.RANDOM_ID
 import com.example.foodnote.ui.notes_fragment.constNote.Const.STROKE_WIDTH
 import com.example.foodnote.ui.notes_fragment.constNote.Const.STROKE_WIDTH_FOCUS
 import com.example.foodnote.ui.notes_fragment.constNote.ConstType
@@ -19,6 +21,7 @@ import com.example.foodnote.ui.notes_fragment.editorNote.EditorStandardNoteFragm
 import com.example.foodnote.ui.notes_fragment.interfaces.ConstructorFragmentInterface
 import com.example.foodnote.ui.notes_fragment.interfaces.NoteBookFragmentInterface
 import kotlinx.coroutines.*
+import java.util.*
 
 class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(ConstructorNoteBinding::inflate) , ConstructorFragmentInterface{
 
@@ -71,7 +74,6 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
             if(flag){
                 createHeightWidth()
                 flag = false
-
                 timeOutButton()
             }
         }
@@ -80,7 +82,6 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
             if(flag){
                 fragment.constructorFragmentClose()
                 flag = false
-
                 timeOutButton()
             }
         }
@@ -179,11 +180,13 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
         when (typeNote) {
             ConstType.STANDARD_TYPE -> {
                 val string = editorStandardNoteFragmentEditor.getNoteText()
-                fragment.setDataCreateStandardNote(width, height, colorCard, string)
+                val randomId = Random().nextInt(RANDOM_ID)
+                fragment.saveToDataAndCreateStandardNote(width, height, colorCard, string,0,0, randomId, NOTES_ELEVATION)
             }
             ConstType.PAINT_TYPE  ->    {
                 val bitmapURL = editorPaintNoteFragmentEditor.getImageURL()
-                fragment.setDataCreatePaintNote(width, height, colorCard, bitmapURL)
+                val randomId = Random().nextInt(RANDOM_ID)
+                fragment.saveToDataAndCreatePaintNote(width, height, colorCard, bitmapURL,0 ,0, randomId, NOTES_ELEVATION)
             }
             else -> {}
         }

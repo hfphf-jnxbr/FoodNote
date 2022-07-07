@@ -49,5 +49,8 @@
     <string name="time">Время</string>
     <string name="cancel">cancel</string>
     <string name="saved_mess">Saved: </string>
+    <string name="alert_dialog_header">Вы точно хотите удалить заметку?</string>
+    <string name="no">нет</string>
+    <string name="yes">да</string>
 
 </resources>
