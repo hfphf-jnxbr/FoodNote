@@ -7,7 +7,7 @@ object Const {
     const val STROKE_WIDTH = 3
     const val STROKE_WIDTH_FOCUS = 6
 
-    const val DURATION_ANIMATION_CONSTRUCTOR = 1500L
+    const val DURATION_ANIMATION_CONSTRUCTOR = 1300L
 
     const val MAX_NOTE_SIZE = 99
     const val MIN_NOTE_SIZE = 30

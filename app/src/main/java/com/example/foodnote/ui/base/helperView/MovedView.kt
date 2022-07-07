@@ -4,11 +4,10 @@ import android.annotation.SuppressLint
 import android.view.MotionEvent
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.example.foodnote.data.databaseRoom.dao.DaoDB
 import com.example.foodnote.ui.notes_fragment.NotesFragment
 
 @SuppressLint("ClickableViewAccessibility")
-class MovedView(private val listView : ArrayList<View>, root : ConstraintLayout, private val fragment: NotesFragment) : View.OnTouchListener , MovedViewInterface{
+class MovedView(private val listView : ArrayList<View>, root : ConstraintLayout, private val fragmentNoteBook: NotesFragment) : View.OnTouchListener , MovedViewInterface{
 
     init {
         root.setOnTouchListener(this)
@@ -17,17 +16,16 @@ class MovedView(private val listView : ArrayList<View>, root : ConstraintLayout,
 
     private var dx = 0f
     private var dy = 0f
-    private var flag = true
+    private var flagFocus = true
     private var flagBlock = true
     private val listElevation = ArrayList<View>()
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         if (event != null && flagBlock) {
-
             when (event.action) {
                 0 -> focusView(event)
                 2 -> movedView(event)
-                1 -> deleteFocusView()
+                1 -> deleteFocusView(event)
             }
         }
         return true
@@ -37,11 +35,11 @@ class MovedView(private val listView : ArrayList<View>, root : ConstraintLayout,
         listView.forEach { view ->
 
             if (view.isPressed) {
-                if (flag) {
+                if (flagFocus) {
                     dx = event.x - view.x
                     dy = event.y - view.y
 
-                    flag = false
+                    flagFocus = false
                 }
                 view.x = event.x - dx
                 view.y = event.y - dy
@@ -70,29 +68,25 @@ class MovedView(private val listView : ArrayList<View>, root : ConstraintLayout,
             maxElevationView.isPressed = true
             maxElevationView.elevation = 60f
         }
-
         listElevation.clear()
     }
 
-    private fun deleteFocusView() {
+    private fun deleteFocusView(event: MotionEvent) {
         listView.forEach { view ->
-
             view.apply {
-                if(isPressed) {
+                if (isPressed) {
                     isPressed = false
                     elevation = 16f
 
-                    fragment.setNewCardCoordinatesData(view.x.toInt(),view.y.toInt(),view)
-                    fragment.setElevationView(view)
+                    fragmentNoteBook.setNewCardCoordinatesData(view.x.toInt(), view.y.toInt(), view)
+                    fragmentNoteBook.setElevationView(view)
                 } else {
                     elevation = 15f
-
-                    fragment.setElevationView(view)
+                    fragmentNoteBook.setElevationView(view)
                 }
             }
         }
-
-        flag = true
+        flagFocus = true
     }
 
     override fun addView(view: View){
