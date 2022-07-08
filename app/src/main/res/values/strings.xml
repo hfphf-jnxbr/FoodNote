@@ -47,7 +47,7 @@
     <string name="Name">Название</string>
     <string name="calorie">Калории</string>
     <string name="time">Время</string>
-    <string name="cancel">cancel</string>
+    <string name="cancel">Cancel</string>
     <string name="saved_mess">Saved: </string>
     <string name="add_diary">Добавить +</string>
     <string name="anonimus_sign_in">Войти анонимно</string>
@@ -57,5 +57,6 @@
     <string name="list_foods">List foods</string>
     <string name="weight_gm">вес гм</string>
     <string name="list_foods_hint">Введите список продуктов через пробел</string>
+    <string name="exit">выйти</string>
 
 </resources>

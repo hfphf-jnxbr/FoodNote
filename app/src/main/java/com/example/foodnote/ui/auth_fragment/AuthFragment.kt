@@ -6,7 +6,10 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.foodnote.R
 import com.example.foodnote.databinding.FragmentAuthBinding
+import com.example.foodnote.ui.auth_fragment.viewModel.AuthViewModel
 import com.example.foodnote.ui.base.BaseViewBindingFragment
+import com.example.foodnote.utils.hide
+import com.example.foodnote.utils.show
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -16,14 +19,13 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
 
 
 class AuthFragment : BaseViewBindingFragment<FragmentAuthBinding>(FragmentAuthBinding::inflate) {
+    private val viewModel: AuthViewModel by viewModel()
+
     // Receiver
     private val getResult =
         registerForActivityResult(
@@ -34,9 +36,12 @@ class AuthFragment : BaseViewBindingFragment<FragmentAuthBinding>(FragmentAuthBi
                 val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
                 try {
                     // Google Sign In was successful, authenticate with Firebase
-                    val account = task.getResult(ApiException::class.java)!!
+                    val account = task.getResult(ApiException::class.java)
                     Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
-                    firebaseAuthWithGoogle(account.idToken!!)
+                    account.idToken?.let { token ->
+                        firebaseAuthWithGoogle(token)
+                    }
+
                 } catch (e: ApiException) {
                     // Google Sign In failed, update UI appropriately
                     Log.w(TAG, "Google sign in failed", e)
@@ -44,46 +49,47 @@ class AuthFragment : BaseViewBindingFragment<FragmentAuthBinding>(FragmentAuthBi
             }
         }
 
-    // [START declare_auth]
-    private lateinit var auth: FirebaseAuth
-    // [END declare_auth]
+    private val auth: FirebaseAuth by lazy {
+        Firebase.auth
+    }
 
-    private lateinit var googleSignInClient: GoogleSignInClient
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.signInButton.setOnClickListener {
-            signIn()
-        }
-        // [START config_signin]
-        // Configure Google Sign In
+    private val googleSignInClient: GoogleSignInClient by lazy {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
 
-        googleSignInClient = GoogleSignIn.getClient(context!!, gso)
-        // [END config_signin]
-
-
-        // [START initialize_auth]
-        // Initialize Firebase Auth
-        auth = Firebase.auth
-        // [END initialize_auth]
+        GoogleSignIn.getClient(context!!, gso)
     }
 
-    // [START on_start_check_user]
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.signInButton.setOnClickListener {
+            signIn()
+        }
+        binding.authAnonimButton.setOnClickListener {
+            val idToken = UUID.randomUUID().toString()
+            viewModel.saveUserId(idToken)
+        }
+    }
+
+    suspend fun getUserId() {
+        viewModel.getUserId().collect {
+
+        }
+    }
+
     override fun onStart() {
         super.onStart()
-        // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
         updateUI(currentUser)
     }
 
     private fun updateUI(account: FirebaseUser?) {
         if (account == null) {
-            binding.signInButton.visibility = View.VISIBLE
+            binding.signInButton.show()
         } else {
-            binding.signInButton.visibility = View.INVISIBLE
+            binding.signInButton.hide()
         }
     }
 
@@ -111,8 +117,8 @@ class AuthFragment : BaseViewBindingFragment<FragmentAuthBinding>(FragmentAuthBi
             }
     }
 
-    companion object {
-        private const val TAG = "GoogleActivity"
-        private const val RC_SIGN_IN = 9001
+    private companion object {
+        const val TAG = "GoogleActivity"
+        const val RC_SIGN_IN = 9001
     }
 }

@@ -1,11 +1,11 @@
 package com.example.foodnote.di
 
 import android.content.Context
-import androidx.room.Room
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
+import androidx.room.Room
 import com.example.foodnote.data.base.RetrofitImpl
 import com.example.foodnote.data.databaseRoom.DataBase
 import com.example.foodnote.data.datasource.calorire_datasource.firebase.FireBaseCalorieDataSourceImpl
@@ -16,6 +16,7 @@ import com.example.foodnote.data.repository.calorie_repository.CalorieRepository
 import com.example.foodnote.data.repository.calorie_repository.CalorieRepositoryImpl
 import com.example.foodnote.data.repository.datastore_pref_repository.UserPreferencesRepository
 import com.example.foodnote.data.repository.datastore_pref_repository.UserPreferencesRepositoryImpl
+import com.example.foodnote.ui.auth_fragment.viewModel.AuthViewModel
 import com.example.foodnote.ui.calorie_calculator_fragment.viewModel.CalorieCalculatorViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
@@ -72,5 +73,11 @@ val calorieCalculatorScreenModule = module {
     }
     viewModel {
         CalorieCalculatorViewModel(get(), get(named(NAME_PREF_APP_REPOSITORY)))
+    }
+}
+
+val authScreenModule = module {
+    viewModel {
+        AuthViewModel(get(named(NAME_PREF_APP_REPOSITORY)))
     }
 }
