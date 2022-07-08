@@ -50,4 +50,5 @@
     <string name="cancel">cancel</string>
     <string name="saved_mess">Saved: </string>
     <string name="add_diary">Добавить +</string>
+    <string name="anonimus_sign_in">Войти анонимно</string>
 </resources>

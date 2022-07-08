@@ -48,23 +48,24 @@ class CalorieCalculatorViewModel(private val interactor: CalorieCalculatorIntera
         }
     }
 
-    fun generateRandomItem(): DiaryItem {
+    fun generateRandomItem(idUser: String): DiaryItem {
         val item = DiaryItem(
             "item ${Random.nextInt(500, 7000)}",
             Random.nextLong(100, 500),
             SimpleDateFormat("hh:mm").format(Date()),
             SimpleDateFormat("dd.MMMM.YYYY").format(Date()),
-            "mail@mail.ru",
+            idUser,
             UUID.randomUUID().toString()
         )
         stateLiveData.value?.diaryList?.add(item)
         return item
     }
 
-    fun getDiary() = interactor
+    fun getDiary(idUser: String) = interactor
         .getDiaryCollection(
             SimpleDateFormat("dd.MMMM.YYYY")
-                .format(Date()), "mail@mail.ru"
+                .format(Date()),
+            idUser
         )
 
 
