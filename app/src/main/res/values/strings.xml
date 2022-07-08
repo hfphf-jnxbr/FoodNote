@@ -52,5 +52,8 @@
     <string name="alert_dialog_header">Вы точно хотите удалить заметку?</string>
     <string name="no">нет</string>
     <string name="yes">да</string>
+    <string name="list_foods">List foods</string>
+    <string name="weight_gm">вес гм</string>
+    <string name="list_foods_hint">Введите список продуктов через пробел</string>
 
 </resources>
