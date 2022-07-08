@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 
+
 fun View.show() {
     visibility = View.VISIBLE
 }

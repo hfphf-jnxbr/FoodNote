@@ -2,7 +2,7 @@ package com.example.foodnote.data.interactor
 
 import com.example.foodnote.data.base.AppState
 import com.example.foodnote.data.model.DiaryItem
-import com.example.foodnote.data.repository.CalorieRepository
+import com.example.foodnote.data.repository.calorie_repository.CalorieRepository
 import kotlinx.coroutines.flow.Flow
 
 class CalorieCalculatorInteractorImpl(private val repository: CalorieRepository) :

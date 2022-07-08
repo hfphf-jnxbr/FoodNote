@@ -35,6 +35,7 @@ import java.util.*
 class CalorieCalculatorFragment :
     BaseViewBindingFragment<FragmentCalorieCalculatorBinding>(FragmentCalorieCalculatorBinding::inflate),
     ItemClickListener {
+
     private val viewModel: CalorieCalculatorViewModel by viewModel()
     private val adapter by lazy {
         CalorieCalculatorAdapter(this)

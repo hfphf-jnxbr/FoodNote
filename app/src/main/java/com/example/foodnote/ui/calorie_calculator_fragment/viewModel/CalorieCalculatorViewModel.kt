@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.foodnote.data.base.SampleState
 import com.example.foodnote.data.interactor.CalorieCalculatorInteractor
 import com.example.foodnote.data.model.DiaryItem
+import com.example.foodnote.data.repository.datastore_pref_repository.UserPreferencesRepository
 import com.example.foodnote.ui.base.viewModel.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -12,7 +13,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.random.Random
 
-class CalorieCalculatorViewModel(private val interactor: CalorieCalculatorInteractor) :
+class CalorieCalculatorViewModel(
+    private val interactor: CalorieCalculatorInteractor,
+    private val dataStorePref: UserPreferencesRepository
+) :
     BaseViewModel<SampleState>() {
     init {
         stateLiveData.value = SampleState()
