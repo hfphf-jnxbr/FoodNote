@@ -1,10 +1,13 @@
 package com.example.foodnote.di
 
+import android.content.Context
+import androidx.room.Room
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.example.foodnote.data.base.RetrofitImpl
+import com.example.foodnote.data.databaseRoom.DataBase
 import com.example.foodnote.data.datasource.calorire_datasource.firebase.FireBaseCalorieDataSourceImpl
 import com.example.foodnote.data.datasource.calorire_datasource.firebase.FirebaseCalorieDataSource
 import com.example.foodnote.data.interactor.CalorieCalculatorInteractor
@@ -25,7 +28,6 @@ import org.koin.dsl.module
 
 val applicationModule = module {
 
-
     // Получаем сервис
     single(named(NAME_DATASOURCE_REMOTE)) {
         get<RetrofitImpl>(
@@ -38,6 +40,9 @@ val applicationModule = module {
         FirebaseFirestore.getInstance()
     }
 
+    single(named(DATA_BASE)) { (context : Context) ->
+        Room.databaseBuilder(context, DataBase::class.java, DATA_BASE_NAME).build().dataBase()
+    }
 }
 val dataStoreModule = module {
     single(named(NAME_DATA_STORE_PREF)) {

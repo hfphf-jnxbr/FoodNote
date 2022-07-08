@@ -1,5 +1,6 @@
 package com.example.foodnote.ui.notes_fragment.canvas
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.view.MotionEvent
@@ -7,7 +8,8 @@ import android.view.View
 import com.example.foodnote.ui.notes_fragment.constNote.Const
 import com.example.foodnote.ui.notes_fragment.interfaces.CanvasInterface
 
-class CanvasPaint(context: Context,private val colorCardBackground: Int) : View(context) , View.OnTouchListener , CanvasInterface {
+@SuppressLint("ViewConstructor")
+class CanvasPaint(context: Context, private val colorCardBackground: Int) : View(context) , View.OnTouchListener , CanvasInterface {
 
     init {
         this.setOnTouchListener(this)
@@ -27,7 +29,7 @@ class CanvasPaint(context: Context,private val colorCardBackground: Int) : View(
     private lateinit var bitmap : Bitmap
     private lateinit var myCanvas : Canvas
     private var color = Color.WHITE
-    private var colorBackground = Color.WHITE
+    private var alpha = 255
     private var size = Const.DEFAULT_SIZE_BRUSH
 
     override fun onDraw(canvas: Canvas?) {
@@ -49,9 +51,14 @@ class CanvasPaint(context: Context,private val colorCardBackground: Int) : View(
         }
 
         paint.color = color
-        paint.strokeWidth = size
+        paint.alpha = alpha
+        paint.strokeWidth = 2f
 
-        myCanvas.drawLine(xTemp.toFloat(), yTemp.toFloat(), xCurrent.toFloat(), yCurrent.toFloat(), paint)
+        for (i in -size..size) {
+            myCanvas.drawLine(xTemp.toFloat() + i, yTemp.toFloat() + i, xCurrent.toFloat() + i, yCurrent.toFloat() + i, paint)
+        }
+
+        paint.color = Color.argb(255,0,0,0)
 
         xTemp = xCurrent
         yTemp = yCurrent
@@ -69,9 +76,11 @@ class CanvasPaint(context: Context,private val colorCardBackground: Int) : View(
 
     override fun setColor(color: Int) { this.color = color }
 
+    override fun setAlphaColor(alpha: Int) { this.alpha = alpha }
+
     override fun setColorBackground(color: Int) { this.color = color }
 
-    override fun setSize(size: Float) { this.size = size }
+    override fun setSize(size: Float) { this.size = size.toInt() }
 
     override fun clearCanvas() { myCanvas.drawColor(colorCardBackground) }
 
@@ -92,5 +101,4 @@ class CanvasPaint(context: Context,private val colorCardBackground: Int) : View(
         }
         return true
     }
-
 }

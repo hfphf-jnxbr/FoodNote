@@ -11,21 +11,26 @@ import com.example.foodnote.ui.base.BaseViewBindingFragment
 import com.example.foodnote.ui.notes_fragment.constNote.Const.DELAY_BUTTON
 import com.example.foodnote.ui.notes_fragment.constNote.Const.MAX_NOTE_SIZE
 import com.example.foodnote.ui.notes_fragment.constNote.Const.MIN_NOTE_SIZE
+import com.example.foodnote.ui.notes_fragment.constNote.Const.NOTES_ELEVATION
+import com.example.foodnote.ui.notes_fragment.constNote.Const.RANDOM_ID
 import com.example.foodnote.ui.notes_fragment.constNote.Const.STROKE_WIDTH
 import com.example.foodnote.ui.notes_fragment.constNote.Const.STROKE_WIDTH_FOCUS
 import com.example.foodnote.ui.notes_fragment.constNote.ConstType
+import com.example.foodnote.ui.notes_fragment.editorNote.EditorFoodsNoteFragment
 import com.example.foodnote.ui.notes_fragment.editorNote.EditorPaintNoteFragment
 import com.example.foodnote.ui.notes_fragment.editorNote.EditorStandardNoteFragment
 import com.example.foodnote.ui.notes_fragment.interfaces.ConstructorFragmentInterface
 import com.example.foodnote.ui.notes_fragment.interfaces.NoteBookFragmentInterface
 import kotlinx.coroutines.*
+import java.util.*
 
 class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(ConstructorNoteBinding::inflate) , ConstructorFragmentInterface{
 
-    private lateinit var fragment: NoteBookFragmentInterface
+    private lateinit var fragmentNoteBook: NoteBookFragmentInterface
 
     private lateinit var editorStandardNoteFragmentEditor: EditorStandardNoteFragment
     private lateinit var editorPaintNoteFragmentEditor: EditorPaintNoteFragment
+    private lateinit var editorFoodNoteFragmentEditor: EditorFoodsNoteFragment
     private lateinit var typeNote : ConstType
 
     private var colorCard = Color.WHITE
@@ -46,7 +51,7 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
         when (typeNote) {
             ConstType.STANDARD_TYPE -> { setNoteStandardEditor( EditorStandardNoteFragment() ) }
             ConstType.PAINT_TYPE ->    { setNotePaintEditor( EditorPaintNoteFragment.newInstance(this)) }
-            else -> {}
+            ConstType.FOOD_TYPE ->     { setNoteFoodEditor( EditorFoodsNoteFragment()) }
         }
     }
 
@@ -60,6 +65,11 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
         childFragmentManager.beginTransaction().replace(R.id.containerEditNotes,fragment).commitNow()
     }
 
+    private fun setNoteFoodEditor(fragment: EditorFoodsNoteFragment) {
+        editorFoodNoteFragmentEditor = fragment
+        childFragmentManager.beginTransaction().replace(R.id.containerEditNotes,fragment).commitNow()
+    }
+
     private fun editTextFilter() {
         val filterArray = Array<InputFilter>(1) { InputFilter.LengthFilter(2) }
         binding.editWidth.filters = filterArray
@@ -69,18 +79,16 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
     private fun chekButton() = with(binding) {
         buttonCreate.setOnClickListener {
             if(flag){
-                createHeightWidth()
+                createNote()
                 flag = false
-
                 timeOutButton()
             }
         }
 
         back.setOnClickListener {
             if(flag){
-                fragment.constructorFragmentClose()
+                fragmentNoteBook.constructorFragmentClose()
                 flag = false
-
                 timeOutButton()
             }
         }
@@ -91,31 +99,14 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
             delay(DELAY_BUTTON)
 
             flag = true
-            fragment.setFlagBlockChip(true)
+            fragmentNoteBook.setFlagBlockChip(true)
         }
     }
 
-    private fun createHeightWidth() = with(binding) {
-        val inputW = editWidth.text.toString()
-        val inputH = editHeight.text.toString()
-
-        if (inputW.isNotEmpty() && inputH.isNotEmpty()) {
-            val inH = inputH.toInt()
-            val inW = inputW.toInt()
-
-            if((inH in MIN_NOTE_SIZE..MAX_NOTE_SIZE) && (inW in MIN_NOTE_SIZE..MAX_NOTE_SIZE)) {
-
-                createNote(inH,inW)
-                fragment.constructorFragmentClose()
-            } else {
-                if(inH !in MIN_NOTE_SIZE..MAX_NOTE_SIZE) editHeight.error = getString(R.string.range_error)
-                if(inW !in MIN_NOTE_SIZE..MAX_NOTE_SIZE) editWidth.error = getString(R.string.range_error)
-            }
-        } else {
-            if(inputW.isEmpty()) editWidth.error = getString(R.string.empty_field_error_messange)
-            if(inputH.isEmpty()) editHeight.error = getString(R.string.empty_field_error_messange)
-
-            Toast.makeText(requireContext(),getString(R.string.empty_field_error_messange),Toast.LENGTH_SHORT).show()
+    private fun createNote() {
+        if(getHeight() > -1 && getWidth() > -1) {
+            createNote(getHeight(), getWidth())
+            fragmentNoteBook.constructorFragmentClose()
         }
     }
 
@@ -128,10 +119,10 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
             if(inH in MIN_NOTE_SIZE..MAX_NOTE_SIZE) {
                 return inH
             } else {
-                if(inH !in MIN_NOTE_SIZE..MAX_NOTE_SIZE) editHeight.error = getString(R.string.range_error)
+                editHeight.error = getString(R.string.range_error)
             }
         } else {
-            if(inputH.isEmpty()) editHeight.error = getString(R.string.empty_field_error_messange)
+            editHeight.error = getString(R.string.empty_field_error_messange)
             Toast.makeText(requireContext(),getString(R.string.empty_field_error_messange),Toast.LENGTH_SHORT).show()
         }
         return -1
@@ -146,10 +137,10 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
             if(inW in MIN_NOTE_SIZE..MAX_NOTE_SIZE) {
                 return inW
             } else {
-                if(inW !in MIN_NOTE_SIZE..MAX_NOTE_SIZE) editHeight.error = getString(R.string.range_error)
+                editWidth.error = getString(R.string.range_error)
             }
         } else {
-            if(inputW.isEmpty()) editWidth.error = getString(R.string.empty_field_error_messange)
+            editWidth.error = getString(R.string.empty_field_error_messange)
             Toast.makeText(requireContext(),getString(R.string.empty_field_error_messange),Toast.LENGTH_SHORT).show()
         }
         return -1
@@ -179,20 +170,26 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
         when (typeNote) {
             ConstType.STANDARD_TYPE -> {
                 val string = editorStandardNoteFragmentEditor.getNoteText()
-                fragment.setDataCreateStandardNote(width, height, colorCard, string)
+                val randomId = Random().nextInt(RANDOM_ID)
+                fragmentNoteBook.saveAndCreateDataNotesStandard(width, height, colorCard, string,0,0, randomId, NOTES_ELEVATION)
             }
             ConstType.PAINT_TYPE  ->    {
                 val bitmapURL = editorPaintNoteFragmentEditor.getImageURL()
-                fragment.setDataCreatePaintNote(width, height, colorCard, bitmapURL)
+                val randomId = Random().nextInt(RANDOM_ID)
+                fragmentNoteBook.saveAndCreateDataNotesPaint(width, height, colorCard, bitmapURL,0 ,0, randomId, NOTES_ELEVATION)
             }
-            else -> {}
+            ConstType.FOOD_TYPE  ->    {
+                val string = editorFoodNoteFragmentEditor.getListFoodsText()
+                val randomId = Random().nextInt(RANDOM_ID)
+                fragmentNoteBook.saveAndCreateDataNotesStandard(width, height, colorCard, string,0 ,0, randomId, NOTES_ELEVATION)
+            }
         }
     }
 
     companion object {
         fun newInstance(fragmentNotes: NotesFragment, typeNotes: ConstType) : ConstructorFragment{
             val fragment = ConstructorFragment()
-            fragment.fragment = fragmentNotes
+            fragment.fragmentNoteBook = fragmentNotes
             fragment.typeNote = typeNotes
             return fragment
         }
