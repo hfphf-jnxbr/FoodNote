@@ -18,6 +18,7 @@ import com.example.foodnote.data.repository.datastore_pref_repository.UserPrefer
 import com.example.foodnote.data.repository.datastore_pref_repository.UserPreferencesRepositoryImpl
 import com.example.foodnote.ui.auth_fragment.viewModel.AuthViewModel
 import com.example.foodnote.ui.calorie_calculator_fragment.viewModel.CalorieCalculatorViewModel
+import com.example.foodnote.ui.splash_screen_fragment.viewModel.SplashScreenViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -41,8 +42,13 @@ val applicationModule = module {
         FirebaseFirestore.getInstance()
     }
 
-    single(named(DATA_BASE)) { (context : Context) ->
+    single(named(DATA_BASE)) { (context: Context) ->
         Room.databaseBuilder(context, DataBase::class.java, DATA_BASE_NAME).build().dataBase()
+    }
+}
+val splashScreenModule = module {
+    viewModel {
+        SplashScreenViewModel(get(named(NAME_PREF_APP_REPOSITORY)))
     }
 }
 val dataStoreModule = module {

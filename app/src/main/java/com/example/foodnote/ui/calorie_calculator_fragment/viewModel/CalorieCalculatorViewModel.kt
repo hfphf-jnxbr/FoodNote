@@ -17,7 +17,7 @@ class CalorieCalculatorViewModel(
     private val interactor: CalorieCalculatorInteractor,
     private val dataStorePref: UserPreferencesRepository
 ) :
-    BaseViewModel<SampleState>() {
+    BaseViewModel<SampleState>(dataStorePref) {
     init {
         stateLiveData.value = SampleState()
     }
@@ -78,13 +78,10 @@ class CalorieCalculatorViewModel(
             kotlin.runCatching {
                 interactor.saveDiary(item)
             }.onSuccess {
-
                 stateLiveData.postValue(stateLiveData.value?.copy(lastAddItem = it))
             }.onFailure {
                 stateLiveData.postValue(stateLiveData.value?.copy(error = it))
             }
         }
     }
-
-
 }

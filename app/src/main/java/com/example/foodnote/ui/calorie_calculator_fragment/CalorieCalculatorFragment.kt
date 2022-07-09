@@ -18,11 +18,6 @@ import com.example.foodnote.ui.calorie_calculator_fragment.viewModel.CalorieCalc
 import com.example.foodnote.utils.hide
 import com.example.foodnote.utils.show
 import com.example.foodnote.utils.showToast
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.time.LocalDate
@@ -41,21 +36,6 @@ class CalorieCalculatorFragment :
         CalorieCalculatorAdapter(this)
     }
 
-    // [START declare_auth]
-    private val auth: FirebaseAuth by lazy {
-        Firebase.auth
-    }
-    private val idUser by lazy {
-        val currentUser = auth.currentUser
-        if (currentUser != null) {
-            currentUser.email ?: currentUser.uid
-        } else {
-            "RandomEmail@mail.com"
-        }
-    }
-    private val uiScope by lazy {
-        CoroutineScope(Dispatchers.Main)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

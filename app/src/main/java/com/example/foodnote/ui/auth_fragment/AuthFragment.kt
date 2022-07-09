@@ -74,7 +74,7 @@ class AuthFragment : BaseViewBindingFragment<FragmentAuthBinding>(FragmentAuthBi
     }
 
     suspend fun getUserId() {
-        viewModel.getUserId().collect {
+        viewModel.getUserId()?.collect {
 
         }
     }

@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_root"
-    app:startDestination="@id/notesFragment">
+    app:startDestination="@id/splashScreenFragment">
 
     <fragment
         android:id="@+id/notesFragment"
         android:name="com.example.foodnote.ui.notes_fragment.NotesFragment"
         android:label="fragment_first"
-        tools:layout="@layout/notebook_fragment"/>
+        tools:layout="@layout/notebook_fragment" />
 
     <fragment
         android:id="@+id/calorieCalculatorFragment"
@@ -40,6 +40,17 @@
         android:label="AuthFragment">
         <action
             android:id="@+id/action_authFragment_to_notesFragment"
+            app:destination="@id/notesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/splashScreenFragment"
+        android:name="com.example.foodnote.ui.splash_screen_fragment.SplashScreenFragment"
+        android:label="SplashScreenFragment">
+        <action
+            android:id="@+id/action_splashScreenFragment_to_authFragment"
+            app:destination="@id/authFragment" />
+        <action
+            android:id="@+id/action_splashScreenFragment_to_notesFragment"
             app:destination="@id/notesFragment" />
     </fragment>
 
