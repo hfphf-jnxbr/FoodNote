@@ -1,4 +1,4 @@
-package com.example.foodnote.ui.notes_fragment.editorNote
+package com.example.foodnote.ui.noteBook.editorNote
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -7,9 +7,9 @@ import android.view.View
 import com.example.foodnote.R
 import com.example.foodnote.databinding.PaintNoteEditorBinding
 import com.example.foodnote.ui.base.BaseViewBindingFragment
-import com.example.foodnote.ui.notes_fragment.ConstructorFragment
-import com.example.foodnote.ui.notes_fragment.canvas.CanvasPaintFragment
-import com.example.foodnote.ui.notes_fragment.interfaces.EditorPaintNoteFragmentInterface
+import com.example.foodnote.ui.noteBook.mainFragmenNoteBook.ConstructorFragment
+import com.example.foodnote.ui.noteBook.canvas.CanvasPaintFragment
+import com.example.foodnote.ui.noteBook.interfaces.EditorPaintNoteFragmentInterface
 import java.io.File
 
 class EditorPaintNoteFragment : BaseViewBindingFragment<PaintNoteEditorBinding>(PaintNoteEditorBinding::inflate) , EditorPaintNoteFragmentInterface {

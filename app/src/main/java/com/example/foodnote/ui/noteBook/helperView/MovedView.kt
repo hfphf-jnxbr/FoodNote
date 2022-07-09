@@ -1,13 +1,14 @@
-package com.example.foodnote.ui.base.helperView
+package com.example.foodnote.ui.noteBook.helperView
 
 import android.annotation.SuppressLint
 import android.view.MotionEvent
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.example.foodnote.ui.notes_fragment.NotesFragment
+import com.example.foodnote.ui.noteBook.mainFragmenNoteBook.NotesFragment
 
 @SuppressLint("ClickableViewAccessibility")
-class MovedView(private val listView : ArrayList<View>, root : ConstraintLayout, private val fragmentNoteBook: NotesFragment) : View.OnTouchListener , MovedViewInterface{
+class MovedView(private val listView : ArrayList<View>, root : ConstraintLayout, private val fragmentNoteBook: NotesFragment) : View.OnTouchListener ,
+    MovedViewInterface {
 
     init {
         root.setOnTouchListener(this)
@@ -25,7 +26,7 @@ class MovedView(private val listView : ArrayList<View>, root : ConstraintLayout,
             when (event.action) {
                 0 -> focusView(event)
                 2 -> movedView(event)
-                1 -> deleteFocusView(event)
+                1 -> deleteFocusView()
             }
         }
         return true
@@ -71,7 +72,7 @@ class MovedView(private val listView : ArrayList<View>, root : ConstraintLayout,
         listElevation.clear()
     }
 
-    private fun deleteFocusView(event: MotionEvent) {
+    private fun deleteFocusView() {
         listView.forEach { view ->
             view.apply {
                 if (isPressed) {

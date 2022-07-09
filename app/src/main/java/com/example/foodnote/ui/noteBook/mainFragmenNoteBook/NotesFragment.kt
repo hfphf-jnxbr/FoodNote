@@ -1,31 +1,35 @@
-package com.example.foodnote.ui.notes_fragment
+package com.example.foodnote.ui.noteBook.mainFragmenNoteBook
 
 import android.animation.ObjectAnimator
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Environment
 import android.util.DisplayMetrics
+import android.util.Property
 import android.view.View
 import android.view.animation.AnticipateOvershootInterpolator
 import androidx.appcompat.app.AlertDialog
 import androidx.core.animation.doOnEnd
-import androidx.core.animation.doOnStart
 import androidx.core.view.updateLayoutParams
 import com.example.foodnote.R
 import com.example.foodnote.data.databaseRoom.dao.DaoDB
 import com.example.foodnote.data.databaseRoom.entities.EntitiesNotesPaint
 import com.example.foodnote.data.databaseRoom.entities.EntitiesNotesStandard
+import com.example.foodnote.databinding.CardFoodsBinding
 import com.example.foodnote.databinding.CardNotesBinding
 import com.example.foodnote.databinding.NotebookFragmentBinding
 import com.example.foodnote.di.DATA_BASE
 import com.example.foodnote.ui.base.BaseViewBindingFragment
-import com.example.foodnote.ui.base.helperView.MovedView
-import com.example.foodnote.ui.notes_fragment.constNote.Const.CARD_NOTE_DP
-import com.example.foodnote.ui.notes_fragment.constNote.Const.DURATION_ANIMATION_CONSTRUCTOR
-import com.example.foodnote.ui.notes_fragment.constNote.Const.TABLE_PAINT
-import com.example.foodnote.ui.notes_fragment.constNote.Const.TABLE_STANDARD
-import com.example.foodnote.ui.notes_fragment.constNote.ConstType
-import com.example.foodnote.ui.notes_fragment.interfaces.NoteBookFragmentInterface
+import com.example.foodnote.ui.noteBook.helperView.MovedView
+import com.example.foodnote.ui.noteBook.constNote.Const.CARD_NOTE_DP
+import com.example.foodnote.ui.noteBook.constNote.Const.DURATION_ANIMATION_CONSTRUCTOR
+import com.example.foodnote.ui.noteBook.constNote.Const.STACK_CONSTRUCTOR
+import com.example.foodnote.ui.noteBook.constNote.Const.TABLE_FOOD
+import com.example.foodnote.ui.noteBook.constNote.Const.TABLE_PAINT
+import com.example.foodnote.ui.noteBook.constNote.Const.TABLE_STANDARD
+import com.example.foodnote.ui.noteBook.constNote.ConstType
+import com.example.foodnote.ui.noteBook.helperView.ExpandView
+import com.example.foodnote.ui.noteBook.interfaces.NoteBookFragmentInterface
 import com.google.android.material.card.MaterialCardView
 import kotlinx.coroutines.*
 import org.koin.android.ext.android.inject
@@ -38,6 +42,7 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
     private lateinit var movedView: MovedView
     private var widthScreen = 0
     private var flagBlockChip = true
+    private var flag = true
     private var openCloseContainer = false
 
     private val scope = CoroutineScope(Dispatchers.IO)
@@ -88,6 +93,13 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
         setDataCreateStandardNote(widthCard,heightCard,colorCard, note, posX, posY, id, elevation)
     }
 
+    override fun saveAndCreateDataNotesFoods(widthCard: Int, heightCard: Int, colorCard: Int, listFoods: String, listWeight: String, general : String, posX: Int, posY: Int, id: Int, elevation: Float) {
+        scope.launch {
+
+        }
+        setDataCreateFoodNote(widthCard, heightCard, colorCard, listFoods, listWeight,general, posX, posY, id, elevation)
+    }
+
     override fun setNewCardCoordinatesData(viewX: Int, viewY: Int, view: View) {
         scope.launch {
             when (view.tag) {
@@ -126,8 +138,16 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
         val cardNoteView = cardNoteViewBind.root
 
         cardNoteView.tag = TABLE_STANDARD
-        cardNoteViewBind.textNote.text = note
-        createNote(cardNoteView, cardNoteViewBind, widthCard, heightCard, colorCard, elevation, posX, posY, idCard)
+
+        var size = (widthCard.toFloat() * 10f) / 30f
+        if (size > 15f) size = 15f
+        cardNoteViewBind.textNote.apply {
+            text = note
+            textSize = size
+        }
+        cardNoteViewBind.buttonDelete.setOnClickListener { deleteDialog(cardNoteView) }
+
+        createNote(cardNoteView, widthCard, heightCard, colorCard, elevation, posX, posY, idCard)
     }
 
     private fun setDataCreatePaintNote(widthCard: Int, heightCard: Int, colorCard: Int, fileName: String, posX: Int, posY: Int, idCard: Int, elevation: Float) {
@@ -135,11 +155,52 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
         val cardNoteView = cardNoteViewBind.root
 
         cardNoteView.tag = TABLE_PAINT
+        cardNoteViewBind.buttonDelete.setOnClickListener { deleteDialog(cardNoteView) }
         cardNoteViewBind.imageNote.setImageBitmap( BitmapFactory.decodeFile(Environment.getExternalStorageDirectory().toString() + File.separator +  Environment.DIRECTORY_DCIM + File.separator + fileName) )
-        createNote(cardNoteView, cardNoteViewBind, widthCard, heightCard, colorCard, elevation, posX, posY, idCard)
+
+        createNote(cardNoteView, widthCard, heightCard, colorCard, elevation, posX, posY, idCard)
     }
 
-    private fun createNote(cardNoteView: MaterialCardView, cardNoteViewBind: CardNotesBinding,widthCard: Int, heightCard: Int, colorCard: Int, elevationCard : Float, posX: Int, posY: Int, idCard: Int) {
+    private fun setDataCreateFoodNote(widthCard: Int, heightCard: Int, colorCard: Int, listFoods: String, listWeight: String, general : String, posX: Int, posY: Int, idCard: Int, elevation: Float) {
+        val cardNoteViewBind = CardFoodsBinding.inflate(layoutInflater, binding.root, false)
+        val cardNoteView = cardNoteViewBind.root
+
+        cardNoteView.tag = TABLE_FOOD
+        cardNoteViewBind.apply {
+            buttonDelete.setOnClickListener { deleteDialog(cardNoteView) }
+            searchRecipe.setOnClickListener {
+
+                flag = if (flag) {
+                    movedView.blockMove(false)
+                    ExpandView.expandView(cardNoteView, binding.root)
+                    false
+                } else {
+                    ExpandView.decreaseView(cardNoteView, binding.root)
+                    movedView.blockMove(true)
+                    true
+                }
+            }
+            var size = (widthCard.toFloat() * 10f) / 30f
+            if (size > 15f) size = 15f
+
+            textListFoods.apply {
+                text = listFoods
+                textSize = size
+            }
+            textListWeight.apply {
+                text = listWeight
+                textSize = size
+            }
+            textGeneral.text = general
+            textHeader.textSize = size + 2
+            textHeaderGram.textSize = size
+            textGeneral.textSize = size
+            headerGeneral.textSize = size
+        }
+        createNote(cardNoteView, widthCard, heightCard, colorCard, elevation, posX, posY, idCard)
+    }
+
+    private fun createNote(cardNoteView: MaterialCardView, widthCard: Int, heightCard: Int, colorCard: Int, elevationCard : Float, posX: Int, posY: Int, idCard: Int) {
         cardNoteView.updateLayoutParams {
             height = ((heightCard * widthScreen) / 100) + convertDpToPixels(CARD_NOTE_DP)
             width = (widthCard * widthScreen) / 100
@@ -152,9 +213,6 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
             elevation = elevationCard
             setCardBackgroundColor(colorCard)
         }
-
-        cardNoteViewBind.buttonDelete.setOnClickListener { deleteDialog(cardNoteView) }
-
         binding.root.addView(cardNoteView)
         movedView.addView(cardNoteView)
     }
@@ -170,8 +228,8 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
         dialog.setPositiveButton(getString(R.string.yes)) { dialog, _ ->
             binding.root.removeView(cardNoteView)
             movedView.removeView(cardNoteView)
-            deleteNotes(cardNoteView)
 
+            deleteNotes(cardNoteView)
             dialog.dismiss()
         }
         dialog.create().show()
@@ -207,17 +265,13 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
         binding.containerConstructor.x = widthScreen.toFloat()
     }
 
-    override fun setFlagBlockChip(boolean: Boolean) {
-        flagBlockChip = boolean
-        movedView.blockMove(true)
-    }
-
     private fun constructorDrop() {
         openCloseContainer = true
         objectAnimation(0f)
     }
 
     override fun constructorFragmentClose() {
+        flagBlockChip = false
         openCloseContainer = false
         objectAnimation( widthScreen.toFloat() )
     }
@@ -229,6 +283,11 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
             start()
         }.doOnEnd {
             flagBlockChip = true
+
+            if(value == widthScreen.toFloat()) {
+                childFragmentManager.popBackStack()
+                movedView.blockMove(true)
+            }
         }
     }
 
@@ -249,8 +308,9 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
     private fun setFragmentConstructor(type : ConstType) {
         childFragmentManager
             .beginTransaction()
-            .replace(R.id.containerConstructor,ConstructorFragment.newInstance(this,type))
-            .commitNow()
+            .replace(R.id.containerConstructor, ConstructorFragment.newInstance(this,type))
+            .addToBackStack(STACK_CONSTRUCTOR)
+            .commit()
     }
 
     override fun onDestroy() {

@@ -53,7 +53,12 @@
     <string name="no">нет</string>
     <string name="yes">да</string>
     <string name="list_foods">List foods</string>
-    <string name="weight_gm">вес гм</string>
-    <string name="list_foods_hint">Введите список продуктов через пробел</string>
+    <string name="weight_gm">вес гм\n</string>
+    <string name="list_foods_hint">Введите по строчно название продуктов</string>
+    <string name="list_foods_header">List Foods</string>
+    <string name="gram">gm</string>
+    <string name="network_error_mess">Network ERROR</string>
+    <string name="general">General:</string>
+    <string name="search">search</string>
 
 </resources>

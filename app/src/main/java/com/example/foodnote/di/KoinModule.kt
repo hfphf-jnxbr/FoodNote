@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.example.foodnote.data.base.RetrofitImpl
 import com.example.foodnote.data.databaseRoom.DataBase
 import com.example.foodnote.ui.calorie_calculator_fragment.viewModel.CalorieCalculatorViewModel
+import com.example.foodnote.ui.noteBook.viewModel.ViewModelConstructorFragment
 import com.google.firebase.firestore.FirebaseFirestore
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
@@ -27,6 +28,7 @@ val applicationModule = module {
     single(named(DATA_BASE)) { (context : Context) ->
         Room.databaseBuilder(context, DataBase::class.java, DATA_BASE_NAME).build().dataBase()
     }
+
 }
 
 val calorieCalculatorScreenModule = module {
@@ -36,4 +38,8 @@ val calorieCalculatorScreenModule = module {
     viewModel {
         CalorieCalculatorViewModel()
     }
+}
+
+val noteBookModule = module {
+    viewModel { ViewModelConstructorFragment() }
 }

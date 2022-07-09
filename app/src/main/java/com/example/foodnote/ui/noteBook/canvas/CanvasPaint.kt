@@ -1,12 +1,12 @@
-package com.example.foodnote.ui.notes_fragment.canvas
+package com.example.foodnote.ui.noteBook.canvas
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.view.MotionEvent
 import android.view.View
-import com.example.foodnote.ui.notes_fragment.constNote.Const
-import com.example.foodnote.ui.notes_fragment.interfaces.CanvasInterface
+import com.example.foodnote.ui.noteBook.constNote.Const
+import com.example.foodnote.ui.noteBook.interfaces.CanvasInterface
 
 @SuppressLint("ViewConstructor")
 class CanvasPaint(context: Context, private val colorCardBackground: Int) : View(context) , View.OnTouchListener , CanvasInterface {
@@ -29,7 +29,7 @@ class CanvasPaint(context: Context, private val colorCardBackground: Int) : View
     private lateinit var bitmap : Bitmap
     private lateinit var myCanvas : Canvas
     private var color = Color.WHITE
-    private var alpha = 255
+    private var alpha = 200
     private var size = Const.DEFAULT_SIZE_BRUSH
 
     override fun onDraw(canvas: Canvas?) {

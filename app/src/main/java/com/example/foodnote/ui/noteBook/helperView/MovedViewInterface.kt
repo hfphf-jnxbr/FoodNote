@@ -1,4 +1,4 @@
-package com.example.foodnote.ui.base.helperView
+package com.example.foodnote.ui.noteBook.helperView
 
 import android.view.View
 

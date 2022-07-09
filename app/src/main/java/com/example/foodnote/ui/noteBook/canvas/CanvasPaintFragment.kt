@@ -1,4 +1,4 @@
-package com.example.foodnote.ui.notes_fragment.canvas
+package com.example.foodnote.ui.noteBook.canvas
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -17,17 +17,16 @@ import androidx.fragment.app.Fragment
 import com.example.foodnote.R
 import com.example.foodnote.databinding.CanvasFragmentBinding
 import com.example.foodnote.ui.base.BaseViewBindingFragment
-import com.example.foodnote.ui.notes_fragment.constNote.Const
-import com.example.foodnote.ui.notes_fragment.constNote.Const.CARD_NOTE_SPLASH_DP
-import com.example.foodnote.ui.notes_fragment.constNote.Const.MARGIN_CANVAS_DP
-import com.example.foodnote.ui.notes_fragment.constNote.Const.MAX_BRUSH_SIZE
-import com.example.foodnote.ui.notes_fragment.constNote.Const.MAX_CANVAS_HEIGHT_DP
-import com.example.foodnote.ui.notes_fragment.constNote.Const.SEED
-import com.example.foodnote.ui.notes_fragment.editorNote.EditorPaintNoteFragment
+import com.example.foodnote.ui.noteBook.constNote.Const
+import com.example.foodnote.ui.noteBook.constNote.Const.CARD_NOTE_SPLASH_DP
+import com.example.foodnote.ui.noteBook.constNote.Const.MARGIN_CANVAS_DP
+import com.example.foodnote.ui.noteBook.constNote.Const.MAX_BRUSH_SIZE
+import com.example.foodnote.ui.noteBook.constNote.Const.MAX_CANVAS_HEIGHT_DP
+import com.example.foodnote.ui.noteBook.constNote.Const.SEED
+import com.example.foodnote.ui.noteBook.editorNote.EditorPaintNoteFragment
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
-import java.lang.Math.random
 import kotlin.random.Random
 
 class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(CanvasFragmentBinding::inflate) {
