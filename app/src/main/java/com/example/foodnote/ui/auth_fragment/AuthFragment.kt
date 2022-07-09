@@ -2,14 +2,19 @@ package com.example.foodnote.ui.auth_fragment
 
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.navigation.fragment.findNavController
 import com.example.foodnote.R
+import com.example.foodnote.data.base.SampleState
 import com.example.foodnote.databinding.FragmentAuthBinding
 import com.example.foodnote.ui.auth_fragment.viewModel.AuthViewModel
 import com.example.foodnote.ui.base.BaseViewBindingFragment
 import com.example.foodnote.utils.hide
 import com.example.foodnote.utils.show
+import com.example.foodnote.utils.showToast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -62,6 +67,28 @@ class AuthFragment : BaseViewBindingFragment<FragmentAuthBinding>(FragmentAuthBi
         GoogleSignIn.getClient(context!!, gso)
     }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        viewModel.getStateLiveData().observe(viewLifecycleOwner) { appState: SampleState ->
+            setState(appState)
+        }
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    private fun setState(appState: SampleState) {
+        if (appState.isSuccess) {
+            val navController = findNavController()
+            navController.navigate(R.id.action_authFragment_to_notesFragment)
+        }
+
+        if (appState.error != null) {
+            context?.showToast(appState.error.message)
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.signInButton.setOnClickListener {
@@ -70,12 +97,6 @@ class AuthFragment : BaseViewBindingFragment<FragmentAuthBinding>(FragmentAuthBi
         binding.authAnonimButton.setOnClickListener {
             val idToken = UUID.randomUUID().toString()
             viewModel.saveUserId(idToken)
-        }
-    }
-
-    suspend fun getUserId() {
-        viewModel.getUserId()?.collect {
-
         }
     }
 

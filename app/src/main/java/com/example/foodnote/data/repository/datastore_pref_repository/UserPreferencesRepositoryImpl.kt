@@ -17,7 +17,7 @@ class UserPreferencesRepositoryImpl(private val dataStore: DataStore<Preferences
     private val TAG: String = "UserPreferencesRepo"
 
     private object PreferencesKeys {
-        val USER_ID = stringPreferencesKey("sort_order")
+        val USER_ID = stringPreferencesKey(USER_ID_KEY)
     }
 
     override val userId: Flow<String> = dataStore.data
@@ -39,5 +39,9 @@ class UserPreferencesRepositoryImpl(private val dataStore: DataStore<Preferences
         dataStore.edit { settings ->
             settings[USER_ID] = userId
         }
+    }
+
+    private companion object {
+        const val USER_ID_KEY = "USER_ID"
     }
 }
