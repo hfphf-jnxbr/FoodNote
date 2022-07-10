@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/md_theme_light_primary</item>
@@ -29,6 +29,9 @@
         <item name="elevationOverlayColor">@color/md_theme_light_surfaceTint</item>
         <item name="colorPrimaryInverse">@color/md_theme_light_inversePrimary</item>
 
+        <item name="colorPrimaryVariant">#797979</item>
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
         <!-- My Color -->
         <item name="strokeColorCard">#E4E4E4</item>
         <item name="clearWhite">#FFFFFF</item>
@@ -46,6 +49,7 @@
         <item name="colorCardWhite">#FFFFFF</item>
         <item name="colorCardGray">#EFEFEF</item>
         <item name="colorCardBlue">#D7EEFA</item>
+
 
     </style>
     <style name="AppTheme.NoActionBar">

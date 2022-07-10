@@ -18,6 +18,7 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val width = MeasureSpec.getSize(widthMeasureSpec)
 
+        createRect(width)
         setMeasuredDimension(width, width)
     }
 
@@ -99,10 +100,6 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
         super.onDraw(canvas)
         canvas!!
 
-        if(flag){
-            createRect()
-            flag = false
-        }
         angleSpeed()
         drawCircles(canvas)
         drawText(canvas)
@@ -128,20 +125,19 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
 
     private fun line(angle : Float, canvas : Canvas, text : String) {
         if(angle > 0) {
+            val x = width/2f + (width/2f - radiuse/2 - 32) * cos(- (angle * 2 * PI) / 360).toFloat()
+            val y = width/2f - (width/2f - radiuse/2 - 32) * sin(- (angle * 2 * PI) / 360).toFloat()
 
-            val x = width/2f + (width/2f - radiuse/2) * cos(- (angle * 2 * PI) / 360).toFloat()
-            val y = width/2f - (width/2f - radiuse/2) * sin(- (angle * 2 * PI) / 360).toFloat()
-
-            val x2 = width/2f + (width/2f - radiuse/2 + 15) * cos(- (angle * 2 * PI) / 360).toFloat()
-            val y2 = width/2f - (width/2f - radiuse/2 + 15) * sin(- (angle * 2 * PI) / 360).toFloat()
+            val x2 = width/2f + (width/2f - radiuse/2 ) * cos(- (angle * 2 * PI) / 360).toFloat()
+            val y2 = width/2f - (width/2f - radiuse/2 ) * sin(- (angle * 2 * PI) / 360).toFloat()
 
             canvas.drawLine(width/2f,width/2f, x, y, paintLine)
             canvas.drawCircle(x, y,10f,paintLine)
 
             if(angle <= 180) {
-                canvas.drawText(text,x2 - 20f,y2 + 32f,paintSmallText)
+                canvas.drawText(text,x2 - 90f,y2 + 32f,paintSmallText)
             } else {
-                canvas.drawText(text,x2 - 20f,y2 - 5f ,paintSmallText)
+                canvas.drawText(text,x2 - 90f,y2 - 10f ,paintSmallText)
             }
         }
     }
@@ -156,7 +152,7 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
         angleSpeed3 = angleSpeedStart3 * ( length3 - angle3)
     }
 
-    private fun createRect() {
+    private fun createRect(width: Int) {
         rectF = RectF(0f + radiuse,0f + radiuse, width.toFloat() - radiuse, width.toFloat() - radiuse)
         rectF2 = RectF(widthDiagram + radiuse,widthDiagram + radiuse,width.toFloat() - widthDiagram - radiuse,width.toFloat() - widthDiagram - radiuse)
         rectF3 = RectF(widthDiagram*2 + radiuse,widthDiagram*2 + radiuse,width.toFloat() - widthDiagram*2 - radiuse,width.toFloat() - widthDiagram*2 - radiuse)
