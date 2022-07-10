@@ -1,9 +1,10 @@
-package com.example.foodnote.data.model
+package com.example.foodnote.data.model.food
+
+import com.squareup.moshi.Json
 
 data class Nutrients(
-    val procnt: Double,
-    val enercal: Double,
-    val fat: Double,
-    val chocdf: Double,
-    val fibtg: Double
+    @field:Json(name = "PROCNT") val procnt: Double,
+    @field:Json(name = "ENERC_KCAL") val enercal: Double,
+    @field:Json(name = "FAT") val fat: Double,
+    @field:Json(name = "CHOCDF") val chocdf: Double,
 )

@@ -1,15 +1,11 @@
 package com.example.foodnote.data.model.food
 
-import com.example.foodnote.data.model.Nutrients
+import com.squareup.moshi.Json
 
 data class Food(
-	val parsed: List<ParsedItem>,
-	val text: String,
-	val image: String,
-	val foodId: String,
-	val categoryLabel: String,
-	val label: String,
-	val category: String,
-	val nutrients: Nutrients
+	@field:Json(name = "label") val label: String,
+	@field:Json(name = "parsed") val parsed: List<ParsedItem>,
+	@field:Json(name = "image") val image: String,
+	@field:Json(name = "nutrients") val nutrients: Nutrients
 )
 

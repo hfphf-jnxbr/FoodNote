@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/product_image_view"
@@ -11,6 +11,8 @@
         android:layout_height="60dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/order" />
@@ -22,6 +24,7 @@
         android:layout_marginStart="8dp"
         app:layout_constraintStart_toEndOf="@+id/product_image_view"
         app:layout_constraintTop_toTopOf="@+id/product_image_view"
+        android:textColor="@color/black"
         tools:text="Варенные яица" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -31,6 +34,7 @@
         android:layout_marginStart="8dp"
         app:layout_constraintStart_toEndOf="@+id/product_name_text_view"
         app:layout_constraintTop_toTopOf="@+id/product_name_text_view"
+        android:textColor="@color/black"
         tools:text="3шт" />
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -40,6 +44,7 @@
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
         tools:src="@drawable/ic_baseline_restore_from_trash_24" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -53,6 +58,7 @@
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toEndOf="@+id/product_image_view"
         app:layout_constraintTop_toBottomOf="@+id/product_name_text_view"
+        android:textColor="@color/black"
         tools:text="Белки 20г" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -65,17 +71,18 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/protain_count_text_view"
         app:layout_constraintTop_toTopOf="@+id/protain_count_text_view"
+        android:textColor="@color/black"
         tools:text="Жиры 30г" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/carbohydrates_count_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/fats_count_text_view"
         app:layout_constraintStart_toEndOf="@+id/fats_count_text_view"
         app:layout_constraintTop_toTopOf="@+id/fats_count_text_view"
+        android:textColor="@color/black"
         tools:text="Жиры 30г" />
 
 
