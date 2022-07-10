@@ -58,5 +58,6 @@
     <string name="weight_gm">вес гм</string>
     <string name="list_foods_hint">Введите список продуктов через пробел</string>
     <string name="exit">выйти</string>
+    <string name="type_name_product">Введите название продукта</string>
 
 </resources>
