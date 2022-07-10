@@ -17,7 +17,16 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    buildTypes.each {
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file("app_edadim.properties").newDataInputStream())
+        def appId  = properties.getProperty("EDADIM_APP_ID", "")
+        def appKey  = properties.getProperty("EDADIM_APP_KEY", "")
+        def baseURl  = properties.getProperty("EDADIM_APP_KEY", "")
+        it.buildConfigField "String", "EDADIM_APP_Id", appId
+        it.buildConfigField "String", "EDADIM_APP_KEY", appKey
+        it.buildConfigField "String", "BASE_URL", baseURl
+    }
     buildTypes {
         release {
             minifyEnabled false
