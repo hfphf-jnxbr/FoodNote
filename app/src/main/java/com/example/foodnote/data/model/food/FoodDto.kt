@@ -7,5 +7,5 @@ data class FoodDto(
     val protein: Double,
     val fat: Double,
     val carbohydrate: Double,
-
+    val count: Int = 0
     )

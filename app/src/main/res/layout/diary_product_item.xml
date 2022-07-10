@@ -83,7 +83,7 @@
         app:layout_constraintStart_toEndOf="@+id/fats_count_text_view"
         app:layout_constraintTop_toTopOf="@+id/fats_count_text_view"
         android:textColor="@color/black"
-        tools:text="Жиры 30г" />
+        tools:text="Углеводы 30г" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
