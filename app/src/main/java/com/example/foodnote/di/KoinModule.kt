@@ -18,6 +18,7 @@ import com.example.foodnote.data.repository.datastore_pref_repository.UserPrefer
 import com.example.foodnote.data.repository.datastore_pref_repository.UserPreferencesRepositoryImpl
 import com.example.foodnote.ui.auth_fragment.viewModel.AuthViewModel
 import com.example.foodnote.ui.calorie_calculator_fragment.viewModel.CalorieCalculatorViewModel
+import com.example.foodnote.ui.diary_item_detail_fragment.viewModel.DiaryItemDetailViewModel
 import com.example.foodnote.ui.splash_screen_fragment.viewModel.SplashScreenViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
@@ -61,7 +62,7 @@ val dataStoreModule = module {
             produceFile = { androidContext().preferencesDataStoreFile(NAME_DATA_STORE_PREF_FILE) }
         )
     }
-    factory<UserPreferencesRepository>(named(NAME_PREF_APP_REPOSITORY)) {
+    single<UserPreferencesRepository>(named(NAME_PREF_APP_REPOSITORY)) {
         UserPreferencesRepositoryImpl(get(named(NAME_DATA_STORE_PREF)))
     }
 }
@@ -85,5 +86,11 @@ val calorieCalculatorScreenModule = module {
 val authScreenModule = module {
     viewModel {
         AuthViewModel(get(named(NAME_PREF_APP_REPOSITORY)))
+    }
+}
+
+val diaryItemDetailScreenModule = module {
+    viewModel<DiaryItemDetailViewModel> {
+        DiaryItemDetailViewModel(get(named(NAME_PREF_APP_REPOSITORY)))
     }
 }

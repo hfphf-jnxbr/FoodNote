@@ -16,7 +16,8 @@ class App : Application() {
                     calorieCalculatorScreenModule,
                     dataStoreModule,
                     authScreenModule,
-                    splashScreenModule
+                    splashScreenModule,
+                    diaryItemDetailScreenModule
                 )
             )
         }

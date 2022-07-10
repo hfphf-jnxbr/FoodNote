@@ -59,7 +59,7 @@
     </fragment>
     <fragment
         android:id="@+id/diaryItemDetailFragment"
-        android:name="com.example.foodnote.ui.diary_item_deatil_fragment.DiaryItemDetailFragment"
+        android:name="com.example.foodnote.ui.diary_item_detail_fragment.DiaryItemDetailFragment"
         android:label="DiaryItemDetailFragment" />
 
 </navigation>
