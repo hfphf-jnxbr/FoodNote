@@ -3,15 +3,27 @@ package com.example.foodnote.ui.calorie_calculator_fragment.viewModel
 
 import androidx.lifecycle.viewModelScope
 import com.example.foodnote.data.base.SampleState
+import com.example.foodnote.data.interactor.CalorieCalculatorInteractor
 import com.example.foodnote.data.model.DiaryItem
+import com.example.foodnote.data.repository.datastore_pref_repository.UserPreferencesRepository
 import com.example.foodnote.ui.base.viewModel.BaseViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.random.Random
 
-class CalorieCalculatorViewModel() : BaseViewModel<SampleState>() {
+class CalorieCalculatorViewModel(
+    private val interactor: CalorieCalculatorInteractor,
+    private val dataStorePref: UserPreferencesRepository
+) :
+    BaseViewModel<SampleState>(dataStorePref) {
     init {
+        stateLiveData.value = SampleState()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
         stateLiveData.value = SampleState()
     }
 
@@ -40,24 +52,35 @@ class CalorieCalculatorViewModel() : BaseViewModel<SampleState>() {
         }
     }
 
-    fun initRandomList() {
-        viewModelScope.launch {
+    fun generateRandomItem(idUser: String): DiaryItem {
+        val item = DiaryItem(
+            "item ${Random.nextInt(500, 7000)}",
+            Random.nextLong(100, 500),
+            SimpleDateFormat("hh:mm").format(Date()),
+            SimpleDateFormat("dd.MMMM.YYYY").format(Date()),
+            idUser,
+            UUID.randomUUID().toString()
+        )
+        stateLiveData.value?.diaryList?.add(item)
+        return item
+    }
+
+    fun getDiary(idUser: String) = interactor
+        .getDiaryCollection(
+            SimpleDateFormat("dd.MMMM.YYYY")
+                .format(Date()),
+            idUser
+        )
+
+
+    fun saveDiary(item: DiaryItem) {
+        viewModelScope.launch(Dispatchers.IO) {
             kotlin.runCatching {
-                val list = ArrayList<DiaryItem>(10)
-                for (i in 0..3) {
-                    list.add(
-                        DiaryItem(
-                            "item $i",
-                            Random.nextInt(100, 500),
-                            SimpleDateFormat("hh:mm:ss").format(Date())
-                        )
-                    )
-                }
-                list
+                interactor.saveDiary(item)
             }.onSuccess {
-                stateLiveData.value = stateLiveData.value?.copy(diaryList = it)
+                stateLiveData.postValue(stateLiveData.value?.copy(lastAddItem = it))
             }.onFailure {
-                stateLiveData.value = stateLiveData.value?.copy(error = it)
+                stateLiveData.postValue(stateLiveData.value?.copy(error = it))
             }
         }
     }
