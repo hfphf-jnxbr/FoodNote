@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TimePicker
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.foodnote.R
 import com.example.foodnote.data.base.AppState
@@ -143,11 +144,7 @@ class CalorieCalculatorFragment :
         adapter.setItem(list)
     }
 
-    fun placeArgument(value: Int, f: (Int, Int) -> Int): (Int) -> Int {
-        return { i -> f(value, i) }
-    }
-
-    private fun showDialog(f: (time: String, name: String) -> Unit) {
+    private fun showDialog(callback: (time: String, name: String) -> Unit) {
         val builder = AlertDialog.Builder(context)
         // Set the dialog title
         val inflater = requireActivity().layoutInflater;
@@ -157,12 +154,11 @@ class CalorieCalculatorFragment :
         builder
             .setView(view)
             .setTitle(R.string.create_notes)
-            // Set the action buttons
             .setPositiveButton(R.string.save,
-                DialogInterface.OnClickListener { dialog, id ->
+                DialogInterface.OnClickListener { _, _ ->
                     val text = editText.text.toString()
                     val time = "${timePicker.hour}:${timePicker.minute}"
-                    f(time, text)
+                    callback(time, text)
                 })
             .setNegativeButton(R.string.disabled,
                 DialogInterface.OnClickListener { dialog, id ->
@@ -172,4 +168,13 @@ class CalorieCalculatorFragment :
         builder.create()
         builder.show()
     }
+
+    override fun navigateToDiaryDetail(item: DiaryItem) {
+        val navController = findNavController()
+        val action = CalorieCalculatorFragmentDirections
+            .actionCalorieCalculatorFragmentToDiaryItemDetailFragment(item)
+        navController.navigate(R.id.action_calorieCalculatorFragment_to_diaryItemDetailFragment)
+    }
+
+
 }
