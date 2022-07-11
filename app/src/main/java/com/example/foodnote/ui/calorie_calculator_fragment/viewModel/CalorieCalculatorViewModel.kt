@@ -3,7 +3,7 @@ package com.example.foodnote.ui.calorie_calculator_fragment.viewModel
 
 import androidx.lifecycle.viewModelScope
 import com.example.foodnote.data.base.SampleState
-import com.example.foodnote.data.interactor.CalorieCalculatorInteractor
+import com.example.foodnote.data.interactor.calorie_interactor.CalorieCalculatorInteractor
 import com.example.foodnote.data.model.DiaryItem
 import com.example.foodnote.data.repository.datastore_pref_repository.UserPreferencesRepository
 import com.example.foodnote.ui.base.viewModel.BaseViewModel

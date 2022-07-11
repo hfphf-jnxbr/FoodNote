@@ -10,12 +10,18 @@ import com.example.foodnote.data.base.RetrofitImpl
 import com.example.foodnote.data.databaseRoom.DataBase
 import com.example.foodnote.data.datasource.calorire_datasource.firebase.FireBaseCalorieDataSourceImpl
 import com.example.foodnote.data.datasource.calorire_datasource.firebase.FirebaseCalorieDataSource
-import com.example.foodnote.data.interactor.CalorieCalculatorInteractor
-import com.example.foodnote.data.interactor.CalorieCalculatorInteractorImpl
+import com.example.foodnote.data.datasource.diary_item_detail_repository.DiaryItemDetailDatasource
+import com.example.foodnote.data.datasource.diary_item_detail_repository.DiaryItemDetailDatasourceImpl
+import com.example.foodnote.data.interactor.calorie_interactor.CalorieCalculatorInteractor
+import com.example.foodnote.data.interactor.calorie_interactor.CalorieCalculatorInteractorImpl
+import com.example.foodnote.data.interactor.diary_item_detail_interactor.DiaryItemDetailInteractor
+import com.example.foodnote.data.interactor.diary_item_detail_interactor.DiaryItemDetailInteractorImpl
 import com.example.foodnote.data.repository.calorie_repository.CalorieRepository
 import com.example.foodnote.data.repository.calorie_repository.CalorieRepositoryImpl
 import com.example.foodnote.data.repository.datastore_pref_repository.UserPreferencesRepository
 import com.example.foodnote.data.repository.datastore_pref_repository.UserPreferencesRepositoryImpl
+import com.example.foodnote.data.repository.diary_item_detail_repository.DiaryItemDetailRepository
+import com.example.foodnote.data.repository.diary_item_detail_repository.DiaryItemDetailRepositoryImpl
 import com.example.foodnote.ui.auth_fragment.viewModel.AuthViewModel
 import com.example.foodnote.ui.calorie_calculator_fragment.viewModel.CalorieCalculatorViewModel
 import com.example.foodnote.ui.diary_item_detail_fragment.viewModel.DiaryItemDetailViewModel
@@ -90,7 +96,19 @@ val authScreenModule = module {
 }
 
 val diaryItemDetailScreenModule = module {
+    factory<DiaryItemDetailDatasource> {
+        DiaryItemDetailDatasourceImpl(get(named(NAME_DATASOURCE_REMOTE)))
+    }
+
+    factory<DiaryItemDetailRepository> {
+        DiaryItemDetailRepositoryImpl(get())
+    }
+
+    factory<DiaryItemDetailInteractor> {
+        DiaryItemDetailInteractorImpl(get())
+    }
+
     viewModel<DiaryItemDetailViewModel> {
-        DiaryItemDetailViewModel(get(named(NAME_PREF_APP_REPOSITORY)))
+        DiaryItemDetailViewModel(get(named(NAME_PREF_APP_REPOSITORY)), get())
     }
 }

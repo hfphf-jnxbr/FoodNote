@@ -1,4 +1,4 @@
-package com.example.foodnote.data.interactor
+package com.example.foodnote.data.interactor.calorie_interactor
 
 import com.example.foodnote.data.base.AppState
 import com.example.foodnote.data.model.DiaryItem
