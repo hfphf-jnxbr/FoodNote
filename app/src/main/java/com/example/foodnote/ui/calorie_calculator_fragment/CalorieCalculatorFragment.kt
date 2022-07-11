@@ -49,6 +49,11 @@ class CalorieCalculatorFragment :
         viewModel.getStateLiveData().observe(viewLifecycleOwner) { appState: SampleState ->
             setState(appState)
         }
+        if (idUser.isEmpty()) {
+            uiScope.launch {
+                getUserId()
+            }
+        }
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
@@ -65,9 +70,16 @@ class CalorieCalculatorFragment :
             getDiary()
         }
         binding.addDiaryButton.setOnClickListener {
-            val diaryItem = viewModel.generateRandomItem(idUser)
-            viewModel.saveDiary(diaryItem)
-            showDialog()
+            showDialog { time, name ->
+                val diaryItem = viewModel.generateRandomItem(idUser, time, name)
+                viewModel.saveDiary(diaryItem)
+            }
+        }
+    }
+
+    private suspend fun getUserId() {
+        viewModel.getUserId().collect {
+            idUser = it
         }
     }
 
@@ -131,7 +143,11 @@ class CalorieCalculatorFragment :
         adapter.setItem(list)
     }
 
-    private fun showDialog() {
+    fun placeArgument(value: Int, f: (Int, Int) -> Int): (Int) -> Int {
+        return { i -> f(value, i) }
+    }
+
+    private fun showDialog(f: (time: String, name: String) -> Unit) {
         val builder = AlertDialog.Builder(context)
         // Set the dialog title
         val inflater = requireActivity().layoutInflater;
@@ -146,6 +162,7 @@ class CalorieCalculatorFragment :
                 DialogInterface.OnClickListener { dialog, id ->
                     val text = editText.text.toString()
                     val time = "${timePicker.hour}:${timePicker.minute}"
+                    f(time, text)
                 })
             .setNegativeButton(R.string.disabled,
                 DialogInterface.OnClickListener { dialog, id ->

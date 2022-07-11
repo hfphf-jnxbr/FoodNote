@@ -52,11 +52,11 @@ class CalorieCalculatorViewModel(
         }
     }
 
-    fun generateRandomItem(idUser: String): DiaryItem {
+    fun generateRandomItem(idUser: String, time: String, name: String): DiaryItem {
         val item = DiaryItem(
-            "item ${Random.nextInt(500, 7000)}",
+            name,
             Random.nextLong(100, 500),
-            SimpleDateFormat("hh:mm").format(Date()),
+            time,
             SimpleDateFormat("dd.MMMM.YYYY").format(Date()),
             idUser,
             UUID.randomUUID().toString()
