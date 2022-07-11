@@ -1,27 +1,33 @@
-package com.example.foodnote.ui.notes_fragment
+package com.example.foodnote.ui.noteBook.mainFragmenNoteBook
 
 import android.graphics.Color
 import android.os.Bundle
 import android.text.InputFilter
 import android.view.View
+import android.widget.EditText
 import android.widget.Toast
 import com.example.foodnote.R
 import com.example.foodnote.databinding.ConstructorNoteBinding
 import com.example.foodnote.ui.base.BaseViewBindingFragment
-import com.example.foodnote.ui.notes_fragment.constNote.Const.DELAY_BUTTON
-import com.example.foodnote.ui.notes_fragment.constNote.Const.MAX_NOTE_SIZE
-import com.example.foodnote.ui.notes_fragment.constNote.Const.MIN_NOTE_SIZE
-import com.example.foodnote.ui.notes_fragment.constNote.Const.NOTES_ELEVATION
-import com.example.foodnote.ui.notes_fragment.constNote.Const.RANDOM_ID
-import com.example.foodnote.ui.notes_fragment.constNote.Const.STROKE_WIDTH
-import com.example.foodnote.ui.notes_fragment.constNote.Const.STROKE_WIDTH_FOCUS
-import com.example.foodnote.ui.notes_fragment.constNote.ConstType
-import com.example.foodnote.ui.notes_fragment.editorNote.EditorFoodsNoteFragment
-import com.example.foodnote.ui.notes_fragment.editorNote.EditorPaintNoteFragment
-import com.example.foodnote.ui.notes_fragment.editorNote.EditorStandardNoteFragment
-import com.example.foodnote.ui.notes_fragment.interfaces.ConstructorFragmentInterface
-import com.example.foodnote.ui.notes_fragment.interfaces.NoteBookFragmentInterface
+import com.example.foodnote.ui.noteBook.constNote.Const.DELAY_BUTTON
+import com.example.foodnote.ui.noteBook.constNote.Const.MAX_NOTE_SIZE
+import com.example.foodnote.ui.noteBook.constNote.Const.MIN_NOTE_SIZE
+import com.example.foodnote.ui.noteBook.constNote.Const.NOTES_ELEVATION
+import com.example.foodnote.ui.noteBook.constNote.Const.RANDOM_ID
+import com.example.foodnote.ui.noteBook.constNote.Const.STROKE_WIDTH
+import com.example.foodnote.ui.noteBook.constNote.Const.STROKE_WIDTH_FOCUS
+import com.example.foodnote.ui.noteBook.constNote.ConstType
+import com.example.foodnote.ui.noteBook.editorNote.EditorFoodsNoteFragment
+import com.example.foodnote.ui.noteBook.editorNote.EditorPaintNoteFragment
+import com.example.foodnote.ui.noteBook.editorNote.EditorStandardNoteFragment
+import com.example.foodnote.ui.noteBook.interfaces.ConstructorFragmentInterface
+import com.example.foodnote.ui.noteBook.interfaces.NoteBookFragmentInterface
+import com.example.foodnote.ui.noteBook.viewModel.StateData
+import com.example.foodnote.ui.noteBook.viewModel.ViewModelConstructorFragment
+import com.example.foodnote.ui.noteBook.viewModel.ViewModelConstructorInterface
+import com.example.foodnote.utils.showToast
 import kotlinx.coroutines.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
 class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(ConstructorNoteBinding::inflate) , ConstructorFragmentInterface{
@@ -37,9 +43,12 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
     private var flag = true
 
     private val scope = CoroutineScope(Dispatchers.IO)
+    private val viewModel : ViewModelConstructorFragment by viewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        initViewModel()
 
         setEditorType()
 
@@ -47,6 +56,23 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
         chekColor()
         editTextFilter()
     }
+
+    private fun initViewModel() { viewModel.getLiveData().observe(viewLifecycleOwner) { render(it) } }
+
+    private fun render(stateData: StateData) {
+        when(stateData) {
+            is StateData.Loading -> {
+
+            }
+            is StateData.Success -> {
+                stateData.data?.let { createFoodNote(it) }
+            }
+            is StateData.Error ->   {
+                context?.showToast(getString(R.string.network_error_mess))
+            }
+        }
+    }
+
     private fun setEditorType() {
         when (typeNote) {
             ConstType.STANDARD_TYPE -> { setNoteStandardEditor( EditorStandardNoteFragment() ) }
@@ -76,10 +102,12 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
         binding.editHeight.filters = filterArray
     }
 
+    fun setFlag(boolean: Boolean) {flag = boolean}
+
     private fun chekButton() = with(binding) {
         buttonCreate.setOnClickListener {
             if(flag){
-                createNote()
+                createNoteWidthHeight()
                 flag = false
                 timeOutButton()
             }
@@ -97,39 +125,21 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
     private fun timeOutButton(){
         scope.launch {
             delay(DELAY_BUTTON)
-
             flag = true
-            fragmentNoteBook.setFlagBlockChip(true)
         }
     }
 
-    private fun createNote() {
+    private fun createNoteWidthHeight() {
         if(getHeight() > -1 && getWidth() > -1) {
             createNote(getHeight(), getWidth())
-            fragmentNoteBook.constructorFragmentClose()
         }
     }
 
-    override fun getHeight() : Int = with(binding){
-        val inputH = editHeight.text.toString()
+    override fun getWidth() : Int = heightWidthInputEditText(binding.editWidth)
+    override fun getHeight() : Int = heightWidthInputEditText(binding.editHeight)
 
-        if (inputH.isNotEmpty()) {
-            val inH = inputH.toInt()
-
-            if(inH in MIN_NOTE_SIZE..MAX_NOTE_SIZE) {
-                return inH
-            } else {
-                editHeight.error = getString(R.string.range_error)
-            }
-        } else {
-            editHeight.error = getString(R.string.empty_field_error_messange)
-            Toast.makeText(requireContext(),getString(R.string.empty_field_error_messange),Toast.LENGTH_SHORT).show()
-        }
-        return -1
-    }
-
-    override fun getWidth() : Int = with(binding){
-        val inputW = editWidth.text.toString()
+    private fun heightWidthInputEditText(editText: EditText) : Int {
+        val inputW = editText.text.toString()
 
         if (inputW.isNotEmpty()) {
             val inW = inputW.toInt()
@@ -137,10 +147,10 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
             if(inW in MIN_NOTE_SIZE..MAX_NOTE_SIZE) {
                 return inW
             } else {
-                editWidth.error = getString(R.string.range_error)
+                editText.error = getString(R.string.range_error)
             }
         } else {
-            editWidth.error = getString(R.string.empty_field_error_messange)
+            editText.error = getString(R.string.empty_field_error_messange)
             Toast.makeText(requireContext(),getString(R.string.empty_field_error_messange),Toast.LENGTH_SHORT).show()
         }
         return -1
@@ -172,22 +182,37 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
                 val string = editorStandardNoteFragmentEditor.getNoteText()
                 val randomId = Random().nextInt(RANDOM_ID)
                 fragmentNoteBook.saveAndCreateDataNotesStandard(width, height, colorCard, string,0,0, randomId, NOTES_ELEVATION)
+                fragmentNoteBook.constructorFragmentClose()
             }
             ConstType.PAINT_TYPE  ->    {
                 val bitmapURL = editorPaintNoteFragmentEditor.getImageURL()
                 val randomId = Random().nextInt(RANDOM_ID)
                 fragmentNoteBook.saveAndCreateDataNotesPaint(width, height, colorCard, bitmapURL,0 ,0, randomId, NOTES_ELEVATION)
+                fragmentNoteBook.constructorFragmentClose()
             }
             ConstType.FOOD_TYPE  ->    {
-                val string = editorFoodNoteFragmentEditor.getListFoodsText()
-                val randomId = Random().nextInt(RANDOM_ID)
-                fragmentNoteBook.saveAndCreateDataNotesStandard(width, height, colorCard, string,0 ,0, randomId, NOTES_ELEVATION)
+                val stringFoods = editorFoodNoteFragmentEditor.getListFoodsText()
+                val stringWeight = editorFoodNoteFragmentEditor.getListWeightText()
+
+                val listFoods = stringFoods.split("\n")
+                val listWeight = stringWeight.split("\n")
+
+                viewModel.sendServerToCal(listFoods,listWeight)
             }
         }
     }
 
+    private fun createFoodNote(general: String){
+        val stringFoods = editorFoodNoteFragmentEditor.getListFoodsText()
+        val stringWeight = editorFoodNoteFragmentEditor.getListWeightText()
+        val randomId = Random().nextInt(RANDOM_ID)
+
+        fragmentNoteBook.saveAndCreateDataNotesFoods(getWidth(), getHeight(), colorCard, stringFoods, stringWeight, general,0 ,0, randomId, NOTES_ELEVATION)
+        fragmentNoteBook.constructorFragmentClose()
+    }
+
     companion object {
-        fun newInstance(fragmentNotes: NotesFragment, typeNotes: ConstType) : ConstructorFragment{
+        fun newInstance(fragmentNotes: NotesFragment, typeNotes: ConstType) : ConstructorFragment {
             val fragment = ConstructorFragment()
             fragment.fragmentNoteBook = fragmentNotes
             fragment.typeNote = typeNotes

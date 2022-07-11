@@ -1,4 +1,4 @@
-package com.example.foodnote.ui.notes_fragment.interfaces
+package com.example.foodnote.ui.noteBook.interfaces
 
 import android.view.View
 
@@ -10,9 +10,9 @@ interface NoteBookFragmentInterface {
 
     fun saveAndCreateDataNotesStandard(widthCard: Int, heightCard: Int, colorCard: Int, note: String, posX : Int, posY : Int, id : Int, elevation: Float)
 
-    fun setFlagBlockChip(boolean: Boolean)
-
     fun setNewCardCoordinatesData(viewX : Int, viewY : Int, view : View)
 
     fun setElevationView(view: View)
+
+    fun saveAndCreateDataNotesFoods(widthCard: Int, heightCard: Int, colorCard: Int, listFoods: String, listWeight :String,general : String, posX : Int, posY : Int, id : Int, elevation: Float)
 }

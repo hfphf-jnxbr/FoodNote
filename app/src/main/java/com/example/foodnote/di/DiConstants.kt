@@ -9,4 +9,4 @@ internal const val NAME_DATASOURCE_REMOTE = "Data Source Remote"
 internal const val NAME_DATASOURCE_FIREBASE = "Data Source Remote"
 
 internal const val DATA_BASE = "Data base room"
-internal const val DATA_BASE_NAME = "notesDB_1.9"
+internal const val DATA_BASE_NAME = "notesDB_2.0"

@@ -1,13 +1,19 @@
-package com.example.foodnote.ui.base.helperView
+package com.example.foodnote.ui.noteBook.helperView
 
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.view.MotionEvent
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.example.foodnote.ui.notes_fragment.NotesFragment
+import androidx.core.animation.doOnEnd
+import com.example.foodnote.ui.noteBook.mainFragmenNoteBook.NotesFragment
+import kotlinx.coroutines.*
 
 @SuppressLint("ClickableViewAccessibility")
-class MovedView(private val listView : ArrayList<View>, root : ConstraintLayout, private val fragmentNoteBook: NotesFragment) : View.OnTouchListener , MovedViewInterface{
+class MovedView(private val listView : ArrayList<View>, root : ConstraintLayout, private val fragmentNoteBook: NotesFragment) : View.OnTouchListener , MovedViewInterface {
+
+    private val scope = CoroutineScope(Dispatchers.IO)
+    private var startAnim = true
 
     init {
         root.setOnTouchListener(this)
@@ -25,7 +31,7 @@ class MovedView(private val listView : ArrayList<View>, root : ConstraintLayout,
             when (event.action) {
                 0 -> focusView(event)
                 2 -> movedView(event)
-                1 -> deleteFocusView(event)
+                1 -> deleteFocusView()
             }
         }
         return true
@@ -66,20 +72,23 @@ class MovedView(private val listView : ArrayList<View>, root : ConstraintLayout,
             }
 
             maxElevationView.isPressed = true
-            maxElevationView.elevation = 60f
+
+            startAnim = true
+            animElevationUp(maxElevationView)
         }
         listElevation.clear()
     }
 
-    private fun deleteFocusView(event: MotionEvent) {
+    private fun deleteFocusView() {
         listView.forEach { view ->
             view.apply {
                 if (isPressed) {
                     isPressed = false
-                    elevation = 16f
+
+                    startAnim = true
+                    animElevationDown(view)
 
                     fragmentNoteBook.setNewCardCoordinatesData(view.x.toInt(), view.y.toInt(), view)
-                    fragmentNoteBook.setElevationView(view)
                 } else {
                     elevation = 15f
                     fragmentNoteBook.setElevationView(view)
@@ -99,6 +108,48 @@ class MovedView(private val listView : ArrayList<View>, root : ConstraintLayout,
 
     override fun blockMove(flag: Boolean) {
         flagBlock = flag
+    }
+
+    private fun animElevationUp(view: View) {
+        scope.launch {
+            var elevation = view.elevation
+            val speed = 6f
+
+            while (startAnim) {
+                Thread.sleep(10)
+                withContext(Dispatchers.Main){
+                    view.elevation = elevation
+                }
+                if(elevation < 60) {
+                    elevation += speed
+                } else {
+                    startAnim = false
+                }
+            }
+        }
+    }
+
+    private fun animElevationDown(view: View) {
+        scope.launch {
+            var elevation = view.elevation
+            val speed = -6f
+
+            while (startAnim) {
+                Thread.sleep(10)
+                withContext(Dispatchers.Main){
+                    view.elevation = elevation
+                }
+                if(elevation > 18) {
+                    elevation += speed
+                } else {
+                    startAnim = false
+                    view.elevation = 16f
+                }
+            }
+            withContext(Dispatchers.IO) {
+                fragmentNoteBook.setElevationView(view)
+            }
+        }
     }
 }
 

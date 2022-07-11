@@ -1,8 +1,8 @@
-package com.example.foodnote.ui.notes_fragment.constNote
+package com.example.foodnote.ui.noteBook.constNote
 
 object Const {
 
-    const val DELAY_BUTTON = 1000L
+    const val DELAY_BUTTON = 3000L
 
     const val STROKE_WIDTH = 3
     const val STROKE_WIDTH_FOCUS = 6
@@ -21,12 +21,14 @@ object Const {
     const val MAX_CANVAS_HEIGHT_DP = 500
     const val MARGIN_CANVAS_DP = 32
 
-    const val MAX_NOTES = 10
     const val NOTES_ELEVATION = 17f
 
     const val SEED = 9999999999
     const val RANDOM_ID = 999999999
 
+    const val STACK_CONSTRUCTOR = "STACK_CONSTRUCTOR"
+
     const val TABLE_PAINT = "notePaint"
     const val TABLE_STANDARD = "noteStandard"
+    const val TABLE_FOOD = "noteFood"
 }
