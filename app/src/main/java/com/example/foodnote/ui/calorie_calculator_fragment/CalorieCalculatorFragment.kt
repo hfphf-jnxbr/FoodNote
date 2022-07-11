@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.foodnote.R
+import com.example.foodnote.data.base.AppState
 import com.example.foodnote.data.base.SampleState
 import com.example.foodnote.data.model.DiaryItem
 import com.example.foodnote.databinding.FragmentCalorieCalculatorBinding
@@ -14,6 +15,10 @@ import com.example.foodnote.ui.base.BaseViewBindingFragment
 import com.example.foodnote.ui.calorie_calculator_fragment.adapter.CalorieCalculatorAdapter
 import com.example.foodnote.ui.calorie_calculator_fragment.adapter.ItemClickListener
 import com.example.foodnote.ui.calorie_calculator_fragment.viewModel.CalorieCalculatorViewModel
+import com.example.foodnote.utils.hide
+import com.example.foodnote.utils.show
+import com.example.foodnote.utils.showToast
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -25,10 +30,12 @@ import java.util.*
 class CalorieCalculatorFragment :
     BaseViewBindingFragment<FragmentCalorieCalculatorBinding>(FragmentCalorieCalculatorBinding::inflate),
     ItemClickListener {
+
     private val viewModel: CalorieCalculatorViewModel by viewModel()
     private val adapter by lazy {
         CalorieCalculatorAdapter(this)
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,14 +50,20 @@ class CalorieCalculatorFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initDate()
-        viewModel.initCalorie()
-        viewModel.initRandomList()
+        initView()
     }
 
-    override fun onResume() {
-        super.onResume()
+    private fun initView() {
+        initDate()
         initCircle()
+        viewModel.initCalorie()
+        uiScope.launch {
+            getDiary()
+        }
+        binding.addDiaryButton.setOnClickListener {
+            val diaryItem = viewModel.generateRandomItem(idUser)
+            viewModel.saveDiary(diaryItem)
+        }
     }
 
     private fun initCircle() = with(binding) {
@@ -75,25 +88,41 @@ class CalorieCalculatorFragment :
                 resources.getString(R.string.format_challenge, carb.first, carb.second)
         }
 
+    private suspend fun getDiary() {
+        viewModel.getDiary(idUser).collect { state ->
+            when (state) {
+                is AppState.Loading -> {
+                    binding.root.context.showToast("LOADING")
+                    binding.diaryCardView.hide()
+                }
+
+                is AppState.Success -> {
+                    binding.diaryCardView.show()
+                    initRcView(state.data as MutableList<DiaryItem>)
+                }
+
+                is AppState.Error -> {
+                    binding.diaryCardView.hide()
+                }
+                else -> {}
+            }
+        }
+    }
+
     private fun setState(state: SampleState) {
 
         if (state.calorie != null) {
             val calorie = state.calorie
             initCalories(calorie.first, calorie.second, calorie.third)
         }
-
-
-        if (state.diaryList.isNotEmpty()) {
-            val diaryList = state.diaryList
-            initRcView(diaryList)
-        }
     }
 
-    private fun initRcView(list: ArrayList<DiaryItem>) {
+    private fun initRcView(list: MutableList<DiaryItem>) {
+        if (binding.diaryContainerRcView.adapter == null) {
+            binding.diaryContainerRcView.layoutManager = LinearLayoutManager(context)
+            binding.diaryContainerRcView.adapter = adapter
+            binding.diaryContainerRcView.itemAnimator?.changeDuration = 0
+        }
         adapter.setItem(list)
-        binding.diaryContainerRcView.layoutManager = LinearLayoutManager(context)
-        binding.diaryContainerRcView.adapter = adapter
-        binding.diaryContainerRcView.itemAnimator?.changeDuration = 0
-
     }
 }
