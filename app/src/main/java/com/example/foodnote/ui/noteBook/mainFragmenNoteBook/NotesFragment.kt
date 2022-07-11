@@ -13,6 +13,7 @@ import androidx.core.animation.doOnEnd
 import androidx.core.view.updateLayoutParams
 import com.example.foodnote.R
 import com.example.foodnote.data.databaseRoom.dao.DaoDB
+import com.example.foodnote.data.databaseRoom.entities.EntitiesNotesFood
 import com.example.foodnote.data.databaseRoom.entities.EntitiesNotesPaint
 import com.example.foodnote.data.databaseRoom.entities.EntitiesNotesStandard
 import com.example.foodnote.databinding.CardFoodsBinding
@@ -63,13 +64,17 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
         scope.launch {
             val dataStandardNotes = notesDao.getAllNotesStandard()
             val dataPaintNotes = notesDao.getAllNotesPaint()
+            val dataFoodNotes = notesDao.getAllNotesFood()
             withContext(Dispatchers.Main) {
 
-                dataPaintNotes.forEach { notes ->
-                    setDataCreatePaintNote(notes.widthCard,notes.heightCard,notes.colorCard,notes.fileName,notes.cardPositionX,notes.cardPositionY,notes.idCard,notes.elevation.toFloat())
+                dataPaintNotes.forEach { not ->
+                    setDataCreatePaintNote(not.widthCard,not.heightCard,not.colorCard,not.fileName,not.cardPositionX,not.cardPositionY,not.idCard,not.elevation.toFloat())
                 }
-                dataStandardNotes.forEach { notes ->
-                    setDataCreateStandardNote(notes.widthCard,notes.heightCard,notes.colorCard,notes.note,notes.cardPositionX,notes.cardPositionY,notes.idCard,notes.elevation.toFloat())
+                dataStandardNotes.forEach { not ->
+                    setDataCreateStandardNote(not.widthCard,not.heightCard,not.colorCard,not.note,not.cardPositionX,not.cardPositionY,not.idCard,not.elevation.toFloat())
+                }
+                dataFoodNotes.forEach { not ->
+                    setDataCreateFoodNote(not.widthCard,not.heightCard,not.colorCard,not.listFoods,not.listWeight,not.general,not.cardPositionX,not.cardPositionY,not.idCard,not.elevation.toFloat())
                 }
             }
         }
@@ -95,7 +100,10 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
 
     override fun saveAndCreateDataNotesFoods(widthCard: Int, heightCard: Int, colorCard: Int, listFoods: String, listWeight: String, general : String, posX: Int, posY: Int, id: Int, elevation: Float) {
         scope.launch {
-
+            notesDao.insertNoteFood(EntitiesNotesFood(
+                widthCard = widthCard, heightCard = heightCard, colorCard = colorCard, general = general, listFoods = listFoods, listWeight = listWeight,
+                cardPositionX = posX, cardPositionY = posY, idCard = id, elevation = elevation.toInt() )
+            )
         }
         setDataCreateFoodNote(widthCard, heightCard, colorCard, listFoods, listWeight,general, posX, posY, id, elevation)
     }
@@ -111,6 +119,10 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
                     notesDao.updateCoordinatesCardNotesPaintX(viewX,view.id)
                     notesDao.updateCoordinatesCardNotesPaintY(viewY,view.id)
                 }
+                TABLE_FOOD -> {
+                    notesDao.updateCoordinatesCardNotesFoodX(viewX,view.id)
+                    notesDao.updateCoordinatesCardNotesFoodY(viewY,view.id)
+                }
             }
         }
     }
@@ -120,6 +132,7 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
             when (view.tag) {
                 TABLE_STANDARD -> { notesDao.updateCardElevationStandard(view.elevation.toInt(),view.id) }
                 TABLE_PAINT -> {  notesDao.updateCardElevationPaint(view.elevation.toInt(),view.id) }
+                TABLE_FOOD -> {  notesDao.updateCardElevationFood(view.elevation.toInt(),view.id) }
             }
         }
     }
@@ -129,6 +142,7 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
             when (view.tag) {
                 TABLE_STANDARD -> { notesDao.deleteNoteStandard(view.id) }
                 TABLE_PAINT -> { notesDao.deleteNotePaint(view.id) }
+                TABLE_FOOD -> { notesDao.deleteNoteFood(view.id) }
             }
         }
     }
@@ -180,6 +194,13 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
                     true
                 }
             }
+           setTextFoodNote(this,widthCard,listWeight, listFoods,general)
+        }
+        createNote(cardNoteView, widthCard, heightCard, colorCard, elevation, posX, posY, idCard)
+    }
+
+    private fun setTextFoodNote(cardNoteViewBind: CardFoodsBinding,widthCard: Int,listWeight: String,listFoods: String,general: String) {
+        cardNoteViewBind.apply {
             var size = (widthCard.toFloat() * 10f) / 30f
             if (size > 15f) size = 15f
 
@@ -191,13 +212,15 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
                 text = listWeight
                 textSize = size
             }
-            textGeneral.text = general
+            textGeneral.apply {
+                text = general
+                textSize = size
+            }
             textHeader.textSize = size + 2
             textHeaderGram.textSize = size
             textGeneral.textSize = size
             headerGeneral.textSize = size
         }
-        createNote(cardNoteView, widthCard, heightCard, colorCard, elevation, posX, posY, idCard)
     }
 
     private fun createNote(cardNoteView: MaterialCardView, widthCard: Int, heightCard: Int, colorCard: Int, elevationCard : Float, posX: Int, posY: Int, idCard: Int) {
@@ -219,7 +242,7 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
 
     private fun deleteDialog(cardNoteView: View) {
         val dialog = AlertDialog.Builder(requireContext())
-        dialog.setTitle(getString(R.string.alert_dialog_header));
+        dialog.setTitle(getString(R.string.alert_dialog_header))
         dialog.setCancelable(true)
 
         dialog.setNegativeButton(getString(R.string.no)) { dialog, _ ->
@@ -273,6 +296,7 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
     override fun constructorFragmentClose() {
         flagBlockChip = false
         openCloseContainer = false
+        movedView.blockMove(true)
         objectAnimation( widthScreen.toFloat() )
     }
 
@@ -286,7 +310,6 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
 
             if(value == widthScreen.toFloat()) {
                 childFragmentManager.popBackStack()
-                movedView.blockMove(true)
             }
         }
     }

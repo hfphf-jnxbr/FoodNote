@@ -45,19 +45,31 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <com.google.android.material.button.MaterialButton
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/searchRecipe"
             android:layout_width="0dp"
             android:layout_height="27dp"
             android:layout_marginStart="8dp"
-            android:backgroundTint="#6AE1B7"
-            android:text="@string/search"
+            android:backgroundTint="@color/white"
+            app:cardCornerRadius="@dimen/margin_16dp"
+            app:strokeColor="#B8B8B8"
+            app:strokeWidth="1dp"
             android:textSize="6sp"
-            app:cornerRadius="@dimen/margin_16dp"
+            app:cornerRadius="0dp"
+            android:layout_marginBottom="4dp"
             app:layout_constraintBottom_toTopOf="@+id/view"
             app:layout_constraintEnd_toEndOf="@+id/textHeader"
             app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="SmallSp" />
+            tools:ignore="SmallSp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/recipe_search"
+                android:textSize="8sp"/>
+
+        </com.google.android.material.card.MaterialCardView>
 
         <View
             android:id="@+id/view"

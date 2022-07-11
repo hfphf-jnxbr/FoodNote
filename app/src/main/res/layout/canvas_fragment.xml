@@ -72,7 +72,7 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/clearCanvas"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="38dp"
                 android:layout_gravity="bottom|end"
                 android:layout_marginEnd="@dimen/squareColor_24dp"
                 android:layout_marginBottom="12dp"
@@ -131,7 +131,7 @@
         android:id="@+id/textAlpha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="alpha"
+        android:text="@string/alpha"
         android:textColor="#292929"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/sizeEditAlpha"
@@ -166,6 +166,71 @@
         app:layout_constraintBottom_toBottomOf="@+id/sizeEdit"
         app:layout_constraintStart_toEndOf="@+id/textPix"
         app:layout_constraintTop_toTopOf="@+id/sizeEdit" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/colorSelection"
+        android:layout_width="80dp"
+        android:layout_height="@dimen/squareColor_24dp"
+        android:backgroundTint="#F4F4F4"
+        app:cardCornerRadius="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/colorMulti"
+        app:layout_constraintEnd_toEndOf="@+id/colorMulti"
+        app:layout_constraintStart_toStartOf="@+id/colorMulti"
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="#A6A6A6"
+        app:strokeWidth="1dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/color_selection"
+            android:textSize="10sp"
+            tools:ignore="SmallSp" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/pic"
+        android:layout_width="@dimen/squareColor_24dp"
+        android:layout_height="@dimen/squareColor_24dp"
+        app:cardCornerRadius="0dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintBottom_toBottomOf="@+id/colorMulti"
+        app:layout_constraintEnd_toStartOf="@+id/colorMulti"
+        app:layout_constraintTop_toTopOf="@+id/colorMulti"
+        app:strokeColor="#A6A6A6"
+        app:strokeWidth="1dp" >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="4dp"
+            android:src="@drawable/color_pic">
+
+        </ImageView>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="3dp"
+        android:background="#979797"
+        app:layout_constraintBottom_toBottomOf="@+id/colorMulti"
+        app:layout_constraintEnd_toStartOf="@+id/colorMulti"
+        app:layout_constraintStart_toEndOf="@+id/pic"
+        app:layout_constraintTop_toTopOf="@+id/pic" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/colorMulti"
+        android:layout_width="@dimen/squareColor_24dp"
+        android:layout_height="@dimen/squareColor_24dp"
+        android:layout_marginEnd="20dp"
+        app:cardCornerRadius="0dp"
+        app:layout_constraintEnd_toStartOf="@+id/colorGreen"
+        app:layout_constraintTop_toTopOf="@+id/colorGreen"
+        app:strokeColor="#A6A6A6"
+        app:strokeWidth="1dp" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/colorGreen"
@@ -268,5 +333,70 @@
         app:strokeColor="#A6A6A6"
         app:strokeWidth="1dp" />
 
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/colorMultiPic"
+        android:layout_width="0dp"
+        android:layout_height="160dp"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="4dp"
+        android:elevation="8dp"
+        android:visibility="visible"
+        app:cardCornerRadius="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textAlpha"
+        app:layout_constraintTop_toBottomOf="@+id/colorMulti"
+        app:strokeColor="#4C4C4C"
+        app:strokeWidth="1dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.example.foodnote.ui.base.customView.ColorPic
+                android:id="@+id/palette"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@+id/seekBar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/buttonOk"
+                android:layout_width="50dp"
+                android:layout_height="0dp"
+                android:backgroundTint="#FFFFFF"
+                app:cardCornerRadius="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/palette"
+                app:strokeColor="#A5A5A5"
+                app:strokeWidth="1dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/ok" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <SeekBar
+                android:id="@+id/seekBar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginVertical="4dp"
+                android:max="359"
+                android:progress="0"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/buttonOk"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/palette" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

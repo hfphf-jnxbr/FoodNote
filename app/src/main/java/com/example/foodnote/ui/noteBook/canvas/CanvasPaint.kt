@@ -54,9 +54,7 @@ class CanvasPaint(context: Context, private val colorCardBackground: Int) : View
         paint.alpha = alpha
         paint.strokeWidth = 2f
 
-        for (i in -size..size) {
-            myCanvas.drawLine(xTemp.toFloat() + i, yTemp.toFloat() + i, xCurrent.toFloat() + i, yCurrent.toFloat() + i, paint)
-        }
+        BrushesDrawing.circleBrush(myCanvas, xCurrent, xTemp, yTemp, yCurrent, paint, size)
 
         paint.color = Color.argb(255,0,0,0)
 

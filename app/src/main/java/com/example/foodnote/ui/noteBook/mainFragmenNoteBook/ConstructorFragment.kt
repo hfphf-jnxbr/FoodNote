@@ -102,6 +102,8 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
         binding.editHeight.filters = filterArray
     }
 
+    fun setFlag(boolean: Boolean) {flag = boolean}
+
     private fun chekButton() = with(binding) {
         buttonCreate.setOnClickListener {
             if(flag){

@@ -30,6 +30,8 @@ class EditorPaintNoteFragment : BaseViewBindingFragment<PaintNoteEditorBinding>(
             val width = fragment.getWidth()
             val color = fragment.getColorBackgroundCard()
 
+            fragment.setFlag(false)
+
             if(height > -1 && width > -1) {
                 requireActivity().supportFragmentManager
                     .beginTransaction()
@@ -38,6 +40,10 @@ class EditorPaintNoteFragment : BaseViewBindingFragment<PaintNoteEditorBinding>(
                     .commit()
             }
         }
+    }
+
+    fun setFlagAnBlockButton() {
+        fragment.setFlag(true)
     }
 
     override fun loadImage(fileNameToSave : String) {

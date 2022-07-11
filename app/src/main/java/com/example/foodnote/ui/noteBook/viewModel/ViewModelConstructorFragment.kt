@@ -16,9 +16,9 @@ class ViewModelConstructorFragment() : ViewModel() , ViewModelConstructorInterfa
         viewModelScope.launch {
             kotlin.runCatching {
 
-                delay(500)
+                delay(200)
 
-                (3600).toString()
+                "3600cals"
             }.onSuccess {
 
                 // response.isSuccessful && response.body() != null

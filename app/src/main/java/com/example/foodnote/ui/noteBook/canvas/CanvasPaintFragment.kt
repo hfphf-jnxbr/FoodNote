@@ -3,14 +3,18 @@ package com.example.foodnote.ui.noteBook.canvas
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.*
+import android.graphics.Color.RED
 import android.graphics.Color.WHITE
 import android.os.Bundle
 import android.os.Environment
 import android.text.InputFilter
 import android.util.DisplayMetrics
 import android.view.View
+import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
@@ -32,7 +36,8 @@ import kotlin.random.Random
 class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(CanvasFragmentBinding::inflate) {
 
     private var colorCard = WHITE
-    private var colorCardBackground = Color.RED
+    private var saveColorCard = WHITE
+    private var colorCardBackground = RED
     private lateinit var viewCanvasPaint : CanvasPaint
     private lateinit var fragment: EditorPaintNoteFragment
 
@@ -86,47 +91,105 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
 
     private fun convertDpToPixels( dp: Int) = (dp * requireContext().resources.displayMetrics.density).toInt()
 
-    private fun chekColor() = with(binding){
-        val list = listOf(colorBlue,colorPink,colorYellow,colorGray,colorWhite,colorBlack,colorPurple,colorGreen)
+    private fun chekColor() = with(binding) {
+        val list = listOf(colorBlue,colorPink,colorYellow,colorGray,colorWhite,colorBlack,colorPurple,colorGreen,colorMulti)
 
         list.forEach { view ->
             view.setOnClickListener {
 
-                list.forEach { e ->
-                    e.strokeColor = Color.LTGRAY
-                    e.strokeWidth = Const.STROKE_WIDTH
-                }
+                clearStroke()
 
                 view.strokeColor = Color.GRAY
                 view.strokeWidth = Const.STROKE_WIDTH_FOCUS
-                colorCard = view.backgroundTintList?.defaultColor ?: WHITE
 
+                colorCard = if(view.id == R.id.colorMulti) {
+                    saveColorCard
+                } else {
+                    view.backgroundTintList?.defaultColor ?: WHITE
+                }
                 viewCanvasPaint.setColor(colorCard)
             }
         }
     }
 
-    private fun editTextFilter() {
-        val filterArray = Array<InputFilter>(1) { InputFilter.LengthFilter(2) }
-        binding.sizeEdit.filters = filterArray
+    private fun clearStroke() = with(binding) {
+        val list = listOf(colorBlue,colorPink,colorYellow,colorGray,colorWhite,colorBlack,colorPurple,colorGreen,colorMulti)
+
+        list.forEach { e ->
+            e.strokeColor = Color.LTGRAY
+            e.strokeWidth = Const.STROKE_WIDTH
+        }
     }
 
-    private fun buttonChek() {
-        binding.clearCanvas.setOnClickListener {
-            viewCanvasPaint.clearCanvas()
-        }
+    fun setColorPic(color: Int) = with(binding.colorMulti){
+        setBackgroundColor(color)
+        saveColorCard = color
 
-        binding.saveButton.setOnClickListener {
+        clearStroke()
+        strokeColor = Color.GRAY
+        strokeWidth = Const.STROKE_WIDTH_FOCUS
+
+        colorCard = color
+        viewCanvasPaint.setColor(colorCard)
+    }
+
+    private fun editTextFilter() = with(binding) {
+        val filterArray = Array<InputFilter>(1) { InputFilter.LengthFilter(2) }
+        sizeEdit.filters = filterArray
+    }
+
+    private fun buttonChek() = with(binding){
+        clearCanvas.setOnClickListener {
+            deleteDialog()
+        }
+        saveButton.setOnClickListener {
             saveImage()
         }
-
-        binding.cancelButton.setOnClickListener {
+        cancelButton.setOnClickListener {
             requireActivity().supportFragmentManager
                 .beginTransaction()
                 .setCustomAnimations(R.anim.anim_layout_2,R.anim.anim_layout)
                 .replace(R.id.containerCanvas, Fragment())
                 .commit()
+
+            fragment.setFlagAnBlockButton()
         }
+
+        colorMultiPic.visibility = View.GONE
+
+        buttonOk.setOnClickListener {
+            colorMultiPic.visibility = View.GONE
+        }
+        colorSelection.setOnClickListener {
+            colorMultiPic.visibility = View.VISIBLE
+        }
+
+        palette.setFragment(this@CanvasPaintFragment)
+        seekBar.setOnSeekBarChangeListener(seekBarChangeListener)
+    }
+
+    private val seekBarChangeListener: OnSeekBarChangeListener = object : OnSeekBarChangeListener {
+        override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+            binding.palette.setColorH(progress)
+        }
+
+        override fun onStartTrackingTouch(seekBar: SeekBar) {}
+        override fun onStopTrackingTouch(seekBar: SeekBar) {}
+    }
+
+    private fun deleteDialog() {
+        val dialog = AlertDialog.Builder(requireContext())
+        dialog.setTitle(getString(R.string.clearCanvas_mess))
+        dialog.setCancelable(true)
+
+        dialog.setNegativeButton(getString(R.string.no)) { dialog, _ ->
+            dialog.dismiss()
+        }
+        dialog.setPositiveButton(getString(R.string.yes)) { dialog, _ ->
+            viewCanvasPaint.clearCanvas()
+            dialog.dismiss()
+        }
+        dialog.create().show()
     }
 
     private fun pixSize() = with(binding) {
@@ -184,7 +247,7 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
         }
     }
 
-    private fun getRandomName() = "image${Random(SEED)}.png"
+    private fun getRandomName() = "image2${Random(SEED)}.png"
 
     private fun bitmapToFile(bitmap: Bitmap, fileNameToSave: String): File? {
         var file: File? = null
@@ -207,6 +270,7 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
             fos.close()
 
             fragment.loadImage(fileNameToSave)
+            fragment.setFlagAnBlockButton()
 
             file
         } catch (e: Exception) {
