@@ -5,7 +5,7 @@ import com.example.foodnote.data.model.food.Food
 
 class DiaryItemDetailDatasourceImpl(private val apiService: ApiService) :
     DiaryItemDetailDatasource {
-    override fun searchProduct(name: String): Food {
-        TODO("Not yet implemented")
+    override suspend fun searchProduct(name: String): Food {
+        return apiService.getProductByName(name)
     }
 }

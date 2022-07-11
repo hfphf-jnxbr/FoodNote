@@ -9,7 +9,7 @@ interface ApiService {
      * Получение данных о продукте по названию
      */
     @GET("food-database/v2/parser")
-    fun getProductByName(
+    suspend fun getProductByName(
         @Query("ingr") ingr: String,
         @Query("nutrition-type") type: String = "cooking"
     ): Food
