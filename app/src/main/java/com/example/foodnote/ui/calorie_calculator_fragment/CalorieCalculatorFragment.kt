@@ -1,10 +1,14 @@
 package com.example.foodnote.ui.calorie_calculator_fragment
 
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.TimePicker
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.foodnote.R
 import com.example.foodnote.data.base.AppState
@@ -63,6 +67,7 @@ class CalorieCalculatorFragment :
         binding.addDiaryButton.setOnClickListener {
             val diaryItem = viewModel.generateRandomItem(idUser)
             viewModel.saveDiary(diaryItem)
+            showDialog()
         }
     }
 
@@ -124,5 +129,30 @@ class CalorieCalculatorFragment :
             binding.diaryContainerRcView.itemAnimator?.changeDuration = 0
         }
         adapter.setItem(list)
+    }
+
+    private fun showDialog() {
+        val builder = AlertDialog.Builder(context)
+        // Set the dialog title
+        val inflater = requireActivity().layoutInflater;
+        val view = inflater.inflate(R.layout.diary_create_dialog, null)
+        val editText = view.findViewById<EditText>(R.id.name_diary_title_text_view)
+        val timePicker = view.findViewById<TimePicker>(R.id.time_diary_time_picker)
+        builder
+            .setView(view)
+            .setTitle(R.string.create_notes)
+            // Set the action buttons
+            .setPositiveButton(R.string.save,
+                DialogInterface.OnClickListener { dialog, id ->
+                    val text = editText.text.toString()
+                    val time = "${timePicker.hour}:${timePicker.minute}"
+                })
+            .setNegativeButton(R.string.disabled,
+                DialogInterface.OnClickListener { dialog, id ->
+                    dialog.cancel()
+                })
+
+        builder.create()
+        builder.show()
     }
 }
