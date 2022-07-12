@@ -73,7 +73,11 @@ class CalorieCalculatorFragment :
         binding.addDiaryButton.setOnClickListener {
             showDialog { time, name ->
                 val diaryItem = viewModel.generateRandomItem(idUser, time, name)
-                viewModel.saveDiary(diaryItem)
+                uiScope.launch {
+                    viewModel.saveDiary(diaryItem).collect {
+                        context?.showToast(it)
+                    }
+                }
             }
         }
     }

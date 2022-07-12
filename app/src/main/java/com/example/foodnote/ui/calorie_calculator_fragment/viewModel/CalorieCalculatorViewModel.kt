@@ -9,6 +9,7 @@ import com.example.foodnote.data.repository.datastore_pref_repository.UserPrefer
 import com.example.foodnote.ui.base.viewModel.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.random.Random
@@ -65,23 +66,18 @@ class CalorieCalculatorViewModel(
         return item
     }
 
-    fun getDiary(idUser: String) = interactor
-        .getDiaryCollection(
-            SimpleDateFormat("dd.MMMM.YYYY")
-                .format(Date()),
-            idUser
-        )
-
-
-    fun saveDiary(item: DiaryItem) {
-        viewModelScope.launch(Dispatchers.IO) {
-            kotlin.runCatching {
-                interactor.saveDiary(item)
-            }.onSuccess {
-                stateLiveData.postValue(stateLiveData.value?.copy(diaryItem = it))
-            }.onFailure {
-                stateLiveData.postValue(stateLiveData.value?.copy(error = it))
-            }
-        }
+    suspend fun getDiary(idUser: String) = withContext(Dispatchers.IO) {
+        interactor
+            .getDiaryCollection(
+                SimpleDateFormat("dd.MMMM.YYYY")
+                    .format(Date()),
+                idUser
+            )
     }
+
+
+    suspend fun saveDiary(item: DiaryItem) = withContext(Dispatchers.IO) {
+        interactor.saveDiary(item)
+    }
+
 }

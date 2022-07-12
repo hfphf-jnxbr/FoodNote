@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 class CalorieCalculatorInteractorImpl(private val repository: CalorieRepository) :
     CalorieCalculatorInteractor {
-    override fun saveDiary(item: DiaryItem): DiaryItem {
+    override fun saveDiary(item: DiaryItem): Flow<String> {
         return repository.saveDiary(item)
     }
 
