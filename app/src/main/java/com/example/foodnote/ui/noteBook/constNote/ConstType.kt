@@ -1,4 +1,4 @@
-package com.example.foodnote.ui.notes_fragment.constNote
+package com.example.foodnote.ui.noteBook.constNote
 
 enum class ConstType {
     STANDARD_TYPE,

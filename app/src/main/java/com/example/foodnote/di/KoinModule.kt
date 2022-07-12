@@ -25,6 +25,7 @@ import com.example.foodnote.data.repository.diary_item_detail_repository.DiaryIt
 import com.example.foodnote.ui.auth_fragment.viewModel.AuthViewModel
 import com.example.foodnote.ui.calorie_calculator_fragment.viewModel.CalorieCalculatorViewModel
 import com.example.foodnote.ui.diary_item_detail_fragment.viewModel.DiaryItemDetailViewModel
+import com.example.foodnote.ui.noteBook.viewModel.ViewModelConstructorFragment
 import com.example.foodnote.ui.splash_screen_fragment.viewModel.SplashScreenViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
@@ -50,6 +51,7 @@ val applicationModule = module {
     single(named(DATA_BASE)) { (context: Context) ->
         Room.databaseBuilder(context, DataBase::class.java, DATA_BASE_NAME).build().dataBase()
     }
+
 }
 val splashScreenModule = module {
     viewModel {
@@ -93,6 +95,7 @@ val authScreenModule = module {
     }
 }
 
+
 val diaryItemDetailScreenModule = module {
     factory<FirebaseCalorieDataSource> {
         FireBaseCalorieDataSourceImpl(get(named(NAME_DATASOURCE_FIREBASE)))
@@ -113,4 +116,8 @@ val diaryItemDetailScreenModule = module {
     viewModel<DiaryItemDetailViewModel> {
         DiaryItemDetailViewModel(get(named(NAME_PREF_APP_REPOSITORY)), get())
     }
+    
+val noteBookModule = module {
+    viewModel { ViewModelConstructorFragment() }
+
 }

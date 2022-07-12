@@ -1,8 +1,8 @@
-package com.example.foodnote.ui.notes_fragment.editorNote
+package com.example.foodnote.ui.noteBook.editorNote
 
 import com.example.foodnote.databinding.FoodNoteEditorBinding
 import com.example.foodnote.ui.base.BaseViewBindingFragment
-import com.example.foodnote.ui.notes_fragment.interfaces.EditorFoodsNoteFragmentInterface
+import com.example.foodnote.ui.noteBook.interfaces.EditorFoodsNoteFragmentInterface
 
 class EditorFoodsNoteFragment : BaseViewBindingFragment<FoodNoteEditorBinding>(FoodNoteEditorBinding::inflate) , EditorFoodsNoteFragmentInterface {
     override fun getListFoodsText() = binding.listFoods.text.toString()

@@ -1,4 +1,4 @@
-package com.example.foodnote.ui.notes_fragment.interfaces
+package com.example.foodnote.ui.noteBook.interfaces
 
 interface EditorPaintNoteFragmentInterface {
     fun loadImage(fileNameToSave : String)

@@ -52,8 +52,20 @@
     <string name="no">нет</string>
     <string name="yes">да</string>
     <string name="list_foods">List foods</string>
+
+    <string name="list_foods_hint">Введите по строчно название продуктов</string>
+    <string name="list_foods_header">List Foods</string>
+    <string name="gram">gm</string>
+    <string name="network_error_mess">Network ERROR</string>
+    <string name="general">General:</string>
+    <string name="search">search</string>
+    <string name="recipe_search">recipe search</string>
+    <string name="color_selection">color selection</string>
+    <string name="alpha">alpha</string>
+    <string name="ok">OK</string>
+    <string name="clearCanvas_mess">Вы точно хотите очистить холст?</string>
     <string name="weight_gm">вес гм</string>
-    <string name="list_foods_hint">Введите список продуктов через пробел</string>
+    
     <string name="exit">выйти</string>
     <string name="type_name_product">Введите название продукта</string>
     <string name="count_products">%d шт</string>
