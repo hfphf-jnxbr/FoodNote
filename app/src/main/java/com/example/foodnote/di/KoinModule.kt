@@ -113,11 +113,13 @@ val diaryItemDetailScreenModule = module {
         DiaryItemDetailInteractorImpl(get())
     }
 
-    viewModel<DiaryItemDetailViewModel> {
+    viewModel {
         DiaryItemDetailViewModel(get(named(NAME_PREF_APP_REPOSITORY)), get())
     }
+}
     
 val noteBookModule = module {
-    viewModel { ViewModelConstructorFragment() }
-
+    viewModel {
+        ViewModelConstructorFragment()
+    }
 }
