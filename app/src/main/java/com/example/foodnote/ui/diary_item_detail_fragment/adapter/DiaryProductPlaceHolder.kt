@@ -15,9 +15,10 @@ class DiaryProductPlaceHolder(item: View) : RecyclerView.ViewHolder(item) {
         Glide
             .with(context)
             .load(item.image)
+            .circleCrop()
             .apply(
                 RequestOptions()
-                    .error(R.drawable.product_place_holder)
+                    .error(R.drawable.ic_baseline_fastfood_24)
                     .centerCrop()
             )
             .into(productImageView);

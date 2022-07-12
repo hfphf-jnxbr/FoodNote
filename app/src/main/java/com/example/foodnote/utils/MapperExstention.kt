@@ -7,17 +7,17 @@ fun Food.toFoodListDto(): List<FoodDto> {
     val foods = this.parsed.map {
         it.food.toFoodDto()
     }
+
     return foods
 }
 
 fun Food.toFoodDto(): FoodDto {
-    val foodItem = this.parsed.first().food
     return FoodDto(
-        foodItem.image,
-        foodItem.label,
-        foodItem.nutrients.enercal,
-        foodItem.nutrients.procnt,
-        foodItem.nutrients.fat,
-        foodItem.nutrients.chocdf
+        this.image ?: "",
+        this.label ?: "",
+        this.nutrients?.enercal ?: 0.0,
+        this.nutrients?.procnt ?: 0.0,
+        this.nutrients?.fat ?: 0.0,
+        this.nutrients?.chocdf ?: 0.0
     )
 }

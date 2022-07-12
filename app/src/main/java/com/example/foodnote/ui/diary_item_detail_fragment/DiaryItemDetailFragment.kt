@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.foodnote.data.base.SampleState
+import com.example.foodnote.data.model.food.FoodDto
 import com.example.foodnote.databinding.FragmentDiaryItemDetailBinding
 import com.example.foodnote.ui.base.BaseViewBindingFragment
 import com.example.foodnote.ui.diary_item_detail_fragment.adapter.DiaryItemProductAdapter
@@ -35,7 +37,9 @@ class DiaryItemDetailFragment :
 
 
     private fun setState(appState: SampleState) {
-
+        if (appState.foodDtoItems.isNotEmpty()) {
+            initRcView(appState.foodDtoItems)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,5 +56,18 @@ class DiaryItemDetailFragment :
             }
             false
         }
+    }
+
+    private fun initRcView(list: List<FoodDto>) {
+        if (binding.productRcView.adapter == null) {
+            binding.productRcView.layoutManager = LinearLayoutManager(context)
+            binding.productRcView.adapter = adapter
+            binding.productRcView.itemAnimator?.changeDuration = 0
+        }
+        adapter.setItem(list)
+    }
+
+    private companion object {
+        const val LOG_TAG = "LOG_DIARY_ITEM_FRAGMENT"
     }
 }
