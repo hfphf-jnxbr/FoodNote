@@ -1,8 +1,8 @@
 package com.example.foodnote.data.datasource.calorire_datasource.firebase
 
-import android.util.Log
 import com.example.foodnote.data.base.AppState
 import com.example.foodnote.data.model.DiaryItem
+import com.example.foodnote.data.model.food.FoodDto
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -14,22 +14,45 @@ import java.util.*
 
 
 class FireBaseCalorieDataSourceImpl(private val db: FirebaseFirestore) : FirebaseCalorieDataSource {
-    override fun saveDiaryItem(diaryItem: DiaryItem): DiaryItem {
-        diaryItem.idUser?.let {
-            db.collection(diaryItem.idUser)
-                .document("Diary")
-                .collection("DiaryItem")
-                .document(UUID.randomUUID().toString())
-                .set(diaryItem)
-                .addOnSuccessListener {
-                    Log.d("DB_SAVE", "DocumentSnapshot add")
-                }
-                .addOnFailureListener { e ->
-                    Log.w("DB_SAVE_ERROR", "Error adding document", e)
-                }
-        }
+    private companion object {
+        const val PRODUCT_COLLECTION_NAME = "Products"
+        const val DIARY_DOCUMENT_NAME = "Diary"
+        const val DIARY_ITEM_COLLECTION_NAME = "DiaryItem"
+    }
 
-        return diaryItem
+    override fun saveDiaryItem(diaryItem: DiaryItem, foodItem: FoodDto?): Flow<String> {
+        return flow {
+            diaryItem.idUser?.let {
+                var error: Throwable? = null
+                val collection = db.collection(diaryItem.idUser)
+                    .document(DIARY_DOCUMENT_NAME)
+                    .collection(DIARY_ITEM_COLLECTION_NAME)
+                    .document(diaryItem.dbId ?: UUID.randomUUID().toString())
+
+                collection.set(diaryItem)
+                    .addOnSuccessListener {
+
+                    }
+                    .addOnFailureListener {
+                        error = it
+                    }
+                    .await()
+                if (foodItem != null) {
+                    collection.collection(PRODUCT_COLLECTION_NAME)
+                        .document(UUID.randomUUID().toString())
+                        .set(foodItem)
+                }
+                if (error != null) {
+                    emit(error!!.message.toString())
+                } else {
+                    emit("Success")
+                }
+
+            }
+
+        }.catch {
+            emit(it.message.toString())
+        }.flowOn(Dispatchers.IO)
     }
 
     override fun getDiaryCollection(
@@ -38,7 +61,7 @@ class FireBaseCalorieDataSourceImpl(private val db: FirebaseFirestore) : Firebas
     ): Flow<AppState<MutableList<DiaryItem>>> {
         return flow<AppState<MutableList<DiaryItem>>> {
             emit(AppState.Loading())
-            val path = "/$idUser/Diary/DiaryItem"
+            val path = "/$idUser/$DIARY_DOCUMENT_NAME/$DIARY_ITEM_COLLECTION_NAME"
             val result = db
                 .collection(path)
                 .whereEqualTo("date", date)

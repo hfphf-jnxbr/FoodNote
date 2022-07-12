@@ -3,7 +3,7 @@ package com.example.foodnote.ui.calorie_calculator_fragment.viewModel
 
 import androidx.lifecycle.viewModelScope
 import com.example.foodnote.data.base.SampleState
-import com.example.foodnote.data.interactor.CalorieCalculatorInteractor
+import com.example.foodnote.data.interactor.calorie_interactor.CalorieCalculatorInteractor
 import com.example.foodnote.data.model.DiaryItem
 import com.example.foodnote.data.repository.datastore_pref_repository.UserPreferencesRepository
 import com.example.foodnote.ui.base.viewModel.BaseViewModel
@@ -52,11 +52,11 @@ class CalorieCalculatorViewModel(
         }
     }
 
-    fun generateRandomItem(idUser: String): DiaryItem {
+    fun generateRandomItem(idUser: String, time: String, name: String): DiaryItem {
         val item = DiaryItem(
-            "item ${Random.nextInt(500, 7000)}",
+            name,
             Random.nextLong(100, 500),
-            SimpleDateFormat("hh:mm").format(Date()),
+            time,
             SimpleDateFormat("dd.MMMM.YYYY").format(Date()),
             idUser,
             UUID.randomUUID().toString()
@@ -78,7 +78,7 @@ class CalorieCalculatorViewModel(
             kotlin.runCatching {
                 interactor.saveDiary(item)
             }.onSuccess {
-                stateLiveData.postValue(stateLiveData.value?.copy(lastAddItem = it))
+                stateLiveData.postValue(stateLiveData.value?.copy(diaryItem = it))
             }.onFailure {
                 stateLiveData.postValue(stateLiveData.value?.copy(error = it))
             }
