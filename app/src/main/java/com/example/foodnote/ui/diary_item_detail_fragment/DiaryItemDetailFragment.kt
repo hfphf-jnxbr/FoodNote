@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.foodnote.data.base.SampleState
 import com.example.foodnote.data.model.food.FoodDto
@@ -13,6 +14,7 @@ import com.example.foodnote.ui.base.BaseViewBindingFragment
 import com.example.foodnote.ui.diary_item_detail_fragment.adapter.DiaryItemProductAdapter
 import com.example.foodnote.ui.diary_item_detail_fragment.adapter.ItemClickListener
 import com.example.foodnote.ui.diary_item_detail_fragment.viewModel.DiaryItemDetailViewModel
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -23,6 +25,7 @@ class DiaryItemDetailFragment :
     private val adapter by lazy {
         DiaryItemProductAdapter(this)
     }
+    private val args: DiaryItemDetailFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,6 +43,10 @@ class DiaryItemDetailFragment :
         if (appState.foodDtoItems.isNotEmpty()) {
             initRcView(appState.foodDtoItems)
         }
+
+        if (appState.diaryItem != null) {
+
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -56,6 +63,10 @@ class DiaryItemDetailFragment :
             }
             false
         }
+        args.diaryItem?.let {
+            viewModel.saveDiaryItem(it)
+        }
+
     }
 
     private fun initRcView(list: List<FoodDto>) {
@@ -65,6 +76,14 @@ class DiaryItemDetailFragment :
             binding.productRcView.itemAnimator?.changeDuration = 0
         }
         adapter.setItem(list)
+    }
+
+    override fun addProduct(item: FoodDto) {
+        uiScope.launch {
+            viewModel.saveFood(item).collect {
+
+            }
+        }
     }
 
     private companion object {

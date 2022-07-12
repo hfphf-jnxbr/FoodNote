@@ -8,7 +8,8 @@ data class SampleState(
     val error: Throwable? = null,
     val isSuccess: Boolean = false,
     val diaryList: MutableList<DiaryItem> = ArrayList(),
-    val lastAddItem: DiaryItem? = null,
+    var diaryItem: DiaryItem? = null,
     val calorie: Triple<Pair<Int, Int>, Pair<Int, Int>, Pair<Int, Int>>? = null,
-    val foodDtoItems: List<FoodDto> = ArrayList()
+    val foodDtoItems: List<FoodDto> = ArrayList(),
+    var foodDtoItem: FoodDto? = null
 )

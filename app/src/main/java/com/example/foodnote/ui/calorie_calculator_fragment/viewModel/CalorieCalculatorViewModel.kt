@@ -78,7 +78,7 @@ class CalorieCalculatorViewModel(
             kotlin.runCatching {
                 interactor.saveDiary(item)
             }.onSuccess {
-                stateLiveData.postValue(stateLiveData.value?.copy(lastAddItem = it))
+                stateLiveData.postValue(stateLiveData.value?.copy(diaryItem = it))
             }.onFailure {
                 stateLiveData.postValue(stateLiveData.value?.copy(error = it))
             }

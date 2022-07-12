@@ -94,12 +94,16 @@ val authScreenModule = module {
 }
 
 val diaryItemDetailScreenModule = module {
+    factory<FirebaseCalorieDataSource> {
+        FireBaseCalorieDataSourceImpl(get(named(NAME_DATASOURCE_FIREBASE)))
+    }
+
     factory<DiaryItemDetailDatasource> {
         DiaryItemDetailDatasourceImpl(get(named(NAME_DATASOURCE_REMOTE_SERVICE)))
     }
 
     factory<DiaryItemDetailRepository> {
-        DiaryItemDetailRepositoryImpl(get())
+        DiaryItemDetailRepositoryImpl(get(), get())
     }
 
     factory<DiaryItemDetailInteractor> {

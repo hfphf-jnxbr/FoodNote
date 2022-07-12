@@ -28,7 +28,7 @@ class DiaryItemProductAdapter(private val itemClickListener: ItemClickListener) 
     }
 
     override fun onBindViewHolder(holder: DiaryProductPlaceHolder, position: Int) {
-        holder.bind(list[position])
+        holder.bind(list[position], itemClickListener)
     }
 
     override fun getItemCount(): Int {

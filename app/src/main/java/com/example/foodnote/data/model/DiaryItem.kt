@@ -1,6 +1,7 @@
 package com.example.foodnote.data.model
 
 import android.os.Parcelable
+import com.example.foodnote.data.model.food.FoodDto
 import kotlinx.parcelize.Parcelize
 
 
@@ -11,5 +12,6 @@ data class DiaryItem(
     val time: String? = null,
     val date: String? = null,
     val idUser: String? = null,
-    val dbId: String? = null
+    val dbId: String? = null,
+    val foodList: List<FoodDto>? = null
 ) : Parcelable

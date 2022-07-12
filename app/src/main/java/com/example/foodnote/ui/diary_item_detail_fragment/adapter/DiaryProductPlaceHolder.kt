@@ -11,15 +11,14 @@ import com.example.foodnote.databinding.DiaryProductItemBinding
 class DiaryProductPlaceHolder(item: View) : RecyclerView.ViewHolder(item) {
     private val binding = DiaryProductItemBinding.bind(item)
     private val context = binding.root.context
-    fun bind(item: FoodDto) = with(binding) {
+    fun bind(item: FoodDto, itemClickListener: ItemClickListener) = with(binding) {
         Glide
             .with(context)
             .load(item.image)
-            .circleCrop()
+            .apply(RequestOptions.circleCropTransform())
             .apply(
                 RequestOptions()
                     .error(R.drawable.ic_baseline_fastfood_24)
-                    .centerCrop()
             )
             .into(productImageView);
 
@@ -29,5 +28,9 @@ class DiaryProductPlaceHolder(item: View) : RecyclerView.ViewHolder(item) {
         fatsCountTextView.text = context.getString(R.string.count_fats, item.fat)
         carbohydratesCountTextView.text =
             context.getString(R.string.count_carbohydrates, item.carbohydrate)
+
+        addButton.setOnClickListener {
+            itemClickListener.addProduct(item)
+        }
     }
 }

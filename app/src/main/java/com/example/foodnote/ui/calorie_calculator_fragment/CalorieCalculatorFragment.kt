@@ -173,7 +173,7 @@ class CalorieCalculatorFragment :
         val navController = findNavController()
         val action = CalorieCalculatorFragmentDirections
             .actionCalorieCalculatorFragmentToDiaryItemDetailFragment(item)
-        navController.navigate(R.id.action_calorieCalculatorFragment_to_diaryItemDetailFragment)
+        navController.navigate(action)
     }
 
 
