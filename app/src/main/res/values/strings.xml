@@ -64,7 +64,7 @@
     <string name="alpha">alpha</string>
     <string name="ok">OK</string>
     <string name="clearCanvas_mess">Вы точно хотите очистить холст?</string>
-    <string name="weight_gm">вес гм</string>
+    <string name="weight_gm">вес гм\n</string>
     
     <string name="exit">выйти</string>
     <string name="type_name_product">Введите название продукта</string>

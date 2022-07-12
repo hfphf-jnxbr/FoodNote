@@ -57,9 +57,9 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
         textSize = 35f
     }
 
-    private val paintLine = Paint().apply { color = Color.rgb(168, 168, 168)
+    private val paintLine = Paint().apply { color = Color.rgb(255, 255, 255)
+        setShadowLayer(8.0f, 1f, 1f, Color.GRAY)
         strokeWidth = 6f
-        isAntiAlias = true
     }
 
     private var angle = 0f
@@ -132,7 +132,7 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
             val y2 = width/2f - (width/2f - radiuse/2 ) * sin(- (angle * 2 * PI) / 360).toFloat()
 
             canvas.drawLine(width/2f,width/2f, x, y, paintLine)
-            canvas.drawCircle(x, y,10f,paintLine)
+            canvas.drawCircle(x, y,25f,paintLine)
 
             if(angle <= 180) {
                 canvas.drawText(text,x2 - 90f,y2 + 32f,paintSmallText)
