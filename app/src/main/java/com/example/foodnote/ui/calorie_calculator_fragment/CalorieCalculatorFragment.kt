@@ -1,10 +1,15 @@
 package com.example.foodnote.ui.calorie_calculator_fragment
 
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.TimePicker
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.foodnote.R
 import com.example.foodnote.data.base.AppState
@@ -45,6 +50,11 @@ class CalorieCalculatorFragment :
         viewModel.getStateLiveData().observe(viewLifecycleOwner) { appState: SampleState ->
             setState(appState)
         }
+        if (idUser.isEmpty()) {
+            uiScope.launch {
+                getUserId()
+            }
+        }
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
@@ -61,8 +71,16 @@ class CalorieCalculatorFragment :
             getDiary()
         }
         binding.addDiaryButton.setOnClickListener {
-            val diaryItem = viewModel.generateRandomItem(idUser)
-            viewModel.saveDiary(diaryItem)
+            showDialog { time, name ->
+                val diaryItem = viewModel.generateRandomItem(idUser, time, name)
+                viewModel.saveDiary(diaryItem)
+            }
+        }
+    }
+
+    private suspend fun getUserId() {
+        viewModel.getUserId().collect {
+            idUser = it
         }
     }
 
@@ -125,4 +143,38 @@ class CalorieCalculatorFragment :
         }
         adapter.setItem(list)
     }
+
+    private fun showDialog(callback: (time: String, name: String) -> Unit) {
+        val builder = AlertDialog.Builder(context)
+        // Set the dialog title
+        val inflater = requireActivity().layoutInflater;
+        val view = inflater.inflate(R.layout.diary_create_dialog, null)
+        val editText = view.findViewById<EditText>(R.id.name_diary_title_text_view)
+        val timePicker = view.findViewById<TimePicker>(R.id.time_diary_time_picker)
+        builder
+            .setView(view)
+            .setTitle(R.string.create_notes)
+            .setPositiveButton(R.string.save,
+                DialogInterface.OnClickListener { _, _ ->
+                    val text = editText.text.toString()
+                    val time = "${timePicker.hour}:${timePicker.minute}"
+                    callback(time, text)
+                })
+            .setNegativeButton(R.string.disabled,
+                DialogInterface.OnClickListener { dialog, id ->
+                    dialog.cancel()
+                })
+
+        builder.create()
+        builder.show()
+    }
+
+    override fun navigateToDiaryDetail(item: DiaryItem) {
+        val navController = findNavController()
+        val action = CalorieCalculatorFragmentDirections
+            .actionCalorieCalculatorFragmentToDiaryItemDetailFragment(item)
+        navController.navigate(action)
+    }
+
+
 }

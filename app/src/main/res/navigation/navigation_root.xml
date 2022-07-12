@@ -15,7 +15,11 @@
         android:id="@+id/calorieCalculatorFragment"
         android:name="com.example.foodnote.ui.calorie_calculator_fragment.CalorieCalculatorFragment"
         android:label="fragment_second"
-        tools:layout="@layout/fragment_calorie_calculator"/>
+        tools:layout="@layout/fragment_calorie_calculator">
+        <action
+            android:id="@+id/action_calorieCalculatorFragment_to_diaryItemDetailFragment"
+            app:destination="@id/diaryItemDetailFragment"></action>
+    </fragment>
 
     <fragment
         android:id="@+id/recipesFragment"
@@ -52,6 +56,15 @@
         <action
             android:id="@+id/action_splashScreenFragment_to_notesFragment"
             app:destination="@id/notesFragment" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/diaryItemDetailFragment"
+        android:name="com.example.foodnote.ui.diary_item_detail_fragment.DiaryItemDetailFragment"
+        android:label="DiaryItemDetailFragment">
+        <argument
+            android:name="diaryItem"
+            app:argType="com.example.foodnote.data.model.DiaryItem" />
     </fragment>
 
 </navigation>

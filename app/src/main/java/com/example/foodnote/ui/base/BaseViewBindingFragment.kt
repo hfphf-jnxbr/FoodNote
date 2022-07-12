@@ -24,14 +24,7 @@ abstract class BaseViewBindingFragment<VB : ViewBinding>(
     private val auth: FirebaseAuth by lazy {
         Firebase.auth
     }
-    protected val idUser by lazy {
-        val currentUser = auth.currentUser
-        if (currentUser != null) {
-            currentUser.email ?: currentUser.uid
-        } else {
-            ""
-        }
-    }
+    protected var idUser = ""
     protected val uiScope by lazy {
         CoroutineScope(Dispatchers.Main)
     }
@@ -42,6 +35,10 @@ abstract class BaseViewBindingFragment<VB : ViewBinding>(
         savedInstanceState: Bundle?
     ): View {
         _binding = inflate(inflater, container, false)
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            currentUser.email ?: currentUser.uid
+        }
         return binding.root
     }
 

@@ -20,7 +20,8 @@ class App : Application() {
                     noteBookModule
                     dataStoreModule,
                     authScreenModule,
-                    splashScreenModule
+                    splashScreenModule,
+                    diaryItemDetailScreenModule
                 )
             )
         }

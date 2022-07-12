@@ -10,14 +10,21 @@ import com.example.foodnote.data.base.RetrofitImpl
 import com.example.foodnote.data.databaseRoom.DataBase
 import com.example.foodnote.data.datasource.calorire_datasource.firebase.FireBaseCalorieDataSourceImpl
 import com.example.foodnote.data.datasource.calorire_datasource.firebase.FirebaseCalorieDataSource
-import com.example.foodnote.data.interactor.CalorieCalculatorInteractor
-import com.example.foodnote.data.interactor.CalorieCalculatorInteractorImpl
+import com.example.foodnote.data.datasource.diary_item_detail_repository.DiaryItemDetailDatasource
+import com.example.foodnote.data.datasource.diary_item_detail_repository.DiaryItemDetailDatasourceImpl
+import com.example.foodnote.data.interactor.calorie_interactor.CalorieCalculatorInteractor
+import com.example.foodnote.data.interactor.calorie_interactor.CalorieCalculatorInteractorImpl
+import com.example.foodnote.data.interactor.diary_item_detail_interactor.DiaryItemDetailInteractor
+import com.example.foodnote.data.interactor.diary_item_detail_interactor.DiaryItemDetailInteractorImpl
 import com.example.foodnote.data.repository.calorie_repository.CalorieRepository
 import com.example.foodnote.data.repository.calorie_repository.CalorieRepositoryImpl
 import com.example.foodnote.data.repository.datastore_pref_repository.UserPreferencesRepository
 import com.example.foodnote.data.repository.datastore_pref_repository.UserPreferencesRepositoryImpl
+import com.example.foodnote.data.repository.diary_item_detail_repository.DiaryItemDetailRepository
+import com.example.foodnote.data.repository.diary_item_detail_repository.DiaryItemDetailRepositoryImpl
 import com.example.foodnote.ui.auth_fragment.viewModel.AuthViewModel
 import com.example.foodnote.ui.calorie_calculator_fragment.viewModel.CalorieCalculatorViewModel
+import com.example.foodnote.ui.diary_item_detail_fragment.viewModel.DiaryItemDetailViewModel
 import com.example.foodnote.ui.noteBook.viewModel.ViewModelConstructorFragment
 import com.example.foodnote.ui.splash_screen_fragment.viewModel.SplashScreenViewModel
 import com.google.firebase.firestore.FirebaseFirestore
@@ -30,12 +37,10 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val applicationModule = module {
-
+    single(named(NAME_DATASOURCE_REMOTE)) { RetrofitImpl() }
     // Получаем сервис
-    single(named(NAME_DATASOURCE_REMOTE)) {
-        get<RetrofitImpl>(
-            qualifier = named(NAME_DATASOURCE_REMOTE)
-        ).getService()
+    single(named(NAME_DATASOURCE_REMOTE_SERVICE)) {
+        get<RetrofitImpl>(qualifier = named(NAME_DATASOURCE_REMOTE)).getService()
     }
 
     // FireStore db
@@ -63,7 +68,7 @@ val dataStoreModule = module {
             produceFile = { androidContext().preferencesDataStoreFile(NAME_DATA_STORE_PREF_FILE) }
         )
     }
-    factory<UserPreferencesRepository>(named(NAME_PREF_APP_REPOSITORY)) {
+    single<UserPreferencesRepository>(named(NAME_PREF_APP_REPOSITORY)) {
         UserPreferencesRepositoryImpl(get(named(NAME_DATA_STORE_PREF)))
     }
 }
@@ -90,6 +95,29 @@ val authScreenModule = module {
     }
 }
 
+
+val diaryItemDetailScreenModule = module {
+    factory<FirebaseCalorieDataSource> {
+        FireBaseCalorieDataSourceImpl(get(named(NAME_DATASOURCE_FIREBASE)))
+    }
+
+    factory<DiaryItemDetailDatasource> {
+        DiaryItemDetailDatasourceImpl(get(named(NAME_DATASOURCE_REMOTE_SERVICE)))
+    }
+
+    factory<DiaryItemDetailRepository> {
+        DiaryItemDetailRepositoryImpl(get(), get())
+    }
+
+    factory<DiaryItemDetailInteractor> {
+        DiaryItemDetailInteractorImpl(get())
+    }
+
+    viewModel<DiaryItemDetailViewModel> {
+        DiaryItemDetailViewModel(get(named(NAME_PREF_APP_REPOSITORY)), get())
+    }
+    
 val noteBookModule = module {
     viewModel { ViewModelConstructorFragment() }
+
 }
