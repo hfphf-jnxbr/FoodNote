@@ -89,7 +89,7 @@ class CalorieCalculatorFragment :
     }
 
     private fun initCircle() = with(binding) {
-        circleDiagramView.start(1499, 1500, 100, 150, 30, 70)
+        circleDiagramView.start(1420, 1500, 100, 150, 24, 70)
     }
 
     private fun initDate() = with(binding) {

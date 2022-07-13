@@ -37,7 +37,7 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
     private lateinit var editorStandardNoteFragmentEditor: EditorStandardNoteFragment
     private lateinit var editorPaintNoteFragmentEditor: EditorPaintNoteFragment
     private lateinit var editorFoodNoteFragmentEditor: EditorFoodsNoteFragment
-    private lateinit var typeNote : ConstType
+    private var typeNote : ConstType = ConstType.STANDARD_TYPE
 
     private var colorCard = Color.WHITE
     private var flag = true

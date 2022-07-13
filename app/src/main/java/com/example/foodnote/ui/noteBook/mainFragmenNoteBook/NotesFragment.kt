@@ -1,16 +1,26 @@
 package com.example.foodnote.ui.noteBook.mainFragmenNoteBook
 
+import android.Manifest
 import android.animation.ObjectAnimator
+import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Environment
 import android.util.DisplayMetrics
-import android.util.Property
+import android.util.Log
 import android.view.View
 import android.view.animation.AnticipateOvershootInterpolator
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.animation.doOnEnd
+import androidx.core.app.ActivityCompat
 import androidx.core.view.updateLayoutParams
+import androidx.fragment.app.Fragment
 import com.example.foodnote.R
 import com.example.foodnote.data.databaseRoom.dao.DaoDB
 import com.example.foodnote.data.databaseRoom.entities.EntitiesNotesFood
@@ -21,7 +31,7 @@ import com.example.foodnote.databinding.CardNotesBinding
 import com.example.foodnote.databinding.NotebookFragmentBinding
 import com.example.foodnote.di.DATA_BASE
 import com.example.foodnote.ui.base.BaseViewBindingFragment
-import com.example.foodnote.ui.noteBook.helperView.MovedView
+import com.example.foodnote.ui.noteBook.constNote.Const
 import com.example.foodnote.ui.noteBook.constNote.Const.CARD_NOTE_DP
 import com.example.foodnote.ui.noteBook.constNote.Const.DURATION_ANIMATION_CONSTRUCTOR
 import com.example.foodnote.ui.noteBook.constNote.Const.STACK_CONSTRUCTOR
@@ -30,13 +40,17 @@ import com.example.foodnote.ui.noteBook.constNote.Const.TABLE_PAINT
 import com.example.foodnote.ui.noteBook.constNote.Const.TABLE_STANDARD
 import com.example.foodnote.ui.noteBook.constNote.ConstType
 import com.example.foodnote.ui.noteBook.helperView.ExpandView
+import com.example.foodnote.ui.noteBook.helperView.MovedView
 import com.example.foodnote.ui.noteBook.interfaces.NoteBookFragmentInterface
 import com.google.android.material.card.MaterialCardView
 import kotlinx.coroutines.*
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileOutputStream
+
 
 class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookFragmentBinding::inflate) , NoteBookFragmentInterface {
 
@@ -55,6 +69,7 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
         initMovedView()
 
         loadDataNote()
+        loadStartExampleNote()
 
         setWidthPixels()
         checkChip()
@@ -339,5 +354,71 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
     override fun onDestroy() {
         super.onDestroy()
         scope.cancel()
+    }
+
+////////////////------------------Example note code----------------/////////////////////////
+    private fun loadStartExampleNote() {
+        val prefs: SharedPreferences = requireActivity().getPreferences(MODE_PRIVATE)
+        if (prefs.getBoolean("isFirstRun", true)) {
+            saveImage()
+        }
+        prefs.edit().putBoolean("isFirstRun", false).apply()
+    }
+    private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { saveImage() }
+    private fun requestLocationPermissions() = permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
+    private fun saveImage() {
+        if(ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+
+            val bitmap = BitmapFactory.decodeResource(requireContext().resources, R.drawable.image_note_paint);
+            bitmapToFile(bitmap,getName())
+        } else {
+            requestLocationPermissions()
+        }
+    }
+    private fun getName() = "image224.png"
+    private fun bitmapToFile(bitmap: Bitmap, fileNameToSave: String): File? {
+        var file: File? = null
+        return try {
+            val name = Environment.getExternalStorageDirectory().toString() + File.separator + Environment.DIRECTORY_DCIM + File.separator + fileNameToSave
+
+            file = File(name)
+            file.createNewFile()
+
+            Toast.makeText(requireContext(), getString(R.string.saved_mess) + name, Toast.LENGTH_SHORT).show()
+
+            val bos = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos)
+
+            val bitmapData = bos.toByteArray()
+
+            val fos = FileOutputStream(file)
+            fos.write(bitmapData)
+            fos.flush()
+            fos.close()
+
+            createExampleNote()
+
+            file
+        } catch (e: Exception) {
+            e.printStackTrace()
+            file
+        }
+    }
+    private fun createExampleNote() {
+        val stringStandart = "Note\n- Finish the project\n- Bugfix navigation\n- Added new brash"
+
+        val bitmapURL = getName()
+
+        val stringFoods = "Milk\nApple\nOrange"
+        val stringWeight = "1300\n700\n430"
+        val general = "3600cals"
+
+        val height = ((55 * widthScreen) / 100) + convertDpToPixels(CARD_NOTE_DP)
+        val width = (42 * widthScreen) / 100
+
+        saveAndCreateDataNotesStandard(50, 40, Color.rgb(252, 252, 215 ), stringStandart,width + 20 + 40,height + 20 + 180,  51, Const.NOTES_ELEVATION)
+        saveAndCreateDataNotesPaint(75, 55, Color.WHITE, bitmapURL,40 ,180, 52, Const.NOTES_ELEVATION)
+        saveAndCreateDataNotesFoods(42, 60, Color.WHITE, stringFoods, stringWeight, general,40 ,height + 20 + 180, 53, Const.NOTES_ELEVATION)
     }
 }
