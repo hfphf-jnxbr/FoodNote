@@ -37,7 +37,7 @@ abstract class BaseViewBindingFragment<VB : ViewBinding>(
         _binding = inflate(inflater, container, false)
         val currentUser = auth.currentUser
         if (currentUser != null) {
-            idUser = currentUser.email ?: currentUser.uid
+            //idUser = currentUser.email ?: currentUser.uid
         }
         return binding.root
     }

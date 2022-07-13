@@ -54,7 +54,7 @@ class DiaryItemDetailFragment :
                                 context?.showToast(state.error?.message)
                             }
                             is AppState.Loading -> {
-
+                                context?.showToast("Saved")
                             }
                             is AppState.Success -> {
                                 initRcView(state.data as List<FoodDto>)
