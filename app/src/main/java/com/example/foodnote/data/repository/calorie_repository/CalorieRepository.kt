@@ -5,6 +5,6 @@ import com.example.foodnote.data.model.DiaryItem
 import kotlinx.coroutines.flow.Flow
 
 interface CalorieRepository {
-    fun saveDiary(item: DiaryItem): Flow<String>
+    fun saveDiary(item: DiaryItem): Flow<AppState<String>>
     fun getDiaryCollection(date: String, idUser: String): Flow<AppState<MutableList<DiaryItem>>>
 }

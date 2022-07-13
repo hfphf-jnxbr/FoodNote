@@ -16,7 +16,7 @@ class DiaryItemDetailInteractorImpl(private val repo: DiaryItemDetailRepository)
         }
     }
 
-    override fun saveDiaryItem(item: DiaryItem, foodItem: FoodDto): Flow<String> {
+    override fun saveDiaryItem(item: DiaryItem, foodItem: FoodDto): Flow<AppState<String>> {
         return repo.saveItem(item, foodItem)
     }
 

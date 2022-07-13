@@ -67,9 +67,8 @@ class DiaryItemDetailFragment :
                                 context?.showToast("Saved")
                             }
                             is AppState.Success -> {
-                                initRcView(state.data as List<FoodDto>)
+                                initRcView(state.data)
                             }
-                            else -> {}
                         }
                     }
                 }
@@ -105,8 +104,10 @@ class DiaryItemDetailFragment :
 
     override fun addProduct(item: FoodDto) {
         uiScope.launch {
-            viewModel.saveFood(item).collect {
-                context?.showToast(it)
+            viewModel.saveFood(item).collect { state ->
+                if (state is AppState.Success) {
+                    context?.showToast(state.data)
+                }
             }
         }
     }

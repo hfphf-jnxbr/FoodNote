@@ -7,6 +7,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface DiaryItemDetailRepository {
     suspend fun searchProduct(name: String): List<FoodDto>
-    fun saveItem(item: DiaryItem, foodItem: FoodDto): Flow<String>
+    fun saveItem(item: DiaryItem, foodItem: FoodDto): Flow<AppState<String>>
     fun getSavedFoodCollection(idUser: String, diaryId: String): Flow<AppState<List<FoodDto>>>
 }

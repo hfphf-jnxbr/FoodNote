@@ -45,7 +45,7 @@ class DiaryItemDetailViewModel(
         }
     }
 
-    suspend fun saveFood(item: FoodDto): Flow<String> = withContext(Dispatchers.IO) {
+    suspend fun saveFood(item: FoodDto) = withContext(Dispatchers.IO) {
         interactor.saveDiaryItem(stateLiveData.value!!.diaryItem!!, item)
     }
 

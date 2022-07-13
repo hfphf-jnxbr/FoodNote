@@ -22,34 +22,26 @@ class FireBaseCalorieDataSourceImpl(private val db: FirebaseFirestore) : Firebas
         const val DIARY_ITEM_COLLECTION_NAME = "DiaryItem"
     }
 
-    override fun saveDiaryItem(diaryItem: DiaryItem, foodItem: FoodDto?): Flow<String> {
+    override fun saveDiaryItem(diaryItem: DiaryItem, foodItem: FoodDto?): Flow<AppState<String>> {
         return flow {
             diaryItem.idUser?.let {
-                emit("Loading")
-                var error: Throwable? = null
+                emit(AppState.Loading())
                 val collection = db.collection(diaryItem.idUser)
                     .document(DIARY_DOCUMENT_NAME)
                     .collection(DIARY_ITEM_COLLECTION_NAME)
                     .document(diaryItem.dbId ?: UUID.randomUUID().toString())
 
                 collection.set(diaryItem)
-                    .addOnFailureListener { error = it }
                     .await()
                 if (foodItem != null) {
                     collection.collection(PRODUCT_COLLECTION_NAME)
                         .document(UUID.randomUUID().toString())
                         .set(foodItem)
                 }
-                if (error != null) {
-                    emit(error!!.message.toString())
-                } else {
-                    emit("Success")
-                }
-
+                emit(AppState.Success("Success"))
             }
-
         }.catch {
-            emit(it.message.toString())
+            emit(AppState.Error(it))
         }.flowOn(Dispatchers.IO)
     }
 
