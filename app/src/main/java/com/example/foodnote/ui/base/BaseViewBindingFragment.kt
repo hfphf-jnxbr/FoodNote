@@ -1,5 +1,6 @@
 package com.example.foodnote.ui.base
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -29,16 +30,20 @@ abstract class BaseViewBindingFragment<VB : ViewBinding>(
         CoroutineScope(Dispatchers.Main)
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            idUser = currentUser.email ?: currentUser.uid
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = inflate(inflater, container, false)
-        val currentUser = auth.currentUser
-        if (currentUser != null) {
-            //idUser = currentUser.email ?: currentUser.uid
-        }
         return binding.root
     }
 

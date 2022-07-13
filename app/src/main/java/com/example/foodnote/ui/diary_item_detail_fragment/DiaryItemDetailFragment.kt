@@ -37,9 +37,19 @@ class DiaryItemDetailFragment :
         viewModel.getStateLiveData().observe(viewLifecycleOwner) { appState: SampleState ->
             setState(appState)
         }
+        if (idUser.isEmpty()) {
+            uiScope.launch {
+                getUserId()
+            }
+        }
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
+    private suspend fun getUserId() {
+        viewModel.getUserId().collect {
+            idUser = it
+        }
+    }
 
     private fun setState(appState: SampleState) {
         if (appState.foodDtoItems.isNotEmpty()) {

@@ -3,6 +3,8 @@ package com.example.foodnote.data.datasource.calorire_datasource.firebase
 import com.example.foodnote.data.base.AppState
 import com.example.foodnote.data.model.DiaryItem
 import com.example.foodnote.data.model.food.FoodDto
+import com.example.foodnote.data.model.food.FoodFireBase
+import com.example.foodnote.utils.toFoodDto
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -76,13 +78,15 @@ class FireBaseCalorieDataSourceImpl(private val db: FirebaseFirestore) : Firebas
     ): Flow<AppState<List<FoodDto>>> {
         return flow<AppState<List<FoodDto>>> {
             val path =
-                "/$idUser/$DIARY_DOCUMENT_NAME/$DIARY_ITEM_COLLECTION_NAME/$PRODUCT_COLLECTION_NAME/$diaryId"
+                "/$idUser/$DIARY_DOCUMENT_NAME/$DIARY_ITEM_COLLECTION_NAME/$diaryId/$PRODUCT_COLLECTION_NAME"
             emit(AppState.Loading())
             val result = db
                 .collection(path)
                 .get()
                 .await()
-            val items = result.toObjects(FoodDto::class.java)
+            val items = result.toObjects(FoodFireBase::class.java).map {
+                it.toFoodDto()
+            }
             emit(AppState.Success(items))
         }.catch {
             emit(AppState.Error(it))
