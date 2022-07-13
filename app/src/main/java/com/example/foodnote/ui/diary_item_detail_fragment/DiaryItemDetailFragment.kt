@@ -7,9 +7,11 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.foodnote.R
 import com.example.foodnote.data.base.AppState
 import com.example.foodnote.data.base.SampleState
 import com.example.foodnote.data.model.food.FoodDto
+import com.example.foodnote.data.model.food.TotalFoodResult
 import com.example.foodnote.databinding.FragmentDiaryItemDetailBinding
 import com.example.foodnote.ui.base.BaseViewBindingFragment
 import com.example.foodnote.ui.diary_item_detail_fragment.adapter.DiaryItemProductAdapter
@@ -52,26 +54,14 @@ class DiaryItemDetailFragment :
     }
 
     private fun setState(appState: SampleState) {
-        if (appState.foodDtoItems.isNotEmpty()) {
-            initRcView(appState.foodDtoItems)
-        }
-        if (appState.diaryItem != null) {
-            uiScope.launch {
-                appState.diaryItem?.dbId?.let { dbId ->
-                    viewModel.getSavedFoodCollection(idUser, dbId).collect { state ->
-                        when (state) {
-                            is AppState.Error -> {
-                                context?.showToast(state.error?.message)
-                            }
-                            is AppState.Loading -> {
-                                context?.showToast("Saved")
-                            }
-                            is AppState.Success -> {
-                                initRcView(state.data)
-                            }
-                        }
-                    }
-                }
+
+        uiScope.launch {
+            if (appState.foodDtoItems.isNotEmpty()) {
+                initRcView(appState.foodDtoItems)
+            }
+
+            appState.totalFoodResult?.let {
+                setTotalView(it)
             }
         }
     }
@@ -79,6 +69,14 @@ class DiaryItemDetailFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
+    }
+
+    private fun setTotalView(total: TotalFoodResult) = with(binding) {
+        countCalorieTextView.text = context?.getString(R.string.count_calorie, total.calorieSum)
+        countFatTextView.text = context?.getString(R.string.count_fats, total.fatSum)
+        countProteinTextView.text = context?.getString(R.string.count_protein, total.proteinSum)
+        countCarbohydrateTextView.text =
+            context?.getString(R.string.count_carbohydrates, total.carbohydrateSum)
     }
 
     private fun initView() = with(binding) {
@@ -90,7 +88,30 @@ class DiaryItemDetailFragment :
             }
             false
         }
-        viewModel.saveDiaryItem(args.diaryItem)
+        initTotalContainer()
+    }
+
+    private fun initTotalContainer() = with(binding) {
+        uiScope.launch {
+            timeItemTextView.text = args.diaryItem.time
+            titleTextView.text = args.diaryItem.name
+            args.diaryItem.dbId?.let { dbId ->
+                viewModel.getSavedFoodCollection(idUser, dbId).collect { state ->
+                    when (state) {
+                        is AppState.Error -> {
+                            context?.showToast(state.error?.message)
+                        }
+                        is AppState.Loading -> {
+                            context?.showToast("Saved")
+                        }
+                        is AppState.Success -> {
+                            initRcView(state.data)
+                            viewModel.calculateTotalData(state.data)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun initRcView(list: List<FoodDto>) {

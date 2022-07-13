@@ -12,7 +12,7 @@ class DiaryItemProductAdapter(private val itemClickListener: ItemClickListener) 
 
     fun setItem(list: List<FoodDto>) {
         this.list = list
-        notifyItemRangeInserted(0, itemCount)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiaryProductPlaceHolder {

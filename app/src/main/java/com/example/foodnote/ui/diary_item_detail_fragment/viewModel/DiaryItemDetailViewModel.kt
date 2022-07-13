@@ -49,6 +49,18 @@ class DiaryItemDetailViewModel(
         interactor.saveDiaryItem(stateLiveData.value!!.diaryItem!!, item)
     }
 
+    fun calculateTotalData(list: List<FoodDto>) {
+        viewModelScope.launch {
+            kotlin.runCatching {
+                interactor.calculateTotalData(list)
+            }.onSuccess {
+                stateLiveData.value = stateLiveData.value?.copy(totalFoodResult = it)
+            }.onFailure {
+                stateLiveData.value = stateLiveData.value?.copy(error = it)
+            }
+        }
+    }
+
     suspend fun getSavedFoodCollection(idUser: String, dbId: String)
             : Flow<AppState<List<FoodDto>>> = withContext(Dispatchers.IO) {
         interactor.getSavedFoodCollection(idUser, dbId)

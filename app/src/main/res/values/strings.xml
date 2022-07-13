@@ -52,7 +52,6 @@
     <string name="no">нет</string>
     <string name="yes">да</string>
     <string name="list_foods">List foods</string>
-
     <string name="list_foods_hint">Введите по строчно название продуктов</string>
     <string name="list_foods_header">List Foods</string>
     <string name="gram">gm</string>
@@ -65,13 +64,13 @@
     <string name="ok">OK</string>
     <string name="clearCanvas_mess">Вы точно хотите очистить холст?</string>
     <string name="weight_gm">вес гм\n</string>
-    
     <string name="exit">выйти</string>
     <string name="type_name_product">Введите название продукта</string>
     <string name="count_products">%d шт</string>
     <string name="count_protein">Белки %.2f г</string>
     <string name="count_fats">Жиры %.2f г</string>
-    <string name="count_carbohydrates">Белки %.2f г</string>
+    <string name="count_carbohydrates">Углеводы %.2f г</string>
+    <string name="count_calorie">Количество  ккал %.2f</string>
     <string name="create_notes">Создаение заметки</string>
     <string name="save">Сохранить</string>
     <string name="disabled">Отменить</string>
