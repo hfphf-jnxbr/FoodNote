@@ -5,17 +5,17 @@ buildscript {
         kotlin_version = "1.5.30"
         coroutines_version = "1.5.1"
 
-        lifecycle_version = "2.4.1"
+        lifecycle_version = "2.5.0"
         room_version = "2.5.0-alpha02"
-        navigation_version = '2.4.2'
+        navigation_version = '2.5.0'
 
         okhttp_version = "3.12.12"
         retrofit_version = "2.9.0"
 
-        glide_version = "4.12.0"
+        glide_version = "4.13.0"
         material_dialogs_version = "3.3.0"
         moshi_version = '4.9.2'
-        koin_version = '3.1.2'
+        koin_version = '3.1.4'
         bom_version = '30.2.0'
         play_service_auth_version = '20.2.0'
         fire_store_version = '24.2.0'
