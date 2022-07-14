@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface DiaryItemDetailInteractor {
     suspend fun searchFood(name: String): List<FoodDto>
-    fun saveDiaryItem(item: DiaryItem, foodItem: FoodDto): Flow<AppState<String>>
+    fun saveDiaryItem(item: DiaryItem, foodItem: FoodDto?): Flow<AppState<String>>
     fun getSavedFoodCollection(idUser: String, diaryId: String): Flow<AppState<List<FoodDto>>>
     suspend fun calculateTotalData(list: List<FoodDto>): TotalFoodResult
 }

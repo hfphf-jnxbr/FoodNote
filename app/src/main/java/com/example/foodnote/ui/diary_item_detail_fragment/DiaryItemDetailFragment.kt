@@ -60,8 +60,13 @@ class DiaryItemDetailFragment :
                 initRcView(appState.foodDtoItems)
             }
 
-            appState.totalFoodResult?.let {
-                setTotalView(it)
+            appState.totalFoodResult?.let { totalResult ->
+                viewModel.saveTotalCalculate(totalResult).collect {}
+                setTotalView(totalResult)
+            }
+
+            if (appState.totalFoodResult != null) {
+
             }
         }
     }

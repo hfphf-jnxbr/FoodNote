@@ -10,9 +10,7 @@ abstract class BaseViewModel<T>(
     protected val stateLiveData: MutableLiveData<T> = MutableLiveData()
 ) : ViewModel() {
     fun getStateLiveData(): LiveData<T> = stateLiveData
-    override fun onCleared() {
-        super.onCleared()
-    }
 
     fun getUserId() = dataStorePref.userId
+
 }

@@ -6,6 +6,7 @@ import com.example.foodnote.data.base.SampleState
 import com.example.foodnote.data.interactor.diary_item_detail_interactor.DiaryItemDetailInteractor
 import com.example.foodnote.data.model.DiaryItem
 import com.example.foodnote.data.model.food.FoodDto
+import com.example.foodnote.data.model.food.TotalFoodResult
 import com.example.foodnote.data.repository.datastore_pref_repository.UserPreferencesRepository
 import com.example.foodnote.ui.base.viewModel.BaseViewModel
 import kotlinx.coroutines.Dispatchers
@@ -59,6 +60,20 @@ class DiaryItemDetailViewModel(
                 stateLiveData.value = stateLiveData.value?.copy(error = it)
             }
         }
+    }
+
+    suspend fun saveTotalCalculate(item: TotalFoodResult) = withContext(Dispatchers.IO) {
+        val diaryItem = stateLiveData.value!!.diaryItem!!.apply {
+            calories = item.calorieSum.toLong()
+            proteinSum = item.proteinSum
+            fatSum = item.fatSum
+            carbSum = item.carbohydrateSum
+        }
+        interactor.saveDiaryItem(diaryItem, null)
+    }
+
+    fun calculateTotalData() {
+
     }
 
     suspend fun getSavedFoodCollection(idUser: String, dbId: String)

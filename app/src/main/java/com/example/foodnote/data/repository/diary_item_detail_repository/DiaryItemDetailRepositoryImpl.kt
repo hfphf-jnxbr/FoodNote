@@ -20,7 +20,7 @@ class DiaryItemDetailRepositoryImpl(
         return newList
     }
 
-    override fun saveItem(item: DiaryItem, foodItem: FoodDto): Flow<AppState<String>> =
+    override fun saveItem(item: DiaryItem, foodItem: FoodDto?): Flow<AppState<String>> =
         firebaseCalorieDataSource.saveDiaryItem(item, foodItem)
 
     override fun getSavedFoodCollection(

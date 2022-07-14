@@ -2,6 +2,7 @@ package com.example.foodnote.ui.calorie_calculator_fragment.viewModel
 
 
 import androidx.lifecycle.viewModelScope
+import com.example.foodnote.data.base.AppState
 import com.example.foodnote.data.base.SampleState
 import com.example.foodnote.data.interactor.calorie_interactor.CalorieCalculatorInteractor
 import com.example.foodnote.data.model.DiaryItem
@@ -16,7 +17,7 @@ import kotlin.random.Random
 
 class CalorieCalculatorViewModel(
     private val interactor: CalorieCalculatorInteractor,
-    private val dataStorePref: UserPreferencesRepository
+    dataStorePref: UserPreferencesRepository
 ) :
     BaseViewModel<SampleState>(dataStorePref) {
     init {
@@ -56,7 +57,7 @@ class CalorieCalculatorViewModel(
     fun generateRandomItem(idUser: String, time: String, name: String): DiaryItem {
         val item = DiaryItem(
             name,
-            Random.nextLong(100, 500),
+            0,
             time,
             SimpleDateFormat("dd.MMMM.YYYY").format(Date()),
             idUser,
@@ -72,9 +73,31 @@ class CalorieCalculatorViewModel(
                 SimpleDateFormat("dd.MMMM.YYYY")
                     .format(Date()),
                 idUser
-            )
+            ).collect { state ->
+                when (state) {
+                    is AppState.Success -> {
+                        stateLiveData.value = stateLiveData.value?.copy(diaryList = state.data)
+                    }
+                    else -> {
+
+                    }
+                }
+            }
     }
 
+    fun calculateTotalData() {
+        viewModelScope.launch {
+            kotlin.runCatching {
+                stateLiveData.value?.diaryList?.let {
+                    interactor.calculateTotalData(it)
+                }
+            }.onSuccess {
+                stateLiveData.value = stateLiveData.value?.copy(totalFoodResult = it)
+            }.onFailure {
+                stateLiveData.value = stateLiveData.value?.copy(error = it)
+            }
+        }
+    }
 
     suspend fun saveDiary(item: DiaryItem) = withContext(Dispatchers.IO) {
         interactor.saveDiary(item)
