@@ -3,6 +3,8 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'com.google.gms.google-services'
+    id 'kotlin-parcelize'
+    id "androidx.navigation.safeargs"
 }
 
 android {
@@ -17,7 +19,16 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    buildTypes.each {
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file("app_edadim.properties").newDataInputStream())
+        def appId  = properties.getProperty("EDADIM_APP_ID", "")
+        def appKey  = properties.getProperty("EDADIM_APP_KEY", "")
+        def baseURl  = properties.getProperty("BASE_URL", "")
+        it.buildConfigField "String", "EDADIM_APP_Id", appId
+        it.buildConfigField "String", "EDADIM_APP_KEY", appKey
+        it.buildConfigField "String", "BASE_URL", baseURl
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -50,6 +61,9 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
 
+    implementation "androidx.datastore:datastore:$data_store_version"
+    implementation "androidx.datastore:datastore-preferences:$data_store_version"
+
 
     implementation "com.github.bumptech.glide:glide:$glide_version"
     kapt "com.github.bumptech.glide:compiler:$glide_version"
@@ -65,14 +79,14 @@ dependencies {
 
 
     //firebase
-    implementation platform('com.google.firebase:firebase-bom:30.2.0')
+    implementation platform("com.google.firebase:firebase-bom:$bom_version")
     implementation 'com.google.firebase:firebase-auth-ktx'
-    implementation 'com.google.android.gms:play-services-auth:20.2.0'
-    implementation 'com.google.firebase:firebase-firestore:24.2.0'
+    implementation "com.google.android.gms:play-services-auth:$play_service_auth_version"
+    implementation "com.google.firebase:firebase-firestore:$fire_store_version"
     //coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
-
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutines_version"
     //retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"

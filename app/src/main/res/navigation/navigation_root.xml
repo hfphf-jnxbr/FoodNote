@@ -3,19 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_root"
-    app:startDestination="@id/notesFragment">
+    app:startDestination="@id/splashScreenFragment">
 
     <fragment
         android:id="@+id/notesFragment"
-        android:name="com.example.foodnote.ui.notes_fragment.NotesFragment"
+        android:name="com.example.foodnote.ui.noteBook.mainFragmenNoteBook.NotesFragment"
         android:label="fragment_first"
-        tools:layout="@layout/notebook_fragment"/>
+        tools:layout="@layout/notebook_fragment" />
 
     <fragment
         android:id="@+id/calorieCalculatorFragment"
         android:name="com.example.foodnote.ui.calorie_calculator_fragment.CalorieCalculatorFragment"
         android:label="fragment_second"
-        tools:layout="@layout/fragment_calorie_calculator"/>
+        tools:layout="@layout/fragment_calorie_calculator">
+        <action
+            android:id="@+id/action_calorieCalculatorFragment_to_diaryItemDetailFragment"
+            app:destination="@id/diaryItemDetailFragment"></action>
+    </fragment>
 
     <fragment
         android:id="@+id/recipesFragment"
@@ -27,12 +31,40 @@
         android:id="@+id/settingsFragment"
         android:name="com.example.foodnote.ui.settings_fragment.SettingsFragment"
         android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings"/>
+        tools:layout="@layout/fragment_settings" />
 
     <fragment
         android:id="@+id/anotherFragment"
         android:name="com.example.foodnote.ui.antother_fragment.AnotherFragment"
         android:label="fragment_another"
-        tools:layout="@layout/fragment_another"/>
+        tools:layout="@layout/fragment_another" />
+    <fragment
+        android:id="@+id/authFragment"
+        android:name="com.example.foodnote.ui.auth_fragment.AuthFragment"
+        android:label="AuthFragment">
+        <action
+            android:id="@+id/action_authFragment_to_notesFragment"
+            app:destination="@id/notesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/splashScreenFragment"
+        android:name="com.example.foodnote.ui.splash_screen_fragment.SplashScreenFragment"
+        android:label="SplashScreenFragment">
+        <action
+            android:id="@+id/action_splashScreenFragment_to_authFragment"
+            app:destination="@id/authFragment" />
+        <action
+            android:id="@+id/action_splashScreenFragment_to_notesFragment"
+            app:destination="@id/notesFragment" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/diaryItemDetailFragment"
+        android:name="com.example.foodnote.ui.diary_item_detail_fragment.DiaryItemDetailFragment"
+        android:label="DiaryItemDetailFragment">
+        <argument
+            android:name="diaryItem"
+            app:argType="com.example.foodnote.data.model.DiaryItem" />
+    </fragment>
 
 </navigation>

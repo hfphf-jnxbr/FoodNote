@@ -8,9 +8,12 @@ import com.example.foodnote.databinding.DiaryItemBinding
 class DiaryViewHolder(item: View) : RecyclerView.ViewHolder(item) {
     private val binding = DiaryItemBinding.bind(item)
     private val context = binding.root.context
-    fun bind(item: DiaryItem) = with(binding) {
+    fun bind(item: DiaryItem, listener: ItemClickListener) = with(binding) {
         diaryTitleTextView.text = item.name
         diaryValueCaloriesTextView.text = item.calories.toString()
         diaryTimeTextView.text = item.time
+        root.setOnClickListener {
+            listener.navigateToDiaryDetail(item)
+        }
     }
 }
