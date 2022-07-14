@@ -8,4 +8,5 @@ data class FoodFireBase(
     val fat: Double? = null,
     val carbohydrate: Double? = null,
     val count: Int? = null,
+    val docId: String? = null
 )

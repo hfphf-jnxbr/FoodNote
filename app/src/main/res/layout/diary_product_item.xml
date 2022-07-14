@@ -1,111 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="150dp"
+    app:cardCornerRadius="5dp"
+    android:elevation="20dp"
+    android:layout_margin="5dp">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/product_image_view"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/order" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_margin="6dp"
+        android:layout_height="match_parent">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/product_name_text_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:ellipsize="end"
-        android:lines="2"
-        android:maxLines="2"
-        android:minLines="2"
-        android:textColor="@color/black"
-        app:layout_constraintEnd_toStartOf="@+id/count_product_text_view"
-        app:layout_constraintStart_toEndOf="@+id/product_image_view"
-        app:layout_constraintTop_toTopOf="@+id/product_image_view"
-        tools:text="Potato sweet potasdsadasdasdsdsadd" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/product_image_view"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/order" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/count_product_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/trash_button"
-        tools:text="3шт" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/product_name_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:lines="2"
+            android:maxLines="2"
+            android:minLines="2"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toEndOf="@+id/product_image_view"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Potato sweet potasdsadasdasdsdsadd" />
 
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/trash_button"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:textColor="@color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:background="@null"
-        android:backgroundTint="@null"
-        android:visibility="gone"
-        android:src="@drawable/ic_baseline_restore_from_trash_24" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/count_product_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:minEms="3"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="@+id/addImageButton"
+            app:layout_constraintEnd_toStartOf="@+id/addImageButton"
+            app:layout_constraintTop_toTopOf="@+id/addImageButton"
+            tools:text="3шт" />
 
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/add_button"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="?android:selectableItemBackground"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/ic_baseline_add_box_24" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/protain_count_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toStartOf="@+id/fats_count_text_view"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@+id/product_image_view"
+            app:layout_constraintTop_toBottomOf="@+id/product_name_text_view"
+            tools:text="Белки 20г" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/protain_count_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toStartOf="@+id/fats_count_text_view"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toEndOf="@+id/product_image_view"
-        app:layout_constraintTop_toBottomOf="@+id/product_name_text_view"
-        android:textColor="@color/black"
-        tools:text="Белки 20г" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/fats_count_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/protain_count_text_view"
+            app:layout_constraintEnd_toStartOf="@+id/carbohydrates_count_text_view"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/protain_count_text_view"
+            app:layout_constraintTop_toTopOf="@+id/protain_count_text_view"
+            android:textColor="@color/black"
+            tools:text="Жиры 30г" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/fats_count_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/protain_count_text_view"
-        app:layout_constraintEnd_toStartOf="@+id/carbohydrates_count_text_view"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/protain_count_text_view"
-        app:layout_constraintTop_toTopOf="@+id/protain_count_text_view"
-        android:textColor="@color/black"
-        tools:text="Жиры 30г" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/carbohydrates_count_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/fats_count_text_view"
+            app:layout_constraintStart_toEndOf="@+id/fats_count_text_view"
+            app:layout_constraintTop_toTopOf="@+id/fats_count_text_view"
+            android:textColor="@color/black"
+            tools:text="Углеводы 30г" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/carbohydrates_count_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/fats_count_text_view"
-        app:layout_constraintStart_toEndOf="@+id/fats_count_text_view"
-        app:layout_constraintTop_toTopOf="@+id/fats_count_text_view"
-        android:textColor="@color/black"
-        tools:text="Углеводы 30г" />
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/deleteImageButton"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/corner_border"
+            android:src="@drawable/minus_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/count_product_text_view"
+            app:layout_constraintTop_toBottomOf="@+id/carbohydrates_count_text_view" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/addImageButton"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/corner_border"
+            android:src="@drawable/plus_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/carbohydrates_count_text_view" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

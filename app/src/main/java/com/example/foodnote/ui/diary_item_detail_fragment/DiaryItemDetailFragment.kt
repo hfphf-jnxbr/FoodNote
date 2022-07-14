@@ -95,6 +95,7 @@ class DiaryItemDetailFragment :
         uiScope.launch {
             timeItemTextView.text = args.diaryItem.time
             titleTextView.text = args.diaryItem.name
+            viewModel.saveDiaryItem(args.diaryItem)
             args.diaryItem.dbId?.let { dbId ->
                 viewModel.getSavedFoodCollection(idUser, dbId).collect { state ->
                     when (state) {
@@ -123,10 +124,24 @@ class DiaryItemDetailFragment :
         adapter.setItem(list)
     }
 
-    override fun addProduct(item: FoodDto) {
+    override fun addProduct(item: FoodDto, pos: Int) {
         uiScope.launch {
+            item.incCount()
             viewModel.saveFood(item).collect { state ->
                 if (state is AppState.Success) {
+                    adapter.notifyItemChanged(pos)
+                    context?.showToast(state.data)
+                }
+            }
+        }
+    }
+
+    override fun deleteProduct(item: FoodDto, pos: Int) {
+        uiScope.launch {
+            item.decCount()
+            viewModel.saveFood(item).collect { state ->
+                if (state is AppState.Success) {
+                    adapter.notifyItemChanged(pos)
                     context?.showToast(state.data)
                 }
             }

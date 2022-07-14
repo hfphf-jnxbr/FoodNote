@@ -34,8 +34,10 @@ class FireBaseCalorieDataSourceImpl(private val db: FirebaseFirestore) : Firebas
                 collection.set(diaryItem)
                     .await()
                 if (foodItem != null) {
+                    val docId = foodItem.docId ?: UUID.randomUUID().toString()
+                    foodItem.docId = docId
                     collection.collection(PRODUCT_COLLECTION_NAME)
-                        .document(UUID.randomUUID().toString())
+                        .document(docId)
                         .set(foodItem)
                 }
                 emit(AppState.Success("Success"))

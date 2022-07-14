@@ -32,6 +32,7 @@ fun FoodFireBase.toFoodDto(): FoodDto {
         this.protein ?: 0.0,
         this.fat ?: 0.0,
         this.carbohydrate ?: 0.0,
-        this.count ?: 0
+        this.count ?: 0,
+        this.docId
     )
 }
