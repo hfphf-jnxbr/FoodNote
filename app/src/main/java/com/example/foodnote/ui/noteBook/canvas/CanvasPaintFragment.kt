@@ -7,7 +7,6 @@ import android.graphics.Color.RED
 import android.graphics.Color.WHITE
 import android.os.Bundle
 import android.os.Environment
-import android.text.InputFilter
 import android.util.DisplayMetrics
 import android.view.View
 import android.widget.SeekBar
@@ -23,11 +22,14 @@ import com.example.foodnote.databinding.CanvasFragmentBinding
 import com.example.foodnote.ui.base.BaseViewBindingFragment
 import com.example.foodnote.ui.noteBook.constNote.Const
 import com.example.foodnote.ui.noteBook.constNote.Const.CARD_NOTE_SPLASH_DP
+import com.example.foodnote.ui.noteBook.constNote.Const.DEFAULT_ALPHA
+import com.example.foodnote.ui.noteBook.constNote.Const.DEFAULT_SIZE_BRUSH
 import com.example.foodnote.ui.noteBook.constNote.Const.MARGIN_CANVAS_DP
-import com.example.foodnote.ui.noteBook.constNote.Const.MAX_BRUSH_SIZE
 import com.example.foodnote.ui.noteBook.constNote.Const.MAX_CANVAS_HEIGHT_DP
 import com.example.foodnote.ui.noteBook.constNote.Const.SEED
+import com.example.foodnote.ui.noteBook.constNote.ConstType
 import com.example.foodnote.ui.noteBook.editorNote.EditorPaintNoteFragment
+import com.google.android.material.card.MaterialCardView
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -38,8 +40,10 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
     private var colorCard = WHITE
     private var saveColorCard = WHITE
     private var colorCardBackground = RED
+
     private lateinit var viewCanvasPaint : CanvasPaint
     private lateinit var fragment: EditorPaintNoteFragment
+    private lateinit var listView: List<MaterialCardView>
 
     private var canvasHeight : Int = 0
     private var canvasWidth : Int = 0
@@ -50,17 +54,24 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewCanvasPaint = CanvasPaint(requireContext(),colorCardBackground)
-        binding.viewCanvasContainer.addView(viewCanvasPaint)
-        binding.viewCanvas.setCardBackgroundColor(colorCardBackground)
+        init()
 
         setWidthPixels()
         setSizeCanvas()
 
         chekColor()
-        editTextFilter()
-        pixSize()
+        chekBrush()
         buttonChek()
+    }
+
+    private fun init() {
+        viewCanvasPaint = CanvasPaint(requireContext(),colorCardBackground,binding.pic)
+        binding.viewCanvasContainer.addView(viewCanvasPaint)
+        binding.viewCanvas.setCardBackgroundColor(colorCardBackground)
+
+        binding.apply {
+           listView = listOf(colorBlue,colorPink,colorYellow,colorGray,colorWhite,colorBlack,colorPurple,colorGreen,colorMulti)
+        }
     }
 
     private fun setWidthPixels() {
@@ -91,13 +102,11 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
 
     private fun convertDpToPixels( dp: Int) = (dp * requireContext().resources.displayMetrics.density).toInt()
 
-    private fun chekColor() = with(binding) {
-        val list = listOf(colorBlue,colorPink,colorYellow,colorGray,colorWhite,colorBlack,colorPurple,colorGreen,colorMulti)
-
-        list.forEach { view ->
+    private fun chekColor() {
+        listView.forEach { view ->
             view.setOnClickListener {
 
-                clearStroke()
+                clearStroke(listView)
 
                 view.strokeColor = Color.GRAY
                 view.strokeWidth = Const.STROKE_WIDTH_FOCUS
@@ -112,10 +121,28 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
         }
     }
 
-    private fun clearStroke() = with(binding) {
-        val list = listOf(colorBlue,colorPink,colorYellow,colorGray,colorWhite,colorBlack,colorPurple,colorGreen,colorMulti)
+    private fun chekBrush() = with(binding){
+        brushPen.strokeColor = Color.GRAY
+        brushPen.strokeWidth = Const.STROKE_WIDTH_FOCUS
 
-        list.forEach { e ->
+        brushPen.setOnClickListener {
+            clearStroke(listOf(brushCircles))
+
+            viewCanvasPaint.setBrush(ConstType.BRUSH_PEN)
+            brushPen.strokeColor = Color.GRAY
+            brushPen.strokeWidth = Const.STROKE_WIDTH_FOCUS
+        }
+        brushCircles.setOnClickListener {
+            clearStroke(listOf(brushPen))
+
+            viewCanvasPaint.setBrush(ConstType.BRUSH_CIRCLES)
+            brushCircles.strokeColor = Color.GRAY
+            brushCircles.strokeWidth = Const.STROKE_WIDTH_FOCUS
+        }
+    }
+
+    private fun clearStroke(listView: List<MaterialCardView>) {
+        listView.forEach { e ->
             e.strokeColor = Color.LTGRAY
             e.strokeWidth = Const.STROKE_WIDTH
         }
@@ -125,17 +152,12 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
         setBackgroundColor(color)
         saveColorCard = color
 
-        clearStroke()
+        clearStroke(listView)
         strokeColor = Color.GRAY
         strokeWidth = Const.STROKE_WIDTH_FOCUS
 
         colorCard = color
         viewCanvasPaint.setColor(colorCard)
-    }
-
-    private fun editTextFilter() = with(binding) {
-        val filterArray = Array<InputFilter>(1) { InputFilter.LengthFilter(2) }
-        sizeEdit.filters = filterArray
     }
 
     private fun buttonChek() = with(binding){
@@ -163,16 +185,40 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
         colorSelection.setOnClickListener {
             colorMultiPic.visibility = View.VISIBLE
         }
+        pic.setOnClickListener {
+            viewCanvasPaint.setPic(true)
+        }
 
         palette.setFragment(this@CanvasPaintFragment)
+
+        seekBarAlpha.setOnSeekBarChangeListener(seekBarChangeListener)
+        seekBarPixSize.setOnSeekBarChangeListener(seekBarChangeListener)
         seekBar.setOnSeekBarChangeListener(seekBarChangeListener)
+
+        seekBarAlpha.progress = DEFAULT_ALPHA
+        seekBarPixSize.progress = DEFAULT_SIZE_BRUSH
+
+        binding.textViewAlpha.text = "Alpha $DEFAULT_ALPHA"
+        binding.textViewSizeBrash.text = "Alpha $DEFAULT_SIZE_BRUSH"
     }
 
     private val seekBarChangeListener: OnSeekBarChangeListener = object : OnSeekBarChangeListener {
         override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-            binding.palette.setColorH(progress)
-        }
 
+            when (seekBar.id){
+                R.id.seekBar -> {
+                    binding.palette.setColorH(progress)
+                }
+                R.id.seekBarAlpha -> {
+                    viewCanvasPaint.setAlphaColor(progress)
+                    binding.textViewAlpha.text = "Alpha $progress"
+                }
+                R.id.seekBarPixSize -> {
+                    viewCanvasPaint.setSize(progress.toFloat())
+                    binding.textViewSizeBrash.text = "Pix $progress"
+                }
+            }
+        }
         override fun onStartTrackingTouch(seekBar: SeekBar) {}
         override fun onStopTrackingTouch(seekBar: SeekBar) {}
     }
@@ -190,40 +236,6 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
             dialog.dismiss()
         }
         dialog.create().show()
-    }
-
-    private fun pixSize() = with(binding) {
-        sizeEdit.setOnClickListener {
-            val input = sizeEdit.text.toString()
-
-            if (input.isNotEmpty()) {
-                val inp = input.toInt()
-
-                if(inp in 0..MAX_BRUSH_SIZE) {
-                    viewCanvasPaint.setSize(inp.toFloat())
-                } else {
-                    if(inp !in 0..MAX_BRUSH_SIZE) sizeEdit.error = getString(R.string.range_error)
-                }
-            } else {
-                Toast.makeText(requireContext(),getString(R.string.empty_field_error_messange), Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        sizeEditAlpha.setOnClickListener {
-            val input = sizeEditAlpha.text.toString()
-
-            if (input.isNotEmpty()) {
-                val inp = input.toInt()
-
-                if(inp in 0..255) {
-                    viewCanvasPaint.setAlphaColor(inp)
-                } else {
-                    if(inp !in 0..255) sizeEditAlpha.error = getString(R.string.range_error)
-                }
-            } else {
-                Toast.makeText(requireContext(),getString(R.string.empty_field_error_messange), Toast.LENGTH_SHORT).show()
-            }
-        }
     }
 
     private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { saveImage() }

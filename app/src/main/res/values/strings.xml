@@ -75,4 +75,6 @@
     <string name="create_notes">Создаение заметки</string>
     <string name="save">Сохранить</string>
     <string name="disabled">Отменить</string>
+    <string name="pix_0">Pix 0</string>
+    <string name="alpha_0">Alpha 0</string>
 </resources>

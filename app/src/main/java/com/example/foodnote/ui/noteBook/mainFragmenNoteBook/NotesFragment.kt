@@ -50,6 +50,7 @@ import org.koin.core.qualifier.named
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import kotlin.random.Random
 
 
 class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookFragmentBinding::inflate) , NoteBookFragmentInterface {
@@ -371,12 +372,14 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
         if(ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 
             val bitmap = BitmapFactory.decodeResource(requireContext().resources, R.drawable.image_note_paint);
-            bitmapToFile(bitmap,getName())
+            nameFile = getName()
+            bitmapToFile(bitmap,nameFile)
         } else {
             requestLocationPermissions()
         }
     }
-    private fun getName() = "image224.png"
+    private lateinit var nameFile : String
+    private fun getName() = "image244${Random(Const.SEED)}.png"
     private fun bitmapToFile(bitmap: Bitmap, fileNameToSave: String): File? {
         var file: File? = null
         return try {
@@ -397,18 +400,18 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
             fos.flush()
             fos.close()
 
-            createExampleNote()
-
             file
         } catch (e: Exception) {
             e.printStackTrace()
             file
+        } finally {
+            createExampleNote()
         }
     }
     private fun createExampleNote() {
         val stringStandart = "Note\n- Finish the project\n- Bugfix navigation\n- Added new brash"
 
-        val bitmapURL = getName()
+        val bitmapURL = nameFile
 
         val stringFoods = "Milk\nApple\nOrange"
         val stringWeight = "1300\n700\n430"
