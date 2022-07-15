@@ -40,7 +40,7 @@ class FireBaseCalorieDataSourceImpl(private val db: FirebaseFirestore) : Firebas
                         .document(docId)
                         .set(foodItem)
                 }
-                emit(AppState.Success())
+                emit(AppState.Success("Success"))
             }
         }.catch {
             emit(AppState.Error(it))
@@ -60,7 +60,7 @@ class FireBaseCalorieDataSourceImpl(private val db: FirebaseFirestore) : Firebas
                 .get()
                 .await()
             val items = result.toObjects(DiaryItem::class.java)
-            emit(AppState.Success())
+            emit(AppState.Success(items))
         }.catch {
             emit(AppState.Error(it))
         }.flowOn(Dispatchers.IO)
@@ -81,7 +81,7 @@ class FireBaseCalorieDataSourceImpl(private val db: FirebaseFirestore) : Firebas
             val items = result.toObjects(FoodFireBase::class.java).map {
                 it.toFoodDto()
             }
-            emit(AppState.Success())
+            emit(AppState.Success(items))
         }.catch {
             emit(AppState.Error(it))
         }.flowOn(Dispatchers.IO)

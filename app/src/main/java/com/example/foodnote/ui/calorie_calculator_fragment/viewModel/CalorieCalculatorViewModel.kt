@@ -2,7 +2,6 @@ package com.example.foodnote.ui.calorie_calculator_fragment.viewModel
 
 
 import androidx.lifecycle.viewModelScope
-import com.example.foodnote.data.base.AppState
 import com.example.foodnote.data.base.SampleState
 import com.example.foodnote.data.interactor.calorie_interactor.CalorieCalculatorInteractor
 import com.example.foodnote.data.model.DiaryItem
@@ -73,16 +72,7 @@ class CalorieCalculatorViewModel(
                 SimpleDateFormat("dd.MMMM.YYYY")
                     .format(Date()),
                 idUser
-            ).collect { state ->
-                when (state) {
-                    is AppState.Success -> {
-                        stateLiveData.value = stateLiveData.value?.copy(diaryList = state.data)
-                    }
-                    else -> {
-
-                    }
-                }
-            }
+            )
     }
 
     fun calculateTotalData() {
