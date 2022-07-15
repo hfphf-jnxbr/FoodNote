@@ -9,12 +9,16 @@ import android.view.View
 import kotlin.math.cos
 import kotlin.math.round
 import kotlin.math.sin
-import kotlin.math.tan
 
-class WaterButton @JvmOverloads constructor(context : Context, attrs : AttributeSet? = null, style: Int = 0) : View(context,attrs,style) , WaterButtonInterface {
+class WaterButton @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    style: Int = 0
+) : View(context, attrs, style), WaterButtonInterface {
 
-    private val paint = Paint().apply { color = Color.argb(250,84, 210, 235) }
-    private val paintText = Paint().apply { color = Color.argb(255,255, 255, 255)
+    private val paint = Paint().apply { color = Color.argb(250, 84, 210, 235) }
+    private val paintText = Paint().apply {
+        color = Color.argb(255, 255, 255, 255)
         isAntiAlias = true
         textSize = 60f
     }
@@ -38,9 +42,9 @@ class WaterButton @JvmOverloads constructor(context : Context, attrs : Attribute
         var x = -0.1f
         while (x < 3.2f) {
 
-            val value = waveFunction(x,a,maxWaterH,(( height*60f)/263f ))
-            drawLineWater(value,canvas,x)
-            x += 3.2f/height
+            val value = waveFunction(x, a, maxWaterH, ((height * 60f) / 263f))
+            drawLineWater(value, canvas, x)
+            x += 3.2f / height
         }
         a += 0.04f
     }
@@ -49,20 +53,21 @@ class WaterButton @JvmOverloads constructor(context : Context, attrs : Attribute
         val string = "${currentWaterValue}/${maxWaterValue} милл"
         val widthText = paintText.measureText(string)
 
-        canvas.drawText(string, width/2f - widthText/2f,height/2f + 20f,paintText)
+        canvas.drawText(string, width / 2f - widthText / 2f, height / 2f + 20f, paintText)
     }
 
     private fun drawLineWater(value: Float, canvas: Canvas, x: Float) {
         val y = round((x * height) / 3.2f)
-        if(y != tempY) {
+        if (y != tempY) {
             canvas.drawLine(0f, y, value, y, paint)
         }
         tempY = y
     }
 
-    private fun waveFunction(x: Float, a: Float, h: Float, amplitude : Float) = (0.5f * (x - 2f) * cos(x + a) * sin(x + a)) * amplitude + h
+    private fun waveFunction(x: Float, a: Float, h: Float, amplitude: Float) =
+        (0.5f * (x - 2f) * cos(x + a) * sin(x + a)) * amplitude + h
 
-    override fun setDataWaterToStart(maxWater : Int, currentWater : Int) {
+    override fun setDataWaterToStart(maxWater: Int, currentWater: Int) {
         this.maxWaterValue = maxWater
         this.currentWaterValue = currentWater
     }

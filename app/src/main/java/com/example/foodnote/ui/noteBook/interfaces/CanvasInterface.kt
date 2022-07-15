@@ -8,5 +8,5 @@ interface CanvasInterface {
     fun setColorBackground(color: Int)
     fun setSize(size: Float)
     fun clearCanvas()
-    fun getBitmap() : Bitmap
+    fun getBitmap(): Bitmap
 }

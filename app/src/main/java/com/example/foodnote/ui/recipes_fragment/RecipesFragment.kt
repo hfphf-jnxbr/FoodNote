@@ -4,7 +4,5 @@ import com.example.foodnote.databinding.FragmentRecipesBinding
 import com.example.foodnote.ui.base.BaseViewBindingFragment
 
 
-class RecipesFragment : BaseViewBindingFragment<FragmentRecipesBinding>(FragmentRecipesBinding::inflate) {
-
-
-}
+class RecipesFragment :
+    BaseViewBindingFragment<FragmentRecipesBinding>(FragmentRecipesBinding::inflate)

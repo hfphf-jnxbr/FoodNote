@@ -12,7 +12,11 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
-class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : AttributeSet? = null, style: Int = 0) : View(context,attrs,style) , DiagramViewInterface{
+class CircleDiagramView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    style: Int = 0
+) : View(context, attrs, style), DiagramViewInterface {
 
     @SuppressLint("DrawAllocation")
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -22,42 +26,51 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
         setMeasuredDimension(width, width)
     }
 
-    private val paintCircle = Paint().apply { color = Color.rgb(10, 180, 255)
+    private val paintCircle = Paint().apply {
+        color = Color.rgb(10, 180, 255)
         isAntiAlias = true
     }
 
-    private val paintCircle3 = Paint().apply { color = Color.rgb(150, 180, 255)
+    private val paintCircle3 = Paint().apply {
+        color = Color.rgb(150, 180, 255)
         isAntiAlias = true
     }
 
-    private val paintCircle4 = Paint().apply { color = Color.rgb(255, 180, 255)
+    private val paintCircle4 = Paint().apply {
+        color = Color.rgb(255, 180, 255)
         isAntiAlias = true
     }
 
-    private val paintCircleBek = Paint().apply { color = Color.rgb(245, 245, 245)
+    private val paintCircleBek = Paint().apply {
+        color = Color.rgb(245, 245, 245)
         isAntiAlias = true
     }
 
-    private val paintCircleBek3 = Paint().apply { color = Color.rgb(245, 245, 245)
+    private val paintCircleBek3 = Paint().apply {
+        color = Color.rgb(245, 245, 245)
         isAntiAlias = true
     }
 
-    private val paintCircleBek4 = Paint().apply { color = Color.rgb(255, 255, 255)
+    private val paintCircleBek4 = Paint().apply {
+        color = Color.rgb(255, 255, 255)
         setShadowLayer(8.0f, 1f, 5.0f, Color.GRAY)
         isAntiAlias = true
     }
 
-    private val paintText = Paint().apply { color = Color.rgb(185, 185, 185)
+    private val paintText = Paint().apply {
+        color = Color.rgb(185, 185, 185)
         isAntiAlias = true
         textSize = 65f
     }
 
-    private val paintSmallText = Paint().apply { color = Color.rgb(135, 135, 135)
+    private val paintSmallText = Paint().apply {
+        color = Color.rgb(135, 135, 135)
         isAntiAlias = true
         textSize = 35f
     }
 
-    private val paintLine = Paint().apply { color = Color.rgb(255, 255, 255)
+    private val paintLine = Paint().apply {
+        color = Color.rgb(255, 255, 255)
         setShadowLayer(8.0f, 1f, 1f, Color.GRAY)
         strokeWidth = 6f
     }
@@ -86,9 +99,9 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
     private var x2 = 0
     private var x3 = 0
 
-    private var rectF : RectF = RectF(0f,0f,0f,0f)
-    private var rectF2 : RectF = RectF(0f,0f,0f,0f)
-    private var rectF3 : RectF = RectF(0f,0f,0f,0f)
+    private var rectF: RectF = RectF(0f, 0f, 0f, 0f)
+    private var rectF2: RectF = RectF(0f, 0f, 0f, 0f)
+    private var rectF3: RectF = RectF(0f, 0f, 0f, 0f)
 
     private var flag = true
 
@@ -107,55 +120,85 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
         invalidate()
     }
 
-    private fun drawCircles(canvas: Canvas){
-        canvas.drawCircle(width/2f,width/2f,width/2f - radiuse ,paintCircleBek4)
+    private fun drawCircles(canvas: Canvas) {
+        canvas.drawCircle(width / 2f, width / 2f, width / 2f - radiuse, paintCircleBek4)
 
-        canvas.drawArc(rectF,0f,angle,true,paintCircle)
-        line(angle,canvas,"$x1 ккал")
-        canvas.drawCircle(width/2f,width/2f,width/2f - widthDiagram - radiuse,paintCircleBek)
+        canvas.drawArc(rectF, 0f, angle, true, paintCircle)
+        line(angle, canvas, "$x1 ккал")
+        canvas.drawCircle(
+            width / 2f,
+            width / 2f,
+            width / 2f - widthDiagram - radiuse,
+            paintCircleBek
+        )
 
-        canvas.drawArc(rectF2,0f,angle2,true,paintCircle3)
-        line(angle2,canvas,"$x2 жиры")
-        canvas.drawCircle(width/2f,width/2f,width/2f - widthDiagram*2 - radiuse,paintCircleBek)
+        canvas.drawArc(rectF2, 0f, angle2, true, paintCircle3)
+        line(angle2, canvas, "$x2 жиры")
+        canvas.drawCircle(
+            width / 2f,
+            width / 2f,
+            width / 2f - widthDiagram * 2 - radiuse,
+            paintCircleBek
+        )
 
-        canvas.drawArc(rectF3,0f,angle3,true,paintCircle4)
-        line(angle3,canvas,"$x3 белок")
-        canvas.drawCircle(width/2f,width/2f,width/2f - widthDiagram*3 - radiuse,paintCircleBek3)
+        canvas.drawArc(rectF3, 0f, angle3, true, paintCircle4)
+        line(angle3, canvas, "$x3 белок")
+        canvas.drawCircle(
+            width / 2f,
+            width / 2f,
+            width / 2f - widthDiagram * 3 - radiuse,
+            paintCircleBek3
+        )
     }
 
-    private fun line(angle : Float, canvas : Canvas, text : String) {
-        if(angle > 0) {
-            val x = width/2f + (width/2f - radiuse/2 - 32) * cos(- (angle * 2 * PI) / 360).toFloat()
-            val y = width/2f - (width/2f - radiuse/2 - 32) * sin(- (angle * 2 * PI) / 360).toFloat()
+    private fun line(angle: Float, canvas: Canvas, text: String) {
+        if (angle > 0) {
+            val x =
+                width / 2f + (width / 2f - radiuse / 2 - 32) * cos(-(angle * 2 * PI) / 360).toFloat()
+            val y =
+                width / 2f - (width / 2f - radiuse / 2 - 32) * sin(-(angle * 2 * PI) / 360).toFloat()
 
-            val x2 = width/2f + (width/2f - radiuse/2 ) * cos(- (angle * 2 * PI) / 360).toFloat()
-            val y2 = width/2f - (width/2f - radiuse/2 ) * sin(- (angle * 2 * PI) / 360).toFloat()
+            val x2 =
+                width / 2f + (width / 2f - radiuse / 2) * cos(-(angle * 2 * PI) / 360).toFloat()
+            val y2 =
+                width / 2f - (width / 2f - radiuse / 2) * sin(-(angle * 2 * PI) / 360).toFloat()
 
-            canvas.drawLine(width/2f,width/2f, x, y, paintLine)
-            canvas.drawCircle(x, y,25f,paintLine)
+            canvas.drawLine(width / 2f, width / 2f, x, y, paintLine)
+            canvas.drawCircle(x, y, 25f, paintLine)
 
-            if(angle <= 180) {
-                canvas.drawText(text,x2 - 90f,y2 + 32f,paintSmallText)
+            if (angle <= 180) {
+                canvas.drawText(text, x2 - 90f, y2 + 32f, paintSmallText)
             } else {
-                canvas.drawText(text,x2 - 90f,y2 - 10f ,paintSmallText)
+                canvas.drawText(text, x2 - 90f, y2 - 10f, paintSmallText)
             }
         }
     }
 
     private fun angleSpeed() {
-        if(angle < length) angle += angleSpeed
-        if(angle2 < length2) angle2 += angleSpeed2
-        if(angle3 < length3) angle3 += angleSpeed3
+        if (angle < length) angle += angleSpeed
+        if (angle2 < length2) angle2 += angleSpeed2
+        if (angle3 < length3) angle3 += angleSpeed3
 
-        angleSpeed = angleSpeedStart * ( length - angle)
-        angleSpeed2 = angleSpeedStart2 * ( length2 - angle2)
-        angleSpeed3 = angleSpeedStart3 * ( length3 - angle3)
+        angleSpeed = angleSpeedStart * (length - angle)
+        angleSpeed2 = angleSpeedStart2 * (length2 - angle2)
+        angleSpeed3 = angleSpeedStart3 * (length3 - angle3)
     }
 
     private fun createRect(width: Int) {
-        rectF = RectF(0f + radiuse,0f + radiuse, width.toFloat() - radiuse, width.toFloat() - radiuse)
-        rectF2 = RectF(widthDiagram + radiuse,widthDiagram + radiuse,width.toFloat() - widthDiagram - radiuse,width.toFloat() - widthDiagram - radiuse)
-        rectF3 = RectF(widthDiagram*2 + radiuse,widthDiagram*2 + radiuse,width.toFloat() - widthDiagram*2 - radiuse,width.toFloat() - widthDiagram*2 - radiuse)
+        rectF =
+            RectF(0f + radiuse, 0f + radiuse, width.toFloat() - radiuse, width.toFloat() - radiuse)
+        rectF2 = RectF(
+            widthDiagram + radiuse,
+            widthDiagram + radiuse,
+            width.toFloat() - widthDiagram - radiuse,
+            width.toFloat() - widthDiagram - radiuse
+        )
+        rectF3 = RectF(
+            widthDiagram * 2 + radiuse,
+            widthDiagram * 2 + radiuse,
+            width.toFloat() - widthDiagram * 2 - radiuse,
+            width.toFloat() - widthDiagram * 2 - radiuse
+        )
 
         this.radiuse = width / 6f
     }
@@ -164,12 +207,12 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
         val string = "max ${maxCalories}ккал"
         val widthText = paintText.measureText(string)
 
-        paintText.textSize = ((width/2f) - radiuse) / 5f
+        paintText.textSize = ((width / 2f) - radiuse) / 5f
 
-        canvas.drawText(string,width/2f - widthText/2 ,width/2f ,paintText)
+        canvas.drawText(string, width / 2f - widthText / 2, width / 2f, paintText)
     }
 
-    override fun start(x1 : Int, maxCalories : Int,x2 : Int, maxFats :Int , x3 : Int, maxProtein : Int) {
+    override fun start(x1: Int, maxCalories: Int, x2: Int, maxFats: Int, x3: Int, maxProtein: Int) {
         angle = 0f
         angle2 = 0f
         angle3 = 0f

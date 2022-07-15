@@ -7,12 +7,14 @@ import android.view.View
 import com.example.foodnote.R
 import com.example.foodnote.databinding.PaintNoteEditorBinding
 import com.example.foodnote.ui.base.BaseViewBindingFragment
-import com.example.foodnote.ui.noteBook.mainFragmenNoteBook.ConstructorFragment
 import com.example.foodnote.ui.noteBook.canvas.CanvasPaintFragment
 import com.example.foodnote.ui.noteBook.interfaces.EditorPaintNoteFragmentInterface
+import com.example.foodnote.ui.noteBook.mainFragmenNoteBook.ConstructorFragment
 import java.io.File
 
-class EditorPaintNoteFragment : BaseViewBindingFragment<PaintNoteEditorBinding>(PaintNoteEditorBinding::inflate) , EditorPaintNoteFragmentInterface {
+class EditorPaintNoteFragment :
+    BaseViewBindingFragment<PaintNoteEditorBinding>(PaintNoteEditorBinding::inflate),
+    EditorPaintNoteFragmentInterface {
 
     private lateinit var fragment: ConstructorFragment
     private var fileName = "null"
@@ -32,11 +34,14 @@ class EditorPaintNoteFragment : BaseViewBindingFragment<PaintNoteEditorBinding>(
 
             fragment.setFlag(false)
 
-            if(height > -1 && width > -1) {
+            if (height > -1 && width > -1) {
                 requireActivity().supportFragmentManager
                     .beginTransaction()
                     .setCustomAnimations(R.anim.anim_layout_2, R.anim.anim_layout)
-                    .replace(R.id.containerCanvas, CanvasPaintFragment.newInstance(this, height, width, color))
+                    .replace(
+                        R.id.containerCanvas,
+                        CanvasPaintFragment.newInstance(this, height, width, color)
+                    )
                     .commit()
             }
         }
@@ -46,15 +51,20 @@ class EditorPaintNoteFragment : BaseViewBindingFragment<PaintNoteEditorBinding>(
         fragment.setFlag(true)
     }
 
-    override fun loadImage(fileNameToSave : String) {
+    override fun loadImage(fileNameToSave: String) {
         fileName = fileNameToSave
-        binding.image.setImageBitmap( BitmapFactory.decodeFile(Environment.getExternalStorageDirectory().toString() + File.separator +  Environment.DIRECTORY_DCIM + File.separator + fileNameToSave) )
+        binding.image.setImageBitmap(
+            BitmapFactory.decodeFile(
+                Environment.getExternalStorageDirectory()
+                    .toString() + File.separator + Environment.DIRECTORY_DCIM + File.separator + fileNameToSave
+            )
+        )
     }
 
     override fun getImageURL() = fileName
 
     companion object {
-        fun newInstance(fragment : ConstructorFragment) : EditorPaintNoteFragment {
+        fun newInstance(fragment: ConstructorFragment): EditorPaintNoteFragment {
             val fragmentEditor = EditorPaintNoteFragment()
             fragmentEditor.fragment = fragment
             return fragmentEditor

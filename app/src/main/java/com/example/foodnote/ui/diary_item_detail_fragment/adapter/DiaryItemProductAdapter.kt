@@ -14,6 +14,7 @@ class DiaryItemProductAdapter(private val itemClickListener: ItemClickListener) 
         this.list = list
         notifyDataSetChanged()
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiaryProductPlaceHolder {
         return DiaryProductPlaceHolder(
             LayoutInflater

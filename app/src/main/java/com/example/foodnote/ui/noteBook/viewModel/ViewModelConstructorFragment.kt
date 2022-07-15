@@ -6,12 +6,12 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class ViewModelConstructorFragment() : ViewModel() , ViewModelConstructorInterface{
+class ViewModelConstructorFragment : ViewModel(), ViewModelConstructorInterface {
     private val liveData = MutableLiveData<StateData>()
 
     override fun getLiveData() = liveData
 
-    override fun sendServerToCal(foods : List<String>, weights : List<String>) {
+    override fun sendServerToCal(foods: List<String>, weights: List<String>) {
 
         viewModelScope.launch {
             kotlin.runCatching {

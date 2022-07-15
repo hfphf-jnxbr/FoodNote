@@ -19,10 +19,6 @@ class LinePercentView @JvmOverloads constructor(
         strokeWidth = 10f
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-    }
-
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         drawLine(canvas)
