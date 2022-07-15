@@ -12,13 +12,13 @@ object Const {
     const val MAX_NOTE_SIZE = 99
     const val MIN_NOTE_SIZE = 30
 
-    const val MAX_BRUSH_SIZE = 50
     const val DEFAULT_SIZE_BRUSH = 8
+    const val DEFAULT_ALPHA = 200
 
     const val CARD_NOTE_DP = 30
     const val CARD_NOTE_SPLASH_DP = 70
 
-    const val MAX_CANVAS_HEIGHT_DP = 500
+    const val MAX_CANVAS_HEIGHT_DP = 430
     const val MARGIN_CANVAS_DP = 32
 
     const val NOTES_ELEVATION = 17f

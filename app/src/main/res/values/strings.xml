@@ -80,4 +80,6 @@
         <item>Похудеть</item>
         <item>Набрать вес</item>
     </string-array>
+    <string name="pix_0">Pix 0</string>
+    <string name="alpha_0">Alpha 0</string>
 </resources>

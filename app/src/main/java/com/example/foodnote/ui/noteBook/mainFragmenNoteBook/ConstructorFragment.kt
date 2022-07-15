@@ -78,6 +78,7 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
             ConstType.STANDARD_TYPE -> { setNoteStandardEditor( EditorStandardNoteFragment() ) }
             ConstType.PAINT_TYPE ->    { setNotePaintEditor( EditorPaintNoteFragment.newInstance(this)) }
             ConstType.FOOD_TYPE ->     { setNoteFoodEditor( EditorFoodsNoteFragment()) }
+            else -> {}
         }
     }
 
@@ -199,6 +200,7 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
 
                 viewModel.sendServerToCal(listFoods,listWeight)
             }
+            else -> {}
         }
     }
 
