@@ -5,4 +5,5 @@ import com.example.foodnote.data.repository.datastore_pref_repository.UserPrefer
 import com.example.foodnote.ui.base.viewModel.BaseViewModel
 
 class SplashScreenViewModel(private val dataStorePref: UserPreferencesRepository) :
-    BaseViewModel<SampleState>(dataStorePref)
+    BaseViewModel<SampleState>(dataStorePref) {
+}

@@ -1,28 +1,23 @@
 package com.example.foodnote.ui.noteBook.helperView
 
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.view.MotionEvent
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.animation.doOnEnd
 import com.example.foodnote.ui.noteBook.mainFragmenNoteBook.NotesFragment
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 @SuppressLint("ClickableViewAccessibility")
-class MovedView(
-    private val listView: ArrayList<View>,
-    root: ConstraintLayout,
-    private val fragmentNoteBook: NotesFragment
-) : View.OnTouchListener, MovedViewInterface {
+class MovedView(private val listView : ArrayList<View>, root : ConstraintLayout, private val fragmentNoteBook: NotesFragment) : View.OnTouchListener , MovedViewInterface {
 
     private val scope = CoroutineScope(Dispatchers.IO)
     private var startAnim = true
 
     init {
         root.setOnTouchListener(this)
-        listView.forEach { view -> view.elevation = 15f }
+        listView.forEach { view ->  view.elevation = 15f }
     }
 
     private var dx = 0f
@@ -60,15 +55,14 @@ class MovedView(
 
     private fun focusView(event: MotionEvent) {
         listView.forEach { view ->
-            if ((event.x > view.x && event.x < view.x + view.width)
-                && (event.y > view.y && event.y < view.y + view.height)
-            ) {
+            if((event.x > view.x && event.x < view.x + view.width)
+                &&(event.y > view.y && event.y < view.y + view.height)) {
 
                 listElevation.add(view)
             }
         }
 
-        if (listElevation.isNotEmpty()) {
+        if(listElevation.isNotEmpty()) {
             var maxElevationView = listElevation[0]
 
             listElevation.forEach { view ->
@@ -104,7 +98,7 @@ class MovedView(
         flagFocus = true
     }
 
-    override fun addView(view: View) {
+    override fun addView(view: View){
         listView.add(view)
     }
 
@@ -123,10 +117,10 @@ class MovedView(
 
             while (startAnim) {
                 Thread.sleep(10)
-                withContext(Dispatchers.Main) {
+                withContext(Dispatchers.Main){
                     view.elevation = elevation
                 }
-                if (elevation < 60) {
+                if(elevation < 60) {
                     elevation += speed
                 } else {
                     startAnim = false
@@ -142,10 +136,10 @@ class MovedView(
 
             while (startAnim) {
                 Thread.sleep(10)
-                withContext(Dispatchers.Main) {
+                withContext(Dispatchers.Main){
                     view.elevation = elevation
                 }
-                if (elevation > 18) {
+                if(elevation > 18) {
                     elevation += speed
                 } else {
                     startAnim = false

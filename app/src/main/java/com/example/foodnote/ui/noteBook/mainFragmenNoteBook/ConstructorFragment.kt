@@ -24,27 +24,26 @@ import com.example.foodnote.ui.noteBook.interfaces.ConstructorFragmentInterface
 import com.example.foodnote.ui.noteBook.interfaces.NoteBookFragmentInterface
 import com.example.foodnote.ui.noteBook.viewModel.StateData
 import com.example.foodnote.ui.noteBook.viewModel.ViewModelConstructorFragment
+import com.example.foodnote.ui.noteBook.viewModel.ViewModelConstructorInterface
 import com.example.foodnote.utils.showToast
 import kotlinx.coroutines.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
-class ConstructorFragment :
-    BaseViewBindingFragment<ConstructorNoteBinding>(ConstructorNoteBinding::inflate),
-    ConstructorFragmentInterface {
+class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(ConstructorNoteBinding::inflate) , ConstructorFragmentInterface{
 
     private lateinit var fragmentNoteBook: NoteBookFragmentInterface
 
     private lateinit var editorStandardNoteFragmentEditor: EditorStandardNoteFragment
     private lateinit var editorPaintNoteFragmentEditor: EditorPaintNoteFragment
     private lateinit var editorFoodNoteFragmentEditor: EditorFoodsNoteFragment
-    private var typeNote: ConstType = ConstType.STANDARD_TYPE
+    private var typeNote : ConstType = ConstType.STANDARD_TYPE
 
     private var colorCard = Color.WHITE
     private var flag = true
 
     private val scope = CoroutineScope(Dispatchers.IO)
-    private val viewModel: ViewModelConstructorFragment by viewModel()
+    private val viewModel : ViewModelConstructorFragment by viewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -58,19 +57,17 @@ class ConstructorFragment :
         editTextFilter()
     }
 
-    private fun initViewModel() {
-        viewModel.getLiveData().observe(viewLifecycleOwner) { render(it) }
-    }
+    private fun initViewModel() { viewModel.getLiveData().observe(viewLifecycleOwner) { render(it) } }
 
     private fun render(stateData: StateData) {
-        when (stateData) {
+        when(stateData) {
             is StateData.Loading -> {
 
             }
             is StateData.Success -> {
                 stateData.data?.let { createFoodNote(it) }
             }
-            is StateData.Error -> {
+            is StateData.Error ->   {
                 context?.showToast(getString(R.string.network_error_mess))
             }
         }
@@ -78,34 +75,25 @@ class ConstructorFragment :
 
     private fun setEditorType() {
         when (typeNote) {
-            ConstType.STANDARD_TYPE -> {
-                setNoteStandardEditor(EditorStandardNoteFragment())
-            }
-            ConstType.PAINT_TYPE -> {
-                setNotePaintEditor(EditorPaintNoteFragment.newInstance(this))
-            }
-            ConstType.FOOD_TYPE -> {
-                setNoteFoodEditor(EditorFoodsNoteFragment())
-            }
+            ConstType.STANDARD_TYPE -> { setNoteStandardEditor( EditorStandardNoteFragment() ) }
+            ConstType.PAINT_TYPE ->    { setNotePaintEditor( EditorPaintNoteFragment.newInstance(this)) }
+            ConstType.FOOD_TYPE ->     { setNoteFoodEditor( EditorFoodsNoteFragment()) }
         }
     }
 
     private fun setNoteStandardEditor(fragment: EditorStandardNoteFragment) {
         editorStandardNoteFragmentEditor = fragment
-        childFragmentManager.beginTransaction().replace(R.id.containerEditNotes, fragment)
-            .commitNow()
+        childFragmentManager.beginTransaction().replace(R.id.containerEditNotes,fragment).commitNow()
     }
 
     private fun setNotePaintEditor(fragment: EditorPaintNoteFragment) {
         editorPaintNoteFragmentEditor = fragment
-        childFragmentManager.beginTransaction().replace(R.id.containerEditNotes, fragment)
-            .commitNow()
+        childFragmentManager.beginTransaction().replace(R.id.containerEditNotes,fragment).commitNow()
     }
 
     private fun setNoteFoodEditor(fragment: EditorFoodsNoteFragment) {
         editorFoodNoteFragmentEditor = fragment
-        childFragmentManager.beginTransaction().replace(R.id.containerEditNotes, fragment)
-            .commitNow()
+        childFragmentManager.beginTransaction().replace(R.id.containerEditNotes,fragment).commitNow()
     }
 
     private fun editTextFilter() {
@@ -114,13 +102,11 @@ class ConstructorFragment :
         binding.editHeight.filters = filterArray
     }
 
-    fun setFlag(boolean: Boolean) {
-        flag = boolean
-    }
+    fun setFlag(boolean: Boolean) {flag = boolean}
 
     private fun chekButton() = with(binding) {
         buttonCreate.setOnClickListener {
-            if (flag) {
+            if(flag){
                 createNoteWidthHeight()
                 flag = false
                 timeOutButton()
@@ -128,7 +114,7 @@ class ConstructorFragment :
         }
 
         back.setOnClickListener {
-            if (flag) {
+            if(flag){
                 fragmentNoteBook.constructorFragmentClose()
                 flag = false
                 timeOutButton()
@@ -136,7 +122,7 @@ class ConstructorFragment :
         }
     }
 
-    private fun timeOutButton() {
+    private fun timeOutButton(){
         scope.launch {
             delay(DELAY_BUTTON)
             flag = true
@@ -144,38 +130,34 @@ class ConstructorFragment :
     }
 
     private fun createNoteWidthHeight() {
-        if (getHeight() > -1 && getWidth() > -1) {
+        if(getHeight() > -1 && getWidth() > -1) {
             createNote(getHeight(), getWidth())
         }
     }
 
-    override fun getWidth(): Int = heightWidthInputEditText(binding.editWidth)
-    override fun getHeight(): Int = heightWidthInputEditText(binding.editHeight)
+    override fun getWidth() : Int = heightWidthInputEditText(binding.editWidth)
+    override fun getHeight() : Int = heightWidthInputEditText(binding.editHeight)
 
-    private fun heightWidthInputEditText(editText: EditText): Int {
+    private fun heightWidthInputEditText(editText: EditText) : Int {
         val inputW = editText.text.toString()
 
         if (inputW.isNotEmpty()) {
             val inW = inputW.toInt()
 
-            if (inW in MIN_NOTE_SIZE..MAX_NOTE_SIZE) {
+            if(inW in MIN_NOTE_SIZE..MAX_NOTE_SIZE) {
                 return inW
             } else {
                 editText.error = getString(R.string.range_error)
             }
         } else {
             editText.error = getString(R.string.empty_field_error_messange)
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.empty_field_error_messange),
-                Toast.LENGTH_SHORT
-            ).show()
+            Toast.makeText(requireContext(),getString(R.string.empty_field_error_messange),Toast.LENGTH_SHORT).show()
         }
         return -1
     }
 
-    private fun chekColor() = with(binding) {
-        val list = listOf(colorBlue, colorPink, colorGreen, colorYellow, colorGray, colorWhite)
+    private fun chekColor() = with(binding){
+        val list = listOf(colorBlue,colorPink,colorGreen,colorYellow,colorGray,colorWhite)
 
         list.forEach { view ->
             view.setOnClickListener {
@@ -194,72 +176,43 @@ class ConstructorFragment :
 
     override fun getColorBackgroundCard() = colorCard
 
-    private fun createNote(height: Int, width: Int) {
+    private fun createNote(height : Int, width : Int) {
         when (typeNote) {
             ConstType.STANDARD_TYPE -> {
                 val string = editorStandardNoteFragmentEditor.getNoteText()
                 val randomId = Random().nextInt(RANDOM_ID)
-                fragmentNoteBook.saveAndCreateDataNotesStandard(
-                    width,
-                    height,
-                    colorCard,
-                    string,
-                    0,
-                    0,
-                    randomId,
-                    NOTES_ELEVATION
-                )
+                fragmentNoteBook.saveAndCreateDataNotesStandard(width, height, colorCard, string,0,0, randomId, NOTES_ELEVATION)
                 fragmentNoteBook.constructorFragmentClose()
             }
-            ConstType.PAINT_TYPE -> {
+            ConstType.PAINT_TYPE  ->    {
                 val bitmapURL = editorPaintNoteFragmentEditor.getImageURL()
                 val randomId = Random().nextInt(RANDOM_ID)
-                fragmentNoteBook.saveAndCreateDataNotesPaint(
-                    width,
-                    height,
-                    colorCard,
-                    bitmapURL,
-                    0,
-                    0,
-                    randomId,
-                    NOTES_ELEVATION
-                )
+                fragmentNoteBook.saveAndCreateDataNotesPaint(width, height, colorCard, bitmapURL,0 ,0, randomId, NOTES_ELEVATION)
                 fragmentNoteBook.constructorFragmentClose()
             }
-            ConstType.FOOD_TYPE -> {
+            ConstType.FOOD_TYPE  ->    {
                 val stringFoods = editorFoodNoteFragmentEditor.getListFoodsText()
                 val stringWeight = editorFoodNoteFragmentEditor.getListWeightText()
 
                 val listFoods = stringFoods.split("\n")
                 val listWeight = stringWeight.split("\n")
 
-                viewModel.sendServerToCal(listFoods, listWeight)
+                viewModel.sendServerToCal(listFoods,listWeight)
             }
         }
     }
 
-    private fun createFoodNote(general: String) {
+    private fun createFoodNote(general: String){
         val stringFoods = editorFoodNoteFragmentEditor.getListFoodsText()
         val stringWeight = editorFoodNoteFragmentEditor.getListWeightText()
         val randomId = Random().nextInt(RANDOM_ID)
 
-        fragmentNoteBook.saveAndCreateDataNotesFoods(
-            getWidth(),
-            getHeight(),
-            colorCard,
-            stringFoods,
-            stringWeight,
-            general,
-            0,
-            0,
-            randomId,
-            NOTES_ELEVATION
-        )
+        fragmentNoteBook.saveAndCreateDataNotesFoods(getWidth(), getHeight(), colorCard, stringFoods, stringWeight, general,0 ,0, randomId, NOTES_ELEVATION)
         fragmentNoteBook.constructorFragmentClose()
     }
 
     companion object {
-        fun newInstance(fragmentNotes: NotesFragment, typeNotes: ConstType): ConstructorFragment {
+        fun newInstance(fragmentNotes: NotesFragment, typeNotes: ConstType) : ConstructorFragment {
             val fragment = ConstructorFragment()
             fragment.fragmentNoteBook = fragmentNotes
             fragment.typeNote = typeNotes

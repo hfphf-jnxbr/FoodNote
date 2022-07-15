@@ -7,11 +7,7 @@ import com.example.foodnote.data.databaseRoom.entities.EntitiesNotesFood
 import com.example.foodnote.data.databaseRoom.entities.EntitiesNotesPaint
 import com.example.foodnote.data.databaseRoom.entities.EntitiesNotesStandard
 
-@Database(
-    entities = [EntitiesNotesPaint::class, EntitiesNotesStandard::class, EntitiesNotesFood::class],
-    version = 1,
-    exportSchema = false
-)
+@Database(entities = [EntitiesNotesPaint::class, EntitiesNotesStandard::class, EntitiesNotesFood::class], version = 1, exportSchema = false)
 abstract class DataBase : RoomDatabase() {
-    abstract fun dataBase(): DaoDB
+    abstract fun dataBase() : DaoDB
 }

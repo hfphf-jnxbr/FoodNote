@@ -2,8 +2,7 @@ package com.example.foodnote.ui.noteBook.canvas
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.Color
+import android.graphics.*
 import android.graphics.Color.RED
 import android.graphics.Color.WHITE
 import android.os.Bundle
@@ -34,17 +33,16 @@ import java.io.File
 import java.io.FileOutputStream
 import kotlin.random.Random
 
-class CanvasPaintFragment :
-    BaseViewBindingFragment<CanvasFragmentBinding>(CanvasFragmentBinding::inflate) {
+class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(CanvasFragmentBinding::inflate) {
 
     private var colorCard = WHITE
     private var saveColorCard = WHITE
     private var colorCardBackground = RED
-    private lateinit var viewCanvasPaint: CanvasPaint
+    private lateinit var viewCanvasPaint : CanvasPaint
     private lateinit var fragment: EditorPaintNoteFragment
 
-    private var canvasHeight: Int = 0
-    private var canvasWidth: Int = 0
+    private var canvasHeight : Int = 0
+    private var canvasWidth : Int = 0
 
     private var widthScreen = 0
     private var heightScreen = 0
@@ -52,7 +50,7 @@ class CanvasPaintFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewCanvasPaint = CanvasPaint(requireContext(), colorCardBackground)
+        viewCanvasPaint = CanvasPaint(requireContext(),colorCardBackground)
         binding.viewCanvasContainer.addView(viewCanvasPaint)
         binding.viewCanvas.setCardBackgroundColor(colorCardBackground)
 
@@ -76,16 +74,14 @@ class CanvasPaintFragment :
         val heightScreen = convertDpToPixels(MAX_CANVAS_HEIGHT_DP)
         val margin = convertDpToPixels(MARGIN_CANVAS_DP)
 
-        if (canvasHeight.toFloat() / canvasWidth.toFloat() <= heightScreen / (widthScreen.toFloat() - margin)) {
+        if(canvasHeight.toFloat()/canvasWidth.toFloat() <= heightScreen/(widthScreen.toFloat() - margin)) {
 
             binding.viewCanvas.updateLayoutParams {
-                height =
-                    (((widthScreen - margin) * canvasHeight.toFloat()) / canvasWidth.toFloat()).toInt() + convertDpToPixels(
-                        CARD_NOTE_SPLASH_DP
-                    )
+                height = (((widthScreen - margin) * canvasHeight.toFloat()) / canvasWidth.toFloat()).toInt() + convertDpToPixels(CARD_NOTE_SPLASH_DP)
                 width = (widthScreen - margin)
             }
-        } else {
+        }
+        else {
             binding.viewCanvas.updateLayoutParams {
                 height = heightScreen + convertDpToPixels(CARD_NOTE_SPLASH_DP)
                 width = ((heightScreen * canvasWidth.toFloat()) / canvasHeight.toFloat()).toInt()
@@ -93,21 +89,10 @@ class CanvasPaintFragment :
         }
     }
 
-    private fun convertDpToPixels(dp: Int) =
-        (dp * requireContext().resources.displayMetrics.density).toInt()
+    private fun convertDpToPixels( dp: Int) = (dp * requireContext().resources.displayMetrics.density).toInt()
 
     private fun chekColor() = with(binding) {
-        val list = listOf(
-            colorBlue,
-            colorPink,
-            colorYellow,
-            colorGray,
-            colorWhite,
-            colorBlack,
-            colorPurple,
-            colorGreen,
-            colorMulti
-        )
+        val list = listOf(colorBlue,colorPink,colorYellow,colorGray,colorWhite,colorBlack,colorPurple,colorGreen,colorMulti)
 
         list.forEach { view ->
             view.setOnClickListener {
@@ -117,7 +102,7 @@ class CanvasPaintFragment :
                 view.strokeColor = Color.GRAY
                 view.strokeWidth = Const.STROKE_WIDTH_FOCUS
 
-                colorCard = if (view.id == R.id.colorMulti) {
+                colorCard = if(view.id == R.id.colorMulti) {
                     saveColorCard
                 } else {
                     view.backgroundTintList?.defaultColor ?: WHITE
@@ -128,17 +113,7 @@ class CanvasPaintFragment :
     }
 
     private fun clearStroke() = with(binding) {
-        val list = listOf(
-            colorBlue,
-            colorPink,
-            colorYellow,
-            colorGray,
-            colorWhite,
-            colorBlack,
-            colorPurple,
-            colorGreen,
-            colorMulti
-        )
+        val list = listOf(colorBlue,colorPink,colorYellow,colorGray,colorWhite,colorBlack,colorPurple,colorGreen,colorMulti)
 
         list.forEach { e ->
             e.strokeColor = Color.LTGRAY
@@ -146,7 +121,7 @@ class CanvasPaintFragment :
         }
     }
 
-    fun setColorPic(color: Int) = with(binding.colorMulti) {
+    fun setColorPic(color: Int) = with(binding.colorMulti){
         setBackgroundColor(color)
         saveColorCard = color
 
@@ -163,7 +138,7 @@ class CanvasPaintFragment :
         sizeEdit.filters = filterArray
     }
 
-    private fun buttonChek() = with(binding) {
+    private fun buttonChek() = with(binding){
         clearCanvas.setOnClickListener {
             deleteDialog()
         }
@@ -173,7 +148,7 @@ class CanvasPaintFragment :
         cancelButton.setOnClickListener {
             requireActivity().supportFragmentManager
                 .beginTransaction()
-                .setCustomAnimations(R.anim.anim_layout_2, R.anim.anim_layout)
+                .setCustomAnimations(R.anim.anim_layout_2,R.anim.anim_layout)
                 .replace(R.id.containerCanvas, Fragment())
                 .commit()
 
@@ -224,17 +199,13 @@ class CanvasPaintFragment :
             if (input.isNotEmpty()) {
                 val inp = input.toInt()
 
-                if (inp in 0..MAX_BRUSH_SIZE) {
+                if(inp in 0..MAX_BRUSH_SIZE) {
                     viewCanvasPaint.setSize(inp.toFloat())
                 } else {
-                    if (inp !in 0..MAX_BRUSH_SIZE) sizeEdit.error = getString(R.string.range_error)
+                    if(inp !in 0..MAX_BRUSH_SIZE) sizeEdit.error = getString(R.string.range_error)
                 }
             } else {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.empty_field_error_messange),
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(requireContext(),getString(R.string.empty_field_error_messange), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -244,41 +215,30 @@ class CanvasPaintFragment :
             if (input.isNotEmpty()) {
                 val inp = input.toInt()
 
-                if (inp in 0..255) {
+                if(inp in 0..255) {
                     viewCanvasPaint.setAlphaColor(inp)
                 } else {
-                    if (inp !in 0..255) sizeEditAlpha.error = getString(R.string.range_error)
+                    if(inp !in 0..255) sizeEditAlpha.error = getString(R.string.range_error)
                 }
             } else {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.empty_field_error_messange),
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(requireContext(),getString(R.string.empty_field_error_messange), Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private val permissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { saveImage() }
-
-    private fun requestLocationPermissions() =
-        permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { saveImage() }
+    private fun requestLocationPermissions() = permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
     private fun saveImage() {
 
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
+        if(ActivityCompat.checkSelfPermission(requireContext(),Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 
             val bitmap = viewCanvasPaint.getBitmap()
             bitmapToFile(bitmap, getRandomName())
 
             requireActivity().supportFragmentManager
                 .beginTransaction()
-                .setCustomAnimations(R.anim.anim_layout_2, R.anim.anim_layout)
+                .setCustomAnimations(R.anim.anim_layout_2,R.anim.anim_layout)
                 .replace(R.id.containerCanvas, Fragment())
                 .commit()
 
@@ -292,17 +252,12 @@ class CanvasPaintFragment :
     private fun bitmapToFile(bitmap: Bitmap, fileNameToSave: String): File? {
         var file: File? = null
         return try {
-            val name = Environment.getExternalStorageDirectory()
-                .toString() + File.separator + Environment.DIRECTORY_DCIM + File.separator + fileNameToSave
+            val name = Environment.getExternalStorageDirectory().toString() + File.separator + Environment.DIRECTORY_DCIM + File.separator + fileNameToSave
 
             file = File(name)
             file.createNewFile()
 
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.saved_mess) + name,
-                Toast.LENGTH_SHORT
-            ).show()
+            Toast.makeText(requireContext(), getString(R.string.saved_mess) + name, Toast.LENGTH_SHORT).show()
 
             val bos = ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos)
@@ -325,12 +280,7 @@ class CanvasPaintFragment :
     }
 
     companion object {
-        fun newInstance(
-            fragment: EditorPaintNoteFragment,
-            height: Int,
-            width: Int,
-            color: Int
-        ): CanvasPaintFragment {
+        fun newInstance(fragment: EditorPaintNoteFragment, height: Int, width: Int, color : Int) : CanvasPaintFragment {
             val canvasPaint = CanvasPaintFragment()
             canvasPaint.canvasHeight = height
             canvasPaint.canvasWidth = width

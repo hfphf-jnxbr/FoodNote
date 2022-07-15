@@ -5,8 +5,6 @@ import com.example.foodnote.ui.base.BaseViewBindingFragment
 import com.example.foodnote.ui.noteBook.interfaces.EditorStandardInterface
 
 
-class EditorStandardNoteFragment :
-    BaseViewBindingFragment<StandartNoteEditorBinding>(StandartNoteEditorBinding::inflate),
-    EditorStandardInterface {
+class EditorStandardNoteFragment : BaseViewBindingFragment<StandartNoteEditorBinding>(StandartNoteEditorBinding::inflate) , EditorStandardInterface {
     override fun getNoteText() = binding.editNote.text.toString()
 }

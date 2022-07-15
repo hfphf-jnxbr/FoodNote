@@ -159,7 +159,7 @@ class CalorieCalculatorFragment :
     private fun showDialog(callback: (time: String, name: String) -> Unit) {
         val builder = AlertDialog.Builder(context)
         // Set the dialog title
-        val inflater = requireActivity().layoutInflater
+        val inflater = requireActivity().layoutInflater;
         val view = inflater.inflate(R.layout.diary_create_dialog, null)
         val editText = view.findViewById<EditText>(R.id.name_diary_title_text_view)
         val timePicker = view.findViewById<TimePicker>(R.id.time_diary_time_picker)

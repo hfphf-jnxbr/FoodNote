@@ -9,8 +9,7 @@ import com.example.foodnote.ui.noteBook.constNote.Const
 import com.example.foodnote.ui.noteBook.interfaces.CanvasInterface
 
 @SuppressLint("ViewConstructor")
-class CanvasPaint(context: Context, private val colorCardBackground: Int) : View(context),
-    View.OnTouchListener, CanvasInterface {
+class CanvasPaint(context: Context, private val colorCardBackground: Int) : View(context) , View.OnTouchListener , CanvasInterface {
 
     init {
         this.setOnTouchListener(this)
@@ -27,8 +26,8 @@ class CanvasPaint(context: Context, private val colorCardBackground: Int) : View
 
     private val paint = Paint().apply { isAntiAlias = true }
 
-    private lateinit var bitmap: Bitmap
-    private lateinit var myCanvas: Canvas
+    private lateinit var bitmap : Bitmap
+    private lateinit var myCanvas : Canvas
     private var color = Color.WHITE
     private var alpha = 200
     private var size = Const.DEFAULT_SIZE_BRUSH
@@ -43,8 +42,8 @@ class CanvasPaint(context: Context, private val colorCardBackground: Int) : View
         invalidate()
     }
 
-    private fun setPixel(xCurrent: Int, yCurrent: Int) {
-        if (flagT) {
+    private fun setPixel(xCurrent : Int, yCurrent : Int) {
+        if(flagT) {
             xTemp = xCurrent
             yTemp = yCurrent
 
@@ -57,14 +56,14 @@ class CanvasPaint(context: Context, private val colorCardBackground: Int) : View
 
         BrushesDrawing.circleBrush(myCanvas, xCurrent, xTemp, yTemp, yCurrent, paint, size)
 
-        paint.color = Color.argb(255, 0, 0, 0)
+        paint.color = Color.argb(255,0,0,0)
 
         xTemp = xCurrent
         yTemp = yCurrent
     }
 
     private fun createBitmap() {
-        if (flag) {
+        if(flag) {
             bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
             myCanvas = Canvas(bitmap)
             myCanvas.drawColor(colorCardBackground)
@@ -73,41 +72,29 @@ class CanvasPaint(context: Context, private val colorCardBackground: Int) : View
         }
     }
 
-    override fun setColor(color: Int) {
-        this.color = color
-    }
+    override fun setColor(color: Int) { this.color = color }
 
-    override fun setAlphaColor(alpha: Int) {
-        this.alpha = alpha
-    }
+    override fun setAlphaColor(alpha: Int) { this.alpha = alpha }
 
-    override fun setColorBackground(color: Int) {
-        this.color = color
-    }
+    override fun setColorBackground(color: Int) { this.color = color }
 
-    override fun setSize(size: Float) {
-        this.size = size.toInt()
-    }
+    override fun setSize(size: Float) { this.size = size.toInt() }
 
-    override fun clearCanvas() {
-        myCanvas.drawColor(colorCardBackground)
-    }
+    override fun clearCanvas() { myCanvas.drawColor(colorCardBackground) }
 
     override fun getBitmap() = bitmap
 
     override fun onTouch(view: View?, event: MotionEvent?): Boolean {
         if (event != null) {
             when (event.action) {
-                0 -> {
-                    flagT = true
-                }
+                0 -> { flagT = true }
                 2 -> {
                     paintX = event.x.toInt()
                     paintY = event.y.toInt()
 
-                    setPixel(paintX, paintY)
+                    setPixel(paintX,paintY)
                 }
-                1 -> {}
+                1 -> { }
             }
         }
         return true
