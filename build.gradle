@@ -18,8 +18,9 @@ buildscript {
         koin_version = '3.1.4'
         bom_version = '30.2.0'
         play_service_auth_version = '20.2.0'
-        fire_store_version = '24.2.0'
+        fire_store_version = '24.2.1'
         data_store_version = '1.0.0'
+        view_pager_version = ''
     }
     repositories {
         google()

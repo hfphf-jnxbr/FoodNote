@@ -17,12 +17,15 @@ import com.example.foodnote.data.base.SampleState
 import com.example.foodnote.data.model.DiaryItem
 import com.example.foodnote.databinding.FragmentCalorieCalculatorBinding
 import com.example.foodnote.ui.base.BaseViewBindingFragment
-import com.example.foodnote.ui.calorie_calculator_fragment.adapter.CalorieCalculatorAdapter
-import com.example.foodnote.ui.calorie_calculator_fragment.adapter.ItemClickListener
+import com.example.foodnote.ui.calorie_calculator_fragment.adapter.rc_view_adapter.CalorieCalculatorAdapter
+import com.example.foodnote.ui.calorie_calculator_fragment.adapter.rc_view_adapter.ItemClickListener
+import com.example.foodnote.ui.calorie_calculator_fragment.adapter.view_pager_adapter.TotalViewAdapter
+import com.example.foodnote.ui.calorie_calculator_fragment.const.FragmentIndex
 import com.example.foodnote.ui.calorie_calculator_fragment.viewModel.CalorieCalculatorViewModel
 import com.example.foodnote.utils.hide
 import com.example.foodnote.utils.show
 import com.example.foodnote.utils.showToast
+import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.time.LocalDate
@@ -40,7 +43,9 @@ class CalorieCalculatorFragment :
     private val adapter by lazy {
         CalorieCalculatorAdapter(this)
     }
-
+    private val totalViewAdapter by lazy {
+        TotalViewAdapter(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,30 +71,8 @@ class CalorieCalculatorFragment :
     private fun initView() {
         initDate()
         initCircle()
-        viewModel.initCalorie()
-        uiScope.launch {
-            getDiary()
-        }
-        binding.addDiaryButton.setOnClickListener {
-            showDialog { time, name ->
-                val diaryItem = viewModel.generateRandomItem(idUser, time, name)
-                uiScope.launch {
-                    viewModel.saveDiary(diaryItem).collect { state ->
-                        when (state) {
-                            is AppState.Success -> {
-                                adapter.addItem(diaryItem)
-                            }
-                            is AppState.Error -> {
-                                context?.showToast(state.error?.message)
-                            }
-                            is AppState.Loading -> {
-                                context?.showToast("Loading")
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        initStartData()
+        initPager()
     }
 
     private suspend fun getUserId() {
@@ -99,7 +82,48 @@ class CalorieCalculatorFragment :
     }
 
     private fun initCircle() = with(binding) {
-        circleDiagramView.start(1420, 1500, 100, 150, 24, 70)
+        //circleDiagramView.start(1420, 1500, 100, 150, 24, 70)
+    }
+
+    private fun initStartData() {
+        uiScope.launch {
+            getDiary()
+            binding.addDiaryButton.setOnClickListener {
+                showDialog { time, name ->
+                    val diaryItem = viewModel.generateRandomItem(idUser, time, name)
+                    uiScope.launch {
+                        viewModel.saveDiary(diaryItem).collect { state ->
+                            when (state) {
+                                is AppState.Success -> {
+                                    adapter.addItem(diaryItem)
+                                }
+                                is AppState.Error -> {
+                                    context?.showToast(state.error?.message)
+                                }
+                                is AppState.Loading -> {
+                                    context?.showToast("Loading")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun initPager() {
+        viewModel.initCalorie()
+        binding.pager.adapter = totalViewAdapter
+        TabLayoutMediator(binding.tabLayout, binding.pager) { tab, position ->
+            when (position) {
+                FragmentIndex.CIRCLE_FRAGMENT.value.first -> {
+                    tab.text = context?.getString(FragmentIndex.CIRCLE_FRAGMENT.value.second)
+                }
+                FragmentIndex.WATER_FRAGMENT.value.first -> {
+                    tab.text = context?.getString(FragmentIndex.WATER_FRAGMENT.value.second)
+                }
+            }
+        }.attach()
     }
 
     private fun initDate() = with(binding) {
@@ -159,7 +183,7 @@ class CalorieCalculatorFragment :
     private fun showDialog(callback: (time: String, name: String) -> Unit) {
         val builder = AlertDialog.Builder(context)
         // Set the dialog title
-        val inflater = requireActivity().layoutInflater;
+        val inflater = requireActivity().layoutInflater
         val view = inflater.inflate(R.layout.diary_create_dialog, null)
         val editText = view.findViewById<EditText>(R.id.name_diary_title_text_view)
         val timePicker = view.findViewById<TimePicker>(R.id.time_diary_time_picker)
