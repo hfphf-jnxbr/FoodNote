@@ -14,8 +14,6 @@ import java.io.IOException
 
 class UserPreferencesRepositoryImpl(private val dataStore: DataStore<Preferences>) :
     UserPreferencesRepository {
-    private val TAG: String = "UserPreferencesRepo"
-
     private object PreferencesKeys {
         val USER_ID = stringPreferencesKey(USER_ID_KEY)
     }
@@ -43,5 +41,6 @@ class UserPreferencesRepositoryImpl(private val dataStore: DataStore<Preferences
 
     private companion object {
         const val USER_ID_KEY = "USER_ID"
+        const val TAG: String = "UserPreferencesRepo"
     }
 }

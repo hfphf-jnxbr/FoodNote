@@ -1,14 +1,18 @@
 package com.example.foodnote.ui.diary_item_detail_fragment.viewModel
 
 import androidx.lifecycle.viewModelScope
+import com.example.foodnote.data.base.AppState
 import com.example.foodnote.data.base.SampleState
 import com.example.foodnote.data.interactor.diary_item_detail_interactor.DiaryItemDetailInteractor
 import com.example.foodnote.data.model.DiaryItem
 import com.example.foodnote.data.model.food.FoodDto
+import com.example.foodnote.data.model.food.TotalFoodResult
 import com.example.foodnote.data.repository.datastore_pref_repository.UserPreferencesRepository
 import com.example.foodnote.ui.base.viewModel.BaseViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DiaryItemDetailViewModel(
     private val dataStorePref: UserPreferencesRepository,
@@ -25,7 +29,9 @@ class DiaryItemDetailViewModel(
     }
 
     fun saveDiaryItem(item: DiaryItem) {
-        stateLiveData.value?.diaryItem = item
+        viewModelScope.launch {
+            stateLiveData.value = stateLiveData.value?.copy(diaryItem = item)
+        }
     }
 
     fun searchFood(name: String) {
@@ -40,10 +46,39 @@ class DiaryItemDetailViewModel(
         }
     }
 
-    fun saveFood(item: FoodDto): Flow<String> {
-        stateLiveData.value?.foodDtoItem = item
-        return interactor.saveDiaryItem(stateLiveData.value!!.diaryItem!!, item)
+    suspend fun saveFood(item: FoodDto) = withContext(Dispatchers.IO) {
+        interactor.saveDiaryItem(stateLiveData.value!!.diaryItem!!, item)
+    }
 
+    fun calculateTotalData(list: List<FoodDto>) {
+        viewModelScope.launch {
+            kotlin.runCatching {
+                interactor.calculateTotalData(list)
+            }.onSuccess {
+                stateLiveData.value = stateLiveData.value?.copy(totalFoodResult = it)
+            }.onFailure {
+                stateLiveData.value = stateLiveData.value?.copy(error = it)
+            }
+        }
+    }
+
+    suspend fun saveTotalCalculate(item: TotalFoodResult) = withContext(Dispatchers.IO) {
+        val diaryItem = stateLiveData.value!!.diaryItem!!.apply {
+            calories = item.calorieSum.toLong()
+            proteinSum = item.proteinSum
+            fatSum = item.fatSum
+            carbSum = item.carbohydrateSum
+        }
+        interactor.saveDiaryItem(diaryItem, null)
+    }
+
+    fun calculateTotalData() {
 
     }
+
+    suspend fun getSavedFoodCollection(idUser: String, dbId: String)
+            : Flow<AppState<List<FoodDto>>> = withContext(Dispatchers.IO) {
+        interactor.getSavedFoodCollection(idUser, dbId)
+    }
+
 }

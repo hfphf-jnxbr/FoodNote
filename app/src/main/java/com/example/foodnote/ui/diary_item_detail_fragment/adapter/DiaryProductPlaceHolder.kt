@@ -20,7 +20,7 @@ class DiaryProductPlaceHolder(item: View) : RecyclerView.ViewHolder(item) {
                 RequestOptions()
                     .error(R.drawable.ic_baseline_fastfood_24)
             )
-            .into(productImageView);
+            .into(productImageView)
 
         productNameTextView.text = item.name
         countProductTextView.text = context.getString(R.string.count_products, item.count)
@@ -28,9 +28,15 @@ class DiaryProductPlaceHolder(item: View) : RecyclerView.ViewHolder(item) {
         fatsCountTextView.text = context.getString(R.string.count_fats, item.fat)
         carbohydratesCountTextView.text =
             context.getString(R.string.count_carbohydrates, item.carbohydrate)
+        if (item.count > 0) {
+            countProductTextView.text = context.getString(R.string.count_products, item.count)
+        }
+        addImageButton.setOnClickListener {
+            itemClickListener.addProduct(item, adapterPosition)
+        }
 
-        addButton.setOnClickListener {
-            itemClickListener.addProduct(item)
+        deleteImageButton.setOnClickListener {
+            itemClickListener.deleteProduct(item, adapterPosition)
         }
     }
 }

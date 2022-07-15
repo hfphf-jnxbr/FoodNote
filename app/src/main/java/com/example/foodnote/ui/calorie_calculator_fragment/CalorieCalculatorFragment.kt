@@ -73,7 +73,21 @@ class CalorieCalculatorFragment :
         binding.addDiaryButton.setOnClickListener {
             showDialog { time, name ->
                 val diaryItem = viewModel.generateRandomItem(idUser, time, name)
-                viewModel.saveDiary(diaryItem)
+                uiScope.launch {
+                    viewModel.saveDiary(diaryItem).collect { state ->
+                        when (state) {
+                            is AppState.Success -> {
+                                adapter.addItem(diaryItem)
+                            }
+                            is AppState.Error -> {
+                                context?.showToast(state.error?.message)
+                            }
+                            is AppState.Loading -> {
+                                context?.showToast("Loading")
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -116,19 +130,17 @@ class CalorieCalculatorFragment :
 
                 is AppState.Success -> {
                     binding.diaryCardView.show()
-                    initRcView(state.data as MutableList<DiaryItem>)
+                    initRcView(state.data)
                 }
 
                 is AppState.Error -> {
                     binding.diaryCardView.hide()
                 }
-                else -> {}
             }
         }
     }
 
     private fun setState(state: SampleState) {
-
         if (state.calorie != null) {
             val calorie = state.calorie
             initCalories(calorie.first, calorie.second, calorie.third)
@@ -141,7 +153,7 @@ class CalorieCalculatorFragment :
             binding.diaryContainerRcView.adapter = adapter
             binding.diaryContainerRcView.itemAnimator?.changeDuration = 0
         }
-        adapter.setItem(list)
+        adapter.setItems(list)
     }
 
     private fun showDialog(callback: (time: String, name: String) -> Unit) {
@@ -161,7 +173,7 @@ class CalorieCalculatorFragment :
                     callback(time, text)
                 })
             .setNegativeButton(R.string.disabled,
-                DialogInterface.OnClickListener { dialog, id ->
+                DialogInterface.OnClickListener { dialog, _ ->
                     dialog.cancel()
                 })
 
@@ -175,6 +187,4 @@ class CalorieCalculatorFragment :
             .actionCalorieCalculatorFragmentToDiaryItemDetailFragment(item)
         navController.navigate(action)
     }
-
-
 }

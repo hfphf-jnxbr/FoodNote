@@ -23,5 +23,5 @@
         android:layout_marginStart="24dp"
         android:timePickerMode="spinner"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name_title_text_view" />
+        app:layout_constraintTop_toBottomOf="@+id/name_diary_title_text_view" />
 </androidx.constraintlayout.widget.ConstraintLayout>

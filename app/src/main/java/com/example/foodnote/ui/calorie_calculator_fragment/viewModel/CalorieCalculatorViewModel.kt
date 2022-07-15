@@ -9,13 +9,14 @@ import com.example.foodnote.data.repository.datastore_pref_repository.UserPrefer
 import com.example.foodnote.ui.base.viewModel.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.random.Random
 
 class CalorieCalculatorViewModel(
     private val interactor: CalorieCalculatorInteractor,
-    private val dataStorePref: UserPreferencesRepository
+    dataStorePref: UserPreferencesRepository
 ) :
     BaseViewModel<SampleState>(dataStorePref) {
     init {
@@ -55,7 +56,7 @@ class CalorieCalculatorViewModel(
     fun generateRandomItem(idUser: String, time: String, name: String): DiaryItem {
         val item = DiaryItem(
             name,
-            Random.nextLong(100, 500),
+            0,
             time,
             SimpleDateFormat("dd.MMMM.YYYY").format(Date()),
             idUser,
@@ -65,23 +66,31 @@ class CalorieCalculatorViewModel(
         return item
     }
 
-    fun getDiary(idUser: String) = interactor
-        .getDiaryCollection(
-            SimpleDateFormat("dd.MMMM.YYYY")
-                .format(Date()),
-            idUser
-        )
+    suspend fun getDiary(idUser: String) = withContext(Dispatchers.IO) {
+        interactor
+            .getDiaryCollection(
+                SimpleDateFormat("dd.MMMM.YYYY")
+                    .format(Date()),
+                idUser
+            )
+    }
 
-
-    fun saveDiary(item: DiaryItem) {
-        viewModelScope.launch(Dispatchers.IO) {
+    fun calculateTotalData() {
+        viewModelScope.launch {
             kotlin.runCatching {
-                interactor.saveDiary(item)
+                stateLiveData.value?.diaryList?.let {
+                    interactor.calculateTotalData(it)
+                }
             }.onSuccess {
-                stateLiveData.postValue(stateLiveData.value?.copy(diaryItem = it))
+                stateLiveData.value = stateLiveData.value?.copy(totalFoodResult = it)
             }.onFailure {
-                stateLiveData.postValue(stateLiveData.value?.copy(error = it))
+                stateLiveData.value = stateLiveData.value?.copy(error = it)
             }
         }
     }
+
+    suspend fun saveDiary(item: DiaryItem) = withContext(Dispatchers.IO) {
+        interactor.saveDiary(item)
+    }
+
 }
