@@ -3,6 +3,8 @@ package com.example.foodnote.data.datasource.calorire_datasource.firebase
 import com.example.foodnote.data.base.AppState
 import com.example.foodnote.data.model.DiaryItem
 import com.example.foodnote.data.model.food.FoodDto
+import com.example.foodnote.data.model.food.FoodFireBase
+import com.example.foodnote.utils.toFoodDto
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -20,38 +22,28 @@ class FireBaseCalorieDataSourceImpl(private val db: FirebaseFirestore) : Firebas
         const val DIARY_ITEM_COLLECTION_NAME = "DiaryItem"
     }
 
-    override fun saveDiaryItem(diaryItem: DiaryItem, foodItem: FoodDto?): Flow<String> {
+    override fun saveDiaryItem(diaryItem: DiaryItem, foodItem: FoodDto?): Flow<AppState<String>> {
         return flow {
             diaryItem.idUser?.let {
-                var error: Throwable? = null
+                emit(AppState.Loading())
                 val collection = db.collection(diaryItem.idUser)
                     .document(DIARY_DOCUMENT_NAME)
                     .collection(DIARY_ITEM_COLLECTION_NAME)
                     .document(diaryItem.dbId ?: UUID.randomUUID().toString())
 
                 collection.set(diaryItem)
-                    .addOnSuccessListener {
-
-                    }
-                    .addOnFailureListener {
-                        error = it
-                    }
                     .await()
                 if (foodItem != null) {
+                    val docId = foodItem.docId ?: UUID.randomUUID().toString()
+                    foodItem.docId = docId
                     collection.collection(PRODUCT_COLLECTION_NAME)
-                        .document(UUID.randomUUID().toString())
+                        .document(docId)
                         .set(foodItem)
                 }
-                if (error != null) {
-                    emit(error!!.message.toString())
-                } else {
-                    emit("Success")
-                }
-
+                emit(AppState.Success("Success"))
             }
-
         }.catch {
-            emit(it.message.toString())
+            emit(AppState.Error(it))
         }.flowOn(Dispatchers.IO)
     }
 
@@ -73,5 +65,27 @@ class FireBaseCalorieDataSourceImpl(private val db: FirebaseFirestore) : Firebas
             emit(AppState.Error(it))
         }.flowOn(Dispatchers.IO)
     }
+
+    override fun getSavedFoodCollection(
+        idUser: String,
+        diaryId: String
+    ): Flow<AppState<List<FoodDto>>> {
+        return flow<AppState<List<FoodDto>>> {
+            val path =
+                "/$idUser/$DIARY_DOCUMENT_NAME/$DIARY_ITEM_COLLECTION_NAME/$diaryId/$PRODUCT_COLLECTION_NAME"
+            emit(AppState.Loading())
+            val result = db
+                .collection(path)
+                .get()
+                .await()
+            val items = result.toObjects(FoodFireBase::class.java).map {
+                it.toFoodDto()
+            }
+            emit(AppState.Success(items))
+        }.catch {
+            emit(AppState.Error(it))
+        }.flowOn(Dispatchers.IO)
+    }
+
 
 }

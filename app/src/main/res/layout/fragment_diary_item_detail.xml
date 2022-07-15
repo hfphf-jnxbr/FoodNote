@@ -16,10 +16,10 @@
         android:id="@+id/time_item_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
-        android:textSize="18sp"
         android:textColor="@color/black"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/search_bar"
         tools:text="10:00" />
@@ -37,10 +37,10 @@
         tools:text="Завтрак" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/materialTextView2"
+        android:id="@+id/count_calorie_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:textColor="@color/black"
         android:textSize="18sp"
@@ -48,17 +48,56 @@
         app:layout_constraintTop_toBottomOf="@+id/time_item_text_view"
         tools:text="Количество  ккал 1500" />
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/count_protein_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/count_fat_text_view"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/count_calorie_text_view"
+        tools:text="Белки 1500" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/count_fat_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/count_carbohydrate_text_view"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/count_protein_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/count_calorie_text_view"
+        tools:text="Жиры 1500" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/count_carbohydrate_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/count_fat_text_view"
+        app:layout_constraintTop_toTopOf="@+id/count_fat_text_view"
+        tools:text="Углеводы 1500" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/product_rc_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialTextView2"
-        tools:listitem="@layout/diary_product_item"
-        tools:itemCount="10" />
+        app:layout_constraintTop_toBottomOf="@+id/count_protein_text_view"
+        tools:itemCount="10"
+        tools:listitem="@layout/diary_product_item" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

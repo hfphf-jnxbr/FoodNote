@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 
 interface FirebaseCalorieDataSource {
-    fun saveDiaryItem(diaryItem: DiaryItem, foodItem: FoodDto?): Flow<String>
+    fun saveDiaryItem(diaryItem: DiaryItem, foodItem: FoodDto?): Flow<AppState<String>>
     fun getDiaryCollection(idUser: String, date: String): Flow<AppState<MutableList<DiaryItem>>>
-
+    fun getSavedFoodCollection(idUser: String, diaryId: String): Flow<AppState<List<FoodDto>>>
 }
