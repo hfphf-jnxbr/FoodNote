@@ -7,10 +7,11 @@ import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.doOnEnd
 import com.example.foodnote.ui.noteBook.mainFragmenNoteBook.NotesFragment
+import com.example.foodnote.ui.noteBook.viewModel.ViewModelNotesFragment
 import kotlinx.coroutines.*
 
 @SuppressLint("ClickableViewAccessibility")
-class MovedView(private val listView : ArrayList<View>, root : ConstraintLayout, private val fragmentNoteBook: NotesFragment) : View.OnTouchListener , MovedViewInterface {
+class MovedView(private val listView : ArrayList<View>, root : ConstraintLayout, private val viewModel: ViewModelNotesFragment) : View.OnTouchListener , MovedViewInterface {
 
     private val scope = CoroutineScope(Dispatchers.IO)
     private var startAnim = true
@@ -88,10 +89,10 @@ class MovedView(private val listView : ArrayList<View>, root : ConstraintLayout,
                     startAnim = true
                     animElevationDown(view)
 
-                    fragmentNoteBook.setNewCardCoordinatesData(view.x.toInt(), view.y.toInt(), view)
+                    viewModel.setNewCardCoordinatesData(view)
                 } else {
                     elevation = 15f
-                    fragmentNoteBook.setElevationView(view)
+                    viewModel.setElevationView(view)
                 }
             }
         }
@@ -147,7 +148,7 @@ class MovedView(private val listView : ArrayList<View>, root : ConstraintLayout,
                 }
             }
             withContext(Dispatchers.IO) {
-                fragmentNoteBook.setElevationView(view)
+                viewModel.setElevationView(view)
             }
         }
     }

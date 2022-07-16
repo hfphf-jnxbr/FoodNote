@@ -1,6 +1,7 @@
-package com.example.foodnote.ui.noteBook.viewModel
+package com.example.foodnote.ui.noteBook.viewModel.VievModelInterfaces
 
 import androidx.lifecycle.MutableLiveData
+import com.example.foodnote.ui.noteBook.viewModel.StateData
 
 interface ViewModelConstructorInterface {
     fun getLiveData() : MutableLiveData<StateData>

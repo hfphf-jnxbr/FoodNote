@@ -8,6 +8,7 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
 import com.example.foodnote.data.base.RetrofitImpl
 import com.example.foodnote.data.databaseRoom.DataBase
+import com.example.foodnote.data.databaseRoom.dao.DaoDB
 import com.example.foodnote.data.datasource.calorire_datasource.firebase.FireBaseCalorieDataSourceImpl
 import com.example.foodnote.data.datasource.calorire_datasource.firebase.FirebaseCalorieDataSource
 import com.example.foodnote.data.datasource.diary_item_detail_repository.DiaryItemDetailDatasource
@@ -26,6 +27,7 @@ import com.example.foodnote.ui.auth_fragment.viewModel.AuthViewModel
 import com.example.foodnote.ui.calorie_calculator_fragment.viewModel.CalorieCalculatorViewModel
 import com.example.foodnote.ui.diary_item_detail_fragment.viewModel.DiaryItemDetailViewModel
 import com.example.foodnote.ui.noteBook.viewModel.ViewModelConstructorFragment
+import com.example.foodnote.ui.noteBook.viewModel.ViewModelNotesFragment
 import com.example.foodnote.ui.splash_screen_fragment.viewModel.SplashScreenViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
@@ -121,5 +123,9 @@ val diaryItemDetailScreenModule = module {
 val noteBookModule = module {
     viewModel {
         ViewModelConstructorFragment()
+    }
+
+    viewModel(named(VIEW_MODEL_NOTES)) { (dao : DaoDB) ->
+        ViewModelNotesFragment(dao)
     }
 }
