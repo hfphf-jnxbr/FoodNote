@@ -76,6 +76,8 @@
     <string name="male">М</string>
     <string name="female">Ж</string>
     <string name="select_meta">Выберите цель</string>
+    <string name="select_weight">Выберите вес</string>
+    <string name="select_height">Выберите рост</string>
     <string-array name="type_modes">
         <item>Похудеть</item>
         <item>Набрать вес</item>
@@ -83,4 +85,5 @@
     <string name="pix_0">Pix 0</string>
     <string name="alpha_0">Alpha 0</string>
     <string name="water">Потребление воды</string>
+    <string name="select_sex">Заполните пол</string>
 </resources>

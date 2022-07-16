@@ -4,6 +4,7 @@ import com.example.foodnote.data.base.AppState
 import com.example.foodnote.data.model.DiaryItem
 import com.example.foodnote.data.model.food.FoodDto
 import com.example.foodnote.data.model.food.FoodFireBase
+import com.example.foodnote.data.model.profile.Profile
 import com.example.foodnote.utils.toFoodDto
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
@@ -20,6 +21,32 @@ class FireBaseDataSourceImpl(private val db: FirebaseFirestore) : FirebaseDataSo
         const val PRODUCT_COLLECTION_NAME = "Products"
         const val DIARY_DOCUMENT_NAME = "Diary"
         const val DIARY_ITEM_COLLECTION_NAME = "DiaryItem"
+        const val PROFILE_COLLECTION_NAME = "Profile"
+    }
+
+    override fun saveProfileData(profile: Profile, idUser: String): Flow<AppState<String>> {
+        return flow {
+            emit(AppState.Loading())
+            db
+                .collection(idUser)
+                .document(PROFILE_COLLECTION_NAME)
+                .set(profile)
+                .await()
+            emit(AppState.Success("Success"))
+        }.catch {
+            emit(AppState.Error(it))
+        }.flowOn(Dispatchers.IO)
+    }
+
+    override fun getProfileData(idUser: String): Flow<AppState<Profile>> {
+        return flow<AppState<Profile>> {
+            emit(AppState.Loading())
+            val result = db.collection(idUser).get().await()
+            val data = result.toObjects(Profile::class.java)
+            emit(AppState.Success(data.first()))
+        }.catch {
+            emit(AppState.Error(it))
+        }.flowOn(Dispatchers.IO)
     }
 
     /**
