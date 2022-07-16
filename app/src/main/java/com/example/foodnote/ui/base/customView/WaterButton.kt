@@ -6,23 +6,35 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
+import com.example.foodnote.ui.base.customView.customViewInterfaces.WaterButtonInterface
 import kotlin.math.cos
 import kotlin.math.round
 import kotlin.math.sin
-import kotlin.math.tan
 
-class WaterButton @JvmOverloads constructor(context : Context, attrs : AttributeSet? = null, style: Int = 0) : View(context,attrs,style) , WaterButtonInterface {
+class WaterButton @JvmOverloads constructor(context : Context, attrs : AttributeSet? = null, style: Int = 0) : View(context,attrs,style) ,
+    WaterButtonInterface {
 
     private val paint = Paint().apply { color = Color.argb(250,84, 210, 235) }
+
     private val paintText = Paint().apply { color = Color.argb(255,255, 255, 255)
         isAntiAlias = true
         textSize = 60f
     }
-    private var a = 0f
+
+    private var parameter = 0f
     private var tempY = 0f
+
+    private var speed = 0.04f
+
+    private var stopX = 3.2f
+    private var startX = -0.1f
+
+    private var amplitudeScale = 60f/263f
 
     private var maxWaterValue = 2100
     private var currentWaterValue = 1250
+
+    private var marginText = 20f
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -35,25 +47,25 @@ class WaterButton @JvmOverloads constructor(context : Context, attrs : Attribute
     private fun drawWater(canvas: Canvas) {
         val maxWaterH = ((width * currentWaterValue) / maxWaterValue).toFloat()
 
-        var x = -0.1f
-        while (x < 3.2f) {
+        var x = startX
+        while (x < stopX) {
 
-            val value = waveFunction(x,a,maxWaterH,(( height*60f)/263f ))
+            val value = waveFunction(x, parameter, maxWaterH,height*amplitudeScale )
             drawLineWater(value,canvas,x)
-            x += 3.2f/height
+            x += stopX/height
         }
-        a += 0.04f
+        parameter += speed
     }
 
     private fun drawText(canvas: Canvas) {
         val string = "${currentWaterValue}/${maxWaterValue} милл"
         val widthText = paintText.measureText(string)
 
-        canvas.drawText(string, width/2f - widthText/2f,height/2f + 20f,paintText)
+        canvas.drawText(string, width/2f - widthText/2f,height/2f + marginText, paintText)
     }
 
     private fun drawLineWater(value: Float, canvas: Canvas, x: Float) {
-        val y = round((x * height) / 3.2f)
+        val y = round((x * height) / stopX)
         if(y != tempY) {
             canvas.drawLine(0f, y, value, y, paint)
         }
