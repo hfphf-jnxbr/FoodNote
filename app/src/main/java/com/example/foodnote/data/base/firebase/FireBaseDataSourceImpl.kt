@@ -1,4 +1,4 @@
-package com.example.foodnote.data.datasource.calorire_datasource.firebase
+package com.example.foodnote.data.base.firebase
 
 import com.example.foodnote.data.base.AppState
 import com.example.foodnote.data.model.DiaryItem
@@ -15,13 +15,19 @@ import kotlinx.coroutines.tasks.await
 import java.util.*
 
 
-class FireBaseCalorieDataSourceImpl(private val db: FirebaseFirestore) : FirebaseCalorieDataSource {
+class FireBaseDataSourceImpl(private val db: FirebaseFirestore) : FirebaseDataSource {
     private companion object {
         const val PRODUCT_COLLECTION_NAME = "Products"
         const val DIARY_DOCUMENT_NAME = "Diary"
         const val DIARY_ITEM_COLLECTION_NAME = "DiaryItem"
     }
 
+    /**
+     * Сохранение заметки
+     *
+     * @param DiaryItem Данные заметки по питанию
+     * @param FoodDto Данные о продукте в заметке
+     */
     override fun saveDiaryItem(diaryItem: DiaryItem, foodItem: FoodDto?): Flow<AppState<String>> {
         return flow {
             diaryItem.idUser?.let {
@@ -47,6 +53,12 @@ class FireBaseCalorieDataSourceImpl(private val db: FirebaseFirestore) : Firebas
         }.flowOn(Dispatchers.IO)
     }
 
+    /**
+     * Получение коллекции заметок
+     *
+     * @param idUser String идентификатор пользователя
+     * @param date String дата документа
+     */
     override fun getDiaryCollection(
         idUser: String,
         date: String
@@ -66,6 +78,12 @@ class FireBaseCalorieDataSourceImpl(private val db: FirebaseFirestore) : Firebas
         }.flowOn(Dispatchers.IO)
     }
 
+    /**
+     * Получение сохраненных продуктов
+     *
+     * @param idUser String идентификатор пользователя
+     * @param diaryId String идентификатор документа
+     */
     override fun getSavedFoodCollection(
         idUser: String,
         diaryId: String

@@ -1,0 +1,3 @@
+package com.example.foodnote.data.interactor.settings_interactor
+
+interface SettingInteractor
