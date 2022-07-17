@@ -21,15 +21,21 @@ class FireBaseDataSourceImpl(private val db: FirebaseFirestore) : FirebaseDataSo
         const val PRODUCT_COLLECTION_NAME = "Products"
         const val DIARY_DOCUMENT_NAME = "Diary"
         const val DIARY_ITEM_COLLECTION_NAME = "DiaryItem"
-        const val PROFILE_COLLECTION_NAME = "Profile"
+        const val PROFILE_DOCUMENT_NAME = "Profile"
     }
 
+    /**
+     * Сохранение профиля данных
+     *
+     * @param profile профиль пользователя
+     * @param idUser идентификатор пользователя
+     */
     override fun saveProfileData(profile: Profile, idUser: String): Flow<AppState<String>> {
         return flow {
             emit(AppState.Loading())
             db
                 .collection(idUser)
-                .document(PROFILE_COLLECTION_NAME)
+                .document(PROFILE_DOCUMENT_NAME)
                 .set(profile)
                 .await()
             emit(AppState.Success("Success"))
@@ -38,12 +44,17 @@ class FireBaseDataSourceImpl(private val db: FirebaseFirestore) : FirebaseDataSo
         }.flowOn(Dispatchers.IO)
     }
 
-    override fun getProfileData(idUser: String): Flow<AppState<Profile>> {
-        return flow<AppState<Profile>> {
+    /**
+     * Получение профиля
+     *
+     * @param idUser идентификатор пользователя
+     */
+    override fun getProfileData(idUser: String): Flow<AppState<Profile?>> {
+        return flow {
             emit(AppState.Loading())
-            val result = db.collection(idUser).get().await()
-            val data = result.toObjects(Profile::class.java)
-            emit(AppState.Success(data.first()))
+            val result = db.collection(idUser).document(PROFILE_DOCUMENT_NAME).get().await()
+            val data = result.toObject(Profile::class.java)
+            emit(AppState.Success(data))
         }.catch {
             emit(AppState.Error(it))
         }.flowOn(Dispatchers.IO)

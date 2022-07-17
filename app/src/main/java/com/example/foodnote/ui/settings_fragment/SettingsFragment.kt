@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 import com.example.foodnote.R
 import com.example.foodnote.data.base.AppState
 import com.example.foodnote.data.interactor.settings_interactor.SettingColumnRequire
+import com.example.foodnote.data.model.profile.Profile
 import com.example.foodnote.databinding.FragmentSettingsBinding
 import com.example.foodnote.ui.base.BaseViewBindingFragment
 import com.example.foodnote.ui.settings_fragment.viewModel.SettingsViewModel
@@ -32,6 +33,8 @@ class SettingsFragment :
             uiScope.launch {
                 getUserId()
             }
+        } else {
+            viewModel.getProfileData(idUser)
         }
         return super.onCreateView(inflater, container, savedInstanceState)
     }
@@ -47,6 +50,9 @@ class SettingsFragment :
             }
             is AppState.Success -> {
                 when (val item = appState.data) {
+                    is Profile -> {
+                        setRequireColumns(item)
+                    }
                     is String -> {
                         context?.showToast("SUCCESS SAVE")
                     }
@@ -106,7 +112,6 @@ class SettingsFragment :
         }
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
@@ -124,9 +129,18 @@ class SettingsFragment :
         }
     }
 
+    private fun setRequireColumns(profile: Profile) {
+        binding.heightTextInput.setText(profile.height.toString())
+        binding.weightTextInput.setText(profile.weight.toString())
+        binding.modeAutoCompleteTextView.setText(profile.meta.toString())
+        binding.femaleRadioButton.isChecked = profile.female ?: false
+        binding.maleRadioButton.isChecked = profile.male ?: false
+    }
+
     private suspend fun getUserId() {
         viewModel.getUserId().collect {
             idUser = it
+            viewModel.getProfileData(idUser)
         }
     }
 
