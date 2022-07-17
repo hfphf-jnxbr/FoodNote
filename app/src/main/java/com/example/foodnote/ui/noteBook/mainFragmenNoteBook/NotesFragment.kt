@@ -5,15 +5,12 @@ import android.animation.ObjectAnimator
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.os.Bundle
 import android.os.Environment
 import android.util.DisplayMetrics
 import android.view.View
 import android.view.animation.AnticipateOvershootInterpolator
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.animation.doOnEnd
@@ -27,10 +24,10 @@ import com.example.foodnote.databinding.NotebookFragmentBinding
 import com.example.foodnote.di.DATA_BASE
 import com.example.foodnote.di.VIEW_MODEL_NOTES
 import com.example.foodnote.ui.base.BaseViewBindingFragment
-import com.example.foodnote.ui.noteBook.constNote.Const
 import com.example.foodnote.ui.noteBook.constNote.Const.CARD_NOTE_DP
 import com.example.foodnote.ui.noteBook.constNote.Const.CONST_SCALE
 import com.example.foodnote.ui.noteBook.constNote.Const.DURATION_ANIMATION_CONSTRUCTOR
+import com.example.foodnote.ui.noteBook.constNote.Const.IS_FIRST_RUN
 import com.example.foodnote.ui.noteBook.constNote.Const.MAX_SIZE_TEXT
 import com.example.foodnote.ui.noteBook.constNote.Const.PRESENT_100
 import com.example.foodnote.ui.noteBook.constNote.Const.STACK_CONSTRUCTOR
@@ -42,7 +39,6 @@ import com.example.foodnote.ui.noteBook.helperView.ExpandView
 import com.example.foodnote.ui.noteBook.helperView.MovedView
 import com.example.foodnote.ui.noteBook.interfaces.NoteBookFragmentInterface
 import com.example.foodnote.ui.noteBook.modelNotes.*
-import com.example.foodnote.ui.noteBook.viewModel.StateData
 import com.example.foodnote.ui.noteBook.viewModel.StateDataNotes
 import com.example.foodnote.ui.noteBook.viewModel.ViewModelNotesFragment
 import com.example.foodnote.utils.showToast
@@ -52,10 +48,7 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
-import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.FileOutputStream
-import kotlin.random.Random
 
 class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookFragmentBinding::inflate) , NoteBookFragmentInterface {
 
@@ -63,7 +56,6 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
     private var widthScreen = 0
     private var flagBlockChip = true
     private var flag = true
-    private var openCloseContainer = false
 
     private val scope = CoroutineScope(Dispatchers.IO)
     private val notesDao: DaoDB by inject(named(DATA_BASE)) { parametersOf(requireActivity()) }
@@ -239,21 +231,6 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
 
     private fun convertDpToPixels(dp: Int) = (dp * requireContext().resources.displayMetrics.density).toInt()
 
-    private fun checkChip() {
-        binding.chipStandardNote.setOnClickListener { actionChip(ConstType.STANDARD_TYPE) }
-        binding.chipPaintNote.setOnClickListener { actionChip(ConstType.PAINT_TYPE) }
-        binding.chipFoodNote.setOnClickListener  { actionChip(ConstType.FOOD_TYPE) }
-    }
-
-    private fun actionChip(type: ConstType) {
-        movedView.blockMove(false)
-
-        if (flagBlockChip) {
-            flagBlockChip = false
-
-            constructorCloseAndOpen( widthScreen.toFloat() , type)
-        }
-    }
 
     private fun initMovedView() {
         flagBlockChip = true
@@ -268,16 +245,50 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
         binding.containerConstructor.x = widthScreen.toFloat()
     }
 
-    private fun constructorDrop() {
-        openCloseContainer = true
+    private fun checkChip() {
+        binding.chipStandardNote.setOnClickListener { actionChip(ConstType.STANDARD_TYPE) }
+        binding.chipPaintNote.setOnClickListener { actionChip(ConstType.PAINT_TYPE) }
+        binding.chipFoodNote.setOnClickListener  { actionChip(ConstType.FOOD_TYPE) }
+    }
+
+    private var typeSave : ConstType = ConstType.NULL_TYPE
+
+    private fun actionChip(type: ConstType) {
+        if (flagBlockChip) {
+            change(type)
+            flagBlockChip = false
+        } else {
+            typeSave = type
+        }
+    }
+
+    private fun change(type: ConstType) {
+
+        if(typeSave == ConstType.NULL_TYPE) {
+            constructorDrop(type)
+        } else {
+            if(type == ConstType.NULL_TYPE) {
+                constructorFragmentClose()
+            } else {
+                constructorCloseAndOpen(type)
+            }
+        }
+        typeSave = type
+    }
+
+    private fun constructorDrop(type: ConstType) {
+        flagBlockChip = false
+        movedView.blockMove(false)
+        setFragmentConstructor(type)
         objectAnimation(0f)
     }
 
     override fun constructorFragmentClose() {
+        typeSave = ConstType.NULL_TYPE
+
         flagBlockChip = false
-        openCloseContainer = false
         movedView.blockMove(true)
-        objectAnimation( widthScreen.toFloat() )
+        objectAnimation( widthScreen.toFloat())
     }
 
     private fun objectAnimation(value : Float) {
@@ -288,23 +299,19 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
         }.doOnEnd {
             flagBlockChip = true
 
-            if(value == widthScreen.toFloat()) {
-                childFragmentManager.popBackStack()
+            if((value == widthScreen.toFloat()) && (typeSave != ConstType.NULL_TYPE)) {
+                constructorDrop(typeSave)
             }
         }
     }
 
-    private fun constructorCloseAndOpen(value : Float, type: ConstType) {
-        var durationMy = DURATION_ANIMATION_CONSTRUCTOR
-        if (!openCloseContainer) { durationMy = 0 }
-
-        ObjectAnimator.ofFloat(binding.containerConstructor, View.X, value).apply {
-            duration = durationMy
+    private fun constructorCloseAndOpen(type: ConstType) {
+        ObjectAnimator.ofFloat(binding.containerConstructor, View.X, widthScreen.toFloat()).apply {
+            duration = DURATION_ANIMATION_CONSTRUCTOR
             interpolator = AnticipateOvershootInterpolator(1f)
             start()
         }.doOnEnd {
-            setFragmentConstructor(type)
-            constructorDrop()
+            constructorDrop(type)
         }
     }
 
@@ -324,10 +331,10 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
 ////////////////----------------Example note-----------/////////////////////////
     private fun loadStartExampleNote() {
         val prefs: SharedPreferences = requireActivity().getPreferences(MODE_PRIVATE)
-        if (prefs.getBoolean("isFirstRun", true)) {
+        if (prefs.getBoolean(IS_FIRST_RUN, true)) {
             saveImage()
         }
-        prefs.edit().putBoolean("isFirstRun", false).apply()
+        prefs.edit().putBoolean(IS_FIRST_RUN, false).apply()
     }
     private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { saveImage() }
     private fun requestLocationPermissions() = permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
