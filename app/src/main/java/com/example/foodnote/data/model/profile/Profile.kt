@@ -4,5 +4,6 @@ data class Profile(
     val weight: Double? = null,
     val height: Double? = null,
     val meta: String? = null,
-    val sex: Boolean? = null
+    val male: Boolean? = null,
+    val female: Boolean? = null
 )

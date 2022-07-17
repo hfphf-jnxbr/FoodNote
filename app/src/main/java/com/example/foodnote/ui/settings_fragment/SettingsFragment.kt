@@ -12,6 +12,7 @@ import com.example.foodnote.data.interactor.settings_interactor.SettingColumnReq
 import com.example.foodnote.databinding.FragmentSettingsBinding
 import com.example.foodnote.ui.base.BaseViewBindingFragment
 import com.example.foodnote.ui.settings_fragment.viewModel.SettingsViewModel
+import com.example.foodnote.utils.showToast
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -39,13 +40,16 @@ class SettingsFragment :
         when (appState) {
 
             is AppState.Error -> {
-
+                context?.showToast(appState.error?.message)
             }
             is AppState.Loading -> {
-
+                context?.showToast("LOADING")
             }
             is AppState.Success -> {
                 when (val item = appState.data) {
+                    is String -> {
+                        context?.showToast("SUCCESS SAVE")
+                    }
                     is Pair<*, *> -> {
                         item as Pair<SettingColumnRequire, Boolean>
                         when (item.first) {
@@ -59,11 +63,15 @@ class SettingsFragment :
                             SettingColumnRequire.WEIGHT -> {
                                 if (!item.second) {
                                     weightTextInput.error = getString(R.string.select_weight)
+                                } else {
+                                    weightTextInput.error = null
                                 }
                             }
                             SettingColumnRequire.HEIGHT -> {
                                 if (!item.second) {
                                     heightTextInput.error = getString(R.string.select_height)
+                                } else {
+                                    heightTextInput.error = null
                                 }
                             }
                             SettingColumnRequire.SEX -> {
@@ -74,14 +82,27 @@ class SettingsFragment :
                                     binding.femaleRadioButton.error = null
                                     binding.maleRadioButton.error = null
                                 }
-
+                            }
+                            SettingColumnRequire.SUCCESS_DATA -> {
+                                val height = binding.heightTextInput.text.toString()
+                                val weight = binding.weightTextInput.text.toString()
+                                val types = binding.modeAutoCompleteTextView.text.toString()
+                                val isFemale = binding.femaleRadioButton.isChecked
+                                val isMale = binding.maleRadioButton.isChecked
+                                viewModel.saveProfileData(
+                                    types,
+                                    weight,
+                                    height,
+                                    isMale,
+                                    isFemale,
+                                    idUser
+                                )
                             }
                         }
                     }
+                    else -> {}
                 }
             }
-
-            else -> {}
         }
     }
 

@@ -18,14 +18,14 @@ import com.example.foodnote.data.interactor.diary_item_detail_interactor.DiaryIt
 import com.example.foodnote.data.interactor.diary_item_detail_interactor.DiaryItemDetailInteractorImpl
 import com.example.foodnote.data.interactor.settings_interactor.SettingInteractor
 import com.example.foodnote.data.interactor.settings_interactor.SettingInteractorImpl
-import com.example.foodnote.data.repository.SettingRepository.SettingRepository
-import com.example.foodnote.data.repository.SettingRepository.SettingRepositoryImpl
 import com.example.foodnote.data.repository.calorie_repository.CalorieRepository
 import com.example.foodnote.data.repository.calorie_repository.CalorieRepositoryImpl
 import com.example.foodnote.data.repository.datastore_pref_repository.UserPreferencesRepository
 import com.example.foodnote.data.repository.datastore_pref_repository.UserPreferencesRepositoryImpl
 import com.example.foodnote.data.repository.diary_item_detail_repository.DiaryItemDetailRepository
 import com.example.foodnote.data.repository.diary_item_detail_repository.DiaryItemDetailRepositoryImpl
+import com.example.foodnote.data.repository.settings_repository.SettingRepository
+import com.example.foodnote.data.repository.settings_repository.SettingRepositoryImpl
 import com.example.foodnote.ui.auth_fragment.viewModel.AuthViewModel
 import com.example.foodnote.ui.calorie_calculator_fragment.viewModel.CalorieCalculatorViewModel
 import com.example.foodnote.ui.diary_item_detail_fragment.viewModel.DiaryItemDetailViewModel

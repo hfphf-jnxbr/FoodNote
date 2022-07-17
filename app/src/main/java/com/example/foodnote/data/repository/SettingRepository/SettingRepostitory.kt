@@ -1,3 +1,0 @@
-package com.example.foodnote.data.repository.SettingRepository
-
-interface SettingRepository

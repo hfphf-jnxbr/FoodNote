@@ -4,5 +4,6 @@ enum class SettingColumnRequire(val value: Boolean = false) {
     MODE,
     WEIGHT,
     HEIGHT,
-    SEX
+    SEX,
+    SUCCESS_DATA
 }
