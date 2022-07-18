@@ -41,6 +41,8 @@ import com.example.foodnote.ui.noteBook.interfaces.NoteBookFragmentInterface
 import com.example.foodnote.ui.noteBook.modelNotes.*
 import com.example.foodnote.ui.noteBook.viewModel.StateDataNotes
 import com.example.foodnote.ui.noteBook.viewModel.ViewModelNotesFragment
+import com.example.foodnote.utils.hide
+import com.example.foodnote.utils.show
 import com.example.foodnote.utils.showToast
 import com.google.android.material.card.MaterialCardView
 import kotlinx.coroutines.*
@@ -79,19 +81,22 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
     private fun render(stateData: StateDataNotes) {
         when(stateData) {
             is StateDataNotes.Loading -> {
-
+                binding.progress.show()
             }
             is StateDataNotes.SuccessNoteStandard -> {
+                binding.progress.hide()
                 stateData.listNote?.let {
                     it.forEach { noteStandard -> setDataCreateStandardNote(noteStandard) }
                 }
             }
             is StateDataNotes.SuccessNotePaint -> {
+                binding.progress.hide()
                 stateData.listNote?.let {
                     it.forEach { notePaint -> setDataCreatePaintNote(notePaint) }
                 }
             }
             is StateDataNotes.SuccessNoteFood -> {
+                binding.progress.hide()
                 stateData.listNote?.let {
                     it.forEach { noteFood -> setDataCreateFoodNote(noteFood) }
                 }
