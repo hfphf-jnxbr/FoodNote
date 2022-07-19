@@ -4,10 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.os.Build
-import android.os.Build.VERSION.SDK
 import android.view.MotionEvent
 import android.view.View
-import com.example.foodnote.ui.noteBook.constNote.Const
 import com.example.foodnote.ui.noteBook.constNote.Const.DEFAULT_ALPHA
 import com.example.foodnote.ui.noteBook.constNote.Const.DEFAULT_SIZE_BRUSH
 import com.example.foodnote.ui.noteBook.constNote.ConstType
@@ -21,17 +19,29 @@ class CanvasPaint(context: Context, private val colorCardBackground: Int, privat
         this.setOnTouchListener(this)
     }
 
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+
+        val width = MeasureSpec.getSize(widthMeasureSpec)
+        val height = MeasureSpec.getSize(heightMeasureSpec)
+
+        bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        myCanvas = Canvas(bitmap)
+        myCanvas.drawColor(colorCardBackground)
+    }
+
     private var paintX = 0
     private var paintY = 0
 
     private var xTemp = 0
     private var yTemp = 0
 
-    private var flag = true
     private var flagT = true
     private var flagPic = false
 
-    private val paint = Paint().apply { isAntiAlias = true }
+    private val paint = Paint().apply { isAntiAlias = true
+        strokeWidth = 2f
+    }
 
     private lateinit var bitmap : Bitmap
     private lateinit var myCanvas : Canvas
@@ -46,9 +56,7 @@ class CanvasPaint(context: Context, private val colorCardBackground: Int, privat
         super.onDraw(canvas)
         canvas!!
 
-        createBitmap()
         canvas.drawBitmap(bitmap, null, Rect(0, 0, width, height), paint)
-
         invalidate()
     }
 
@@ -59,32 +67,17 @@ class CanvasPaint(context: Context, private val colorCardBackground: Int, privat
 
             flagT = false
         }
-
         paint.color = color
         paint.alpha = alpha
-        paint.strokeWidth = 2f
 
         when(brush) {
-
             ConstType.BRUSH_CIRCLES -> { BrushesDrawing.circleBrush(myCanvas, xCurrent, xTemp, yTemp, yCurrent, paint, size) }
             ConstType.BRUSH_PEN -> { BrushesDrawing.flatBrash(myCanvas, xCurrent, yCurrent,xTemp, yTemp, paint, size) }
             else -> {}
         }
-
         paint.color = Color.argb(255,0,0,0)
-
         xTemp = xCurrent
         yTemp = yCurrent
-    }
-
-    private fun createBitmap() {
-        if(flag) {
-            bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-            myCanvas = Canvas(bitmap)
-            myCanvas.drawColor(colorCardBackground)
-
-            flag = false
-        }
     }
 
     private fun getColorPic(xCurrent : Int, yCurrent : Int) {
@@ -115,24 +108,22 @@ class CanvasPaint(context: Context, private val colorCardBackground: Int, privat
     override fun onTouch(view: View?, event: MotionEvent?): Boolean {
         if (event != null) {
             when (event.action) {
-                0 -> {
-                    flagT = true
-
-                    if(flagPic) { getColorPic(paintX,paintY) }
-                }
-                2 -> {
-                    paintX = event.x.toInt()
-                    paintY = event.y.toInt()
-
-                    if(flagPic) {
-                        getColorPic(paintX,paintY)
-                    } else {
-                        setPixel(paintX,paintY)
-                    }
-                }
+                0 -> { flagT = true; if(flagPic) { getColorPic(paintX,paintY) } }
+                2 -> { paint(event) }
                 1 -> { flagPic = false }
             }
         }
         return true
+    }
+
+    private fun paint(event: MotionEvent) {
+        paintX = event.x.toInt()
+        paintY = event.y.toInt()
+
+        if(flagPic) {
+            getColorPic(paintX,paintY)
+        } else {
+            setPixel(paintX,paintY)
+        }
     }
 }

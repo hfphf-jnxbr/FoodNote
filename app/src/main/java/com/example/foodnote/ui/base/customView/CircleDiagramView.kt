@@ -8,11 +8,13 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
+import com.example.foodnote.ui.base.customView.customViewInterfaces.DiagramViewInterface
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
-class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : AttributeSet? = null, style: Int = 0) : View(context,attrs,style) , DiagramViewInterface{
+class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : AttributeSet? = null, style: Int = 0) : View(context,attrs,style) ,
+    DiagramViewInterface {
 
     @SuppressLint("DrawAllocation")
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

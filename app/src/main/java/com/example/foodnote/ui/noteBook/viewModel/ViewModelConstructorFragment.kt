@@ -3,10 +3,12 @@ package com.example.foodnote.ui.noteBook.viewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.foodnote.ui.noteBook.viewModel.VievModelInterfaces.ViewModelConstructorInterface
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class ViewModelConstructorFragment() : ViewModel() , ViewModelConstructorInterface{
+class ViewModelConstructorFragment : ViewModel() , ViewModelConstructorInterface {
+
     private val liveData = MutableLiveData<StateData>()
 
     override fun getLiveData() = liveData

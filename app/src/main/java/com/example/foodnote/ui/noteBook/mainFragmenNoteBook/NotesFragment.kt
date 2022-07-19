@@ -11,7 +11,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Environment
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.View
 import android.view.animation.AnticipateOvershootInterpolator
 import android.widget.Toast
@@ -20,20 +19,20 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.animation.doOnEnd
 import androidx.core.app.ActivityCompat
 import androidx.core.view.updateLayoutParams
-import androidx.fragment.app.Fragment
 import com.example.foodnote.R
 import com.example.foodnote.data.databaseRoom.dao.DaoDB
-import com.example.foodnote.data.databaseRoom.entities.EntitiesNotesFood
-import com.example.foodnote.data.databaseRoom.entities.EntitiesNotesPaint
-import com.example.foodnote.data.databaseRoom.entities.EntitiesNotesStandard
 import com.example.foodnote.databinding.CardFoodsBinding
 import com.example.foodnote.databinding.CardNotesBinding
 import com.example.foodnote.databinding.NotebookFragmentBinding
 import com.example.foodnote.di.DATA_BASE
+import com.example.foodnote.di.VIEW_MODEL_NOTES
 import com.example.foodnote.ui.base.BaseViewBindingFragment
 import com.example.foodnote.ui.noteBook.constNote.Const
 import com.example.foodnote.ui.noteBook.constNote.Const.CARD_NOTE_DP
+import com.example.foodnote.ui.noteBook.constNote.Const.CONST_SCALE
 import com.example.foodnote.ui.noteBook.constNote.Const.DURATION_ANIMATION_CONSTRUCTOR
+import com.example.foodnote.ui.noteBook.constNote.Const.MAX_SIZE_TEXT
+import com.example.foodnote.ui.noteBook.constNote.Const.PRESENT_100
 import com.example.foodnote.ui.noteBook.constNote.Const.STACK_CONSTRUCTOR
 import com.example.foodnote.ui.noteBook.constNote.Const.TABLE_FOOD
 import com.example.foodnote.ui.noteBook.constNote.Const.TABLE_PAINT
@@ -42,16 +41,21 @@ import com.example.foodnote.ui.noteBook.constNote.ConstType
 import com.example.foodnote.ui.noteBook.helperView.ExpandView
 import com.example.foodnote.ui.noteBook.helperView.MovedView
 import com.example.foodnote.ui.noteBook.interfaces.NoteBookFragmentInterface
+import com.example.foodnote.ui.noteBook.modelNotes.*
+import com.example.foodnote.ui.noteBook.viewModel.StateData
+import com.example.foodnote.ui.noteBook.viewModel.StateDataNotes
+import com.example.foodnote.ui.noteBook.viewModel.ViewModelNotesFragment
+import com.example.foodnote.utils.showToast
 import com.google.android.material.card.MaterialCardView
 import kotlinx.coroutines.*
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import kotlin.random.Random
-
 
 class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookFragmentBinding::inflate) , NoteBookFragmentInterface {
 
@@ -63,135 +67,93 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
 
     private val scope = CoroutineScope(Dispatchers.IO)
     private val notesDao: DaoDB by inject(named(DATA_BASE)) { parametersOf(requireActivity()) }
+    private val viewModel : ViewModelNotesFragment by viewModel(named(VIEW_MODEL_NOTES)) { parametersOf(notesDao) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        flagBlockChip = true
+
+        initViewModel()
         initMovedView()
 
-        loadDataNote()
+        viewModel.loadDataNote()
         loadStartExampleNote()
 
         setWidthPixels()
         checkChip()
     }
 
-    private fun loadDataNote() {
-        scope.launch {
-            val dataStandardNotes = notesDao.getAllNotesStandard()
-            val dataPaintNotes = notesDao.getAllNotesPaint()
-            val dataFoodNotes = notesDao.getAllNotesFood()
-            withContext(Dispatchers.Main) {
+    private fun initViewModel() { viewModel.getLiveData().observe(viewLifecycleOwner) { render(it) } }
 
-                dataPaintNotes.forEach { not ->
-                    setDataCreatePaintNote(not.widthCard,not.heightCard,not.colorCard,not.fileName,not.cardPositionX,not.cardPositionY,not.idCard,not.elevation.toFloat())
+    private fun render(stateData: StateDataNotes) {
+        when(stateData) {
+            is StateDataNotes.Loading -> {
+
+            }
+            is StateDataNotes.SuccessNoteStandard -> {
+                stateData.listNote?.let {
+                    it.forEach { noteStandard -> setDataCreateStandardNote(noteStandard) }
                 }
-                dataStandardNotes.forEach { not ->
-                    setDataCreateStandardNote(not.widthCard,not.heightCard,not.colorCard,not.note,not.cardPositionX,not.cardPositionY,not.idCard,not.elevation.toFloat())
+            }
+            is StateDataNotes.SuccessNotePaint -> {
+                stateData.listNote?.let {
+                    it.forEach { notePaint -> setDataCreatePaintNote(notePaint) }
                 }
-                dataFoodNotes.forEach { not ->
-                    setDataCreateFoodNote(not.widthCard,not.heightCard,not.colorCard,not.listFoods,not.listWeight,not.general,not.cardPositionX,not.cardPositionY,not.idCard,not.elevation.toFloat())
+            }
+            is StateDataNotes.SuccessNoteFood -> {
+                stateData.listNote?.let {
+                    it.forEach { noteFood -> setDataCreateFoodNote(noteFood) }
                 }
+            }
+            is StateDataNotes.Error ->   {
+                context?.showToast(getString(R.string.network_error_mess))
             }
         }
     }
 
-    override fun saveAndCreateDataNotesPaint(widthCard: Int, heightCard: Int, colorCard: Int, fileName: String, posX: Int, posY: Int, id: Int, elevation: Float) {
-        scope.launch {
-            notesDao.insertNotePaint(EntitiesNotesPaint(
-                    widthCard = widthCard, heightCard = heightCard, colorCard = colorCard, fileName = fileName,
-                    cardPositionX = posX, cardPositionY = posY, idCard = id, elevation = elevation.toInt() ))
-        }
-        setDataCreatePaintNote(widthCard,heightCard,colorCard, fileName, posX, posY, id, elevation)
+    override fun saveAndCreateDataNotesPaint(note : NotePaint) {
+        viewModel.saveDataNotesPaint(note)
+        setDataCreatePaintNote(note)
     }
 
-    override fun saveAndCreateDataNotesStandard(widthCard: Int, heightCard: Int, colorCard: Int, note: String, posX: Int, posY: Int, id: Int, elevation: Float) {
-        scope.launch {
-            notesDao.insertNoteStandard(EntitiesNotesStandard(
-                widthCard = widthCard, heightCard = heightCard, colorCard = colorCard, note = note,
-                cardPositionX = posX, cardPositionY = posY, idCard = id, elevation = elevation.toInt() ))
-        }
-        setDataCreateStandardNote(widthCard,heightCard,colorCard, note, posX, posY, id, elevation)
+    override fun saveAndCreateDataNotesStandard(note : NoteStandard) {
+        viewModel.saveDataNotesStandard(note)
+        setDataCreateStandardNote(note)
     }
 
-    override fun saveAndCreateDataNotesFoods(widthCard: Int, heightCard: Int, colorCard: Int, listFoods: String, listWeight: String, general : String, posX: Int, posY: Int, id: Int, elevation: Float) {
-        scope.launch {
-            notesDao.insertNoteFood(EntitiesNotesFood(
-                widthCard = widthCard, heightCard = heightCard, colorCard = colorCard, general = general, listFoods = listFoods, listWeight = listWeight,
-                cardPositionX = posX, cardPositionY = posY, idCard = id, elevation = elevation.toInt() )
-            )
-        }
-        setDataCreateFoodNote(widthCard, heightCard, colorCard, listFoods, listWeight,general, posX, posY, id, elevation)
+    override fun saveAndCreateDataNotesFoods(note : NoteFood) {
+        viewModel.saveDataNotesFoods(note)
+        setDataCreateFoodNote(note)
     }
 
-    override fun setNewCardCoordinatesData(viewX: Int, viewY: Int, view: View) {
-        scope.launch {
-            when (view.tag) {
-                TABLE_STANDARD -> {
-                    notesDao.updateCoordinatesCardNotesStandardX(viewX,view.id)
-                    notesDao.updateCoordinatesCardNotesStandardY(viewY,view.id)
-                }
-                TABLE_PAINT -> {
-                    notesDao.updateCoordinatesCardNotesPaintX(viewX,view.id)
-                    notesDao.updateCoordinatesCardNotesPaintY(viewY,view.id)
-                }
-                TABLE_FOOD -> {
-                    notesDao.updateCoordinatesCardNotesFoodX(viewX,view.id)
-                    notesDao.updateCoordinatesCardNotesFoodY(viewY,view.id)
-                }
-            }
-        }
-    }
-
-    override fun setElevationView(view: View) {
-        scope.launch {
-            when (view.tag) {
-                TABLE_STANDARD -> { notesDao.updateCardElevationStandard(view.elevation.toInt(),view.id) }
-                TABLE_PAINT -> {  notesDao.updateCardElevationPaint(view.elevation.toInt(),view.id) }
-                TABLE_FOOD -> {  notesDao.updateCardElevationFood(view.elevation.toInt(),view.id) }
-            }
-        }
-    }
-
-    private fun deleteNotes(view: View) {
-        scope.launch {
-            when (view.tag) {
-                TABLE_STANDARD -> { notesDao.deleteNoteStandard(view.id) }
-                TABLE_PAINT -> { notesDao.deleteNotePaint(view.id) }
-                TABLE_FOOD -> { notesDao.deleteNoteFood(view.id) }
-            }
-        }
-    }
-
-    private fun setDataCreateStandardNote(widthCard: Int, heightCard: Int, colorCard: Int, note : String, posX: Int, posY: Int, idCard : Int, elevation: Float) {
+    private fun setDataCreateStandardNote(note : NoteStandard) {
         val cardNoteViewBind = CardNotesBinding.inflate(layoutInflater, binding.root, false)
         val cardNoteView = cardNoteViewBind.root
 
         cardNoteView.tag = TABLE_STANDARD
 
-        var size = (widthCard.toFloat() * 10f) / 30f
-        if (size > 15f) size = 15f
+        var size = note.widthCard.toFloat() * CONST_SCALE
+        if (size > MAX_SIZE_TEXT) size = MAX_SIZE_TEXT
         cardNoteViewBind.textNote.apply {
-            text = note
+            text = note.string
             textSize = size
         }
         cardNoteViewBind.buttonDelete.setOnClickListener { deleteDialog(cardNoteView) }
 
-        createNote(cardNoteView, widthCard, heightCard, colorCard, elevation, posX, posY, idCard)
+        createNote(note,cardNoteView)
     }
 
-    private fun setDataCreatePaintNote(widthCard: Int, heightCard: Int, colorCard: Int, fileName: String, posX: Int, posY: Int, idCard: Int, elevation: Float) {
+    private fun setDataCreatePaintNote(note: NotePaint) {
         val cardNoteViewBind = CardNotesBinding.inflate(layoutInflater, binding.root, false)
         val cardNoteView = cardNoteViewBind.root
 
         cardNoteView.tag = TABLE_PAINT
         cardNoteViewBind.buttonDelete.setOnClickListener { deleteDialog(cardNoteView) }
-        cardNoteViewBind.imageNote.setImageBitmap( BitmapFactory.decodeFile(Environment.getExternalStorageDirectory().toString() + File.separator +  Environment.DIRECTORY_DCIM + File.separator + fileName) )
+        cardNoteViewBind.imageNote.setImageBitmap( BitmapFactory.decodeFile(Environment.getExternalStorageDirectory().toString() + File.separator +  Environment.DIRECTORY_DCIM + File.separator + note.bitmapURL) )
 
-        createNote(cardNoteView, widthCard, heightCard, colorCard, elevation, posX, posY, idCard)
+        createNote(note,cardNoteView)
     }
 
-    private fun setDataCreateFoodNote(widthCard: Int, heightCard: Int, colorCard: Int, listFoods: String, listWeight: String, general : String, posX: Int, posY: Int, idCard: Int, elevation: Float) {
+    private fun setDataCreateFoodNote(note: NoteFood) = with(note) {
         val cardNoteViewBind = CardFoodsBinding.inflate(layoutInflater, binding.root, false)
         val cardNoteView = cardNoteViewBind.root
 
@@ -210,22 +172,22 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
                     true
                 }
             }
-           setTextFoodNote(this,widthCard,listWeight, listFoods,general)
+           setTextFoodNote(this,note)
         }
-        createNote(cardNoteView, widthCard, heightCard, colorCard, elevation, posX, posY, idCard)
+        createNote(note,cardNoteView)
     }
 
-    private fun setTextFoodNote(cardNoteViewBind: CardFoodsBinding,widthCard: Int,listWeight: String,listFoods: String,general: String) {
+    private fun setTextFoodNote(cardNoteViewBind: CardFoodsBinding,note: NoteFood) = with(note) {
         cardNoteViewBind.apply {
-            var size = (widthCard.toFloat() * 10f) / 30f
-            if (size > 15f) size = 15f
+            var size = widthCard.toFloat() * CONST_SCALE
+            if (size > MAX_SIZE_TEXT) size = MAX_SIZE_TEXT
 
             textListFoods.apply {
-                text = listFoods
+                text = stringFoods
                 textSize = size
             }
             textListWeight.apply {
-                text = listWeight
+                text = stringWeight
                 textSize = size
             }
             textGeneral.apply {
@@ -239,17 +201,17 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
         }
     }
 
-    private fun createNote(cardNoteView: MaterialCardView, widthCard: Int, heightCard: Int, colorCard: Int, elevationCard : Float, posX: Int, posY: Int, idCard: Int) {
+    private fun createNote(note: Note, cardNoteView: MaterialCardView) = with(note) {
         cardNoteView.updateLayoutParams {
-            height = ((heightCard * widthScreen) / 100) + convertDpToPixels(CARD_NOTE_DP)
-            width = (widthCard * widthScreen) / 100
+            height = ((heightCard * widthScreen) / PRESENT_100) + convertDpToPixels(CARD_NOTE_DP)
+            width = (widthCard * widthScreen) / PRESENT_100
         }
 
         cardNoteView.apply {
             x = posX.toFloat()
             y = posY.toFloat()
-            id = idCard
-            elevation = elevationCard
+            id = idNote
+            elevation = elevationNote
             setCardBackgroundColor(colorCard)
         }
         binding.root.addView(cardNoteView)
@@ -257,6 +219,7 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
     }
 
     private fun deleteDialog(cardNoteView: View) {
+
         val dialog = AlertDialog.Builder(requireContext())
         dialog.setTitle(getString(R.string.alert_dialog_header))
         dialog.setCancelable(true)
@@ -268,7 +231,7 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
             binding.root.removeView(cardNoteView)
             movedView.removeView(cardNoteView)
 
-            deleteNotes(cardNoteView)
+            viewModel.deleteNotes(cardNoteView)
             dialog.dismiss()
         }
         dialog.create().show()
@@ -293,7 +256,8 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
     }
 
     private fun initMovedView() {
-        movedView = MovedView(ArrayList(),binding.root, this)
+        flagBlockChip = true
+        movedView = MovedView(ArrayList(),binding.root, viewModel)
     }
 
     private fun setWidthPixels() {
@@ -357,7 +321,7 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
         scope.cancel()
     }
 
-////////////////------------------Example note code----------------/////////////////////////
+////////////////----------------Example note-----------/////////////////////////
     private fun loadStartExampleNote() {
         val prefs: SharedPreferences = requireActivity().getPreferences(MODE_PRIVATE)
         if (prefs.getBoolean("isFirstRun", true)) {
@@ -371,57 +335,12 @@ class NotesFragment : BaseViewBindingFragment<NotebookFragmentBinding>(NotebookF
     private fun saveImage() {
         if(ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 
-            val bitmap = BitmapFactory.decodeResource(requireContext().resources, R.drawable.image_note_paint);
-            nameFile = getName()
-            bitmapToFile(bitmap,nameFile)
+            val bitmap = BitmapFactory.decodeResource(requireContext().resources, R.drawable.image_note_paint)
+
+            val example = ExampleNote(this, requireContext(), widthScreen)
+            example.bitmapToFile(bitmap)
         } else {
             requestLocationPermissions()
         }
-    }
-    private lateinit var nameFile : String
-    private fun getName() = "image244${Random(Const.SEED)}.png"
-    private fun bitmapToFile(bitmap: Bitmap, fileNameToSave: String): File? {
-        var file: File? = null
-        return try {
-            val name = Environment.getExternalStorageDirectory().toString() + File.separator + Environment.DIRECTORY_DCIM + File.separator + fileNameToSave
-
-            file = File(name)
-            file.createNewFile()
-
-            Toast.makeText(requireContext(), getString(R.string.saved_mess) + name, Toast.LENGTH_SHORT).show()
-
-            val bos = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos)
-
-            val bitmapData = bos.toByteArray()
-
-            val fos = FileOutputStream(file)
-            fos.write(bitmapData)
-            fos.flush()
-            fos.close()
-
-            file
-        } catch (e: Exception) {
-            e.printStackTrace()
-            file
-        } finally {
-            createExampleNote()
-        }
-    }
-    private fun createExampleNote() {
-        val stringStandart = "Note\n- Finish the project\n- Bugfix navigation\n- Added new brash"
-
-        val bitmapURL = nameFile
-
-        val stringFoods = "Milk\nApple\nOrange"
-        val stringWeight = "1300\n700\n430"
-        val general = "3600cals"
-
-        val height = ((55 * widthScreen) / 100) + convertDpToPixels(CARD_NOTE_DP)
-        val width = (42 * widthScreen) / 100
-
-        saveAndCreateDataNotesStandard(50, 40, Color.rgb(252, 252, 215 ), stringStandart,width + 20 + 40,height + 20 + 180,  51, Const.NOTES_ELEVATION)
-        saveAndCreateDataNotesPaint(75, 55, Color.WHITE, bitmapURL,40 ,180, 52, Const.NOTES_ELEVATION)
-        saveAndCreateDataNotesFoods(42, 60, Color.WHITE, stringFoods, stringWeight, general,40 ,height + 20 + 180, 53, Const.NOTES_ELEVATION)
     }
 }

@@ -84,6 +84,6 @@
     </string-array>
     <string name="pix_0">Pix 0</string>
     <string name="alpha_0">Alpha 0</string>
-    <string name="water">Потребление воды</string>
-    <string name="select_sex">Заполните пол</string>
+    <string name="alpha_string">Alpha</string>
+    <string name="pix_string">Pix</string>
 </resources>

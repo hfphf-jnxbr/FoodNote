@@ -10,6 +10,8 @@ import com.example.foodnote.data.base.RetrofitImpl
 import com.example.foodnote.data.base.firebase.FireBaseDataSourceImpl
 import com.example.foodnote.data.base.firebase.FirebaseDataSource
 import com.example.foodnote.data.databaseRoom.DataBase
+import com.example.foodnote.data.datasource.calorire_datasource.firebase.FireBaseCalorieDataSourceImpl
+import com.example.foodnote.data.datasource.calorire_datasource.firebase.FirebaseCalorieDataSource
 import com.example.foodnote.data.datasource.diary_item_detail_repository.DiaryItemDetailDatasource
 import com.example.foodnote.data.datasource.diary_item_detail_repository.DiaryItemDetailDatasourceImpl
 import com.example.foodnote.data.interactor.calorie_interactor.CalorieCalculatorInteractor
@@ -31,6 +33,7 @@ import com.example.foodnote.ui.calorie_calculator_fragment.viewModel.CalorieCalc
 import com.example.foodnote.ui.diary_item_detail_fragment.viewModel.DiaryItemDetailViewModel
 import com.example.foodnote.ui.noteBook.viewModel.ViewModelConstructorFragment
 import com.example.foodnote.ui.settings_fragment.viewModel.SettingsViewModel
+import com.example.foodnote.ui.noteBook.viewModel.ViewModelNotesFragment
 import com.example.foodnote.ui.splash_screen_fragment.viewModel.SplashScreenViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
@@ -122,10 +125,14 @@ val diaryItemDetailScreenModule = module {
         DiaryItemDetailViewModel(get(named(NAME_PREF_APP_REPOSITORY)), get())
     }
 }
-
+    
 val noteBookModule = module {
     viewModel {
         ViewModelConstructorFragment()
+    }
+
+    viewModel(named(VIEW_MODEL_NOTES)) { (dao : DaoDB) ->
+        ViewModelNotesFragment(dao)
     }
 }
 
