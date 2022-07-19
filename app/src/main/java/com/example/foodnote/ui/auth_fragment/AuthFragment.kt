@@ -12,15 +12,12 @@ import com.example.foodnote.data.base.SampleState
 import com.example.foodnote.databinding.FragmentAuthBinding
 import com.example.foodnote.ui.auth_fragment.viewModel.AuthViewModel
 import com.example.foodnote.ui.base.BaseViewBindingFragment
-import com.example.foodnote.utils.hide
-import com.example.foodnote.utils.show
 import com.example.foodnote.utils.showToast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -46,7 +43,6 @@ class AuthFragment : BaseViewBindingFragment<FragmentAuthBinding>(FragmentAuthBi
                     account.idToken?.let { token ->
                         firebaseAuthWithGoogle(token)
                     }
-
                 } catch (e: ApiException) {
                     // Google Sign In failed, update UI appropriately
                     Log.w(TAG, "Google sign in failed", e)
@@ -80,13 +76,18 @@ class AuthFragment : BaseViewBindingFragment<FragmentAuthBinding>(FragmentAuthBi
 
     private fun setState(appState: SampleState) {
         if (appState.isSuccess) {
-            val navController = findNavController()
-            navController.navigate(R.id.action_authFragment_to_notesFragment)
+            navigateToMainScreen()
         }
 
         if (appState.error != null) {
             context?.showToast(appState.error.message)
         }
+    }
+
+    private fun navigateToMainScreen() {
+        val navController = findNavController()
+        val action = AuthFragmentDirections.actionAuthFragmentToNotesFragment()
+        navController.navigate(action)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -103,14 +104,8 @@ class AuthFragment : BaseViewBindingFragment<FragmentAuthBinding>(FragmentAuthBi
     override fun onStart() {
         super.onStart()
         val currentUser = auth.currentUser
-        updateUI(currentUser)
-    }
-
-    private fun updateUI(account: FirebaseUser?) {
-        if (account == null) {
-            binding.signInButton.show()
-        } else {
-            binding.signInButton.hide()
+        currentUser?.let {
+            navigateToMainScreen()
         }
     }
 
@@ -129,11 +124,7 @@ class AuthFragment : BaseViewBindingFragment<FragmentAuthBinding>(FragmentAuthBi
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithCredential:success")
                     val user = auth.currentUser
-                    updateUI(user)
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w(TAG, "signInWithCredential:failure", task.exception)
-                    updateUI(null)
+                    navigateToMainScreen()
                 }
             }
     }

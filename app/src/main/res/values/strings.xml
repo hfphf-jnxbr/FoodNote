@@ -1,20 +1,14 @@
 <resources>
     <string name="app_name">FoodNote</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-
     <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <string name="notebook">NoteBook</string>
     <string name="add_note">+ Add Note</string>
-
     <string name="value_30_100">value 30–100%</string>
     <string name="background_card">Background Card</string>
     <string name="height">height =</string>
     <string name="width">width =</string>
     <string name="create_note">Create Note</string>
     <string name="note">Note</string>
-
     <string name="standard_notes">Standard notes</string>
     <string name="food_notes">Food notes</string>
     <string name="paint_notes">Paint notes</string>
@@ -36,7 +30,7 @@
     <string name="settings">Настройки</string>
     <string name="other">Другой</string>
     <string name="age">Возраст</string>
-    <string name="weight">вес</string>
+    <string name="weight">Вес</string>
     <string name="burning_weight">Сожжено</string>
     <string name="eating_weight">Cъедено</string>
     <string name="zero">0</string>
@@ -55,8 +49,39 @@
     <string name="no">нет</string>
     <string name="yes">да</string>
     <string name="list_foods">List foods</string>
-    <string name="weight_gm">вес гм</string>
-    <string name="list_foods_hint">Введите список продуктов через пробел</string>
+    <string name="list_foods_hint">Введите по строчно название продуктов</string>
+    <string name="list_foods_header">List Foods</string>
+    <string name="gram">gm</string>
+    <string name="network_error_mess">Network ERROR</string>
+    <string name="general">General:</string>
+    <string name="search">search</string>
+    <string name="recipe_search">Recipe search</string>
+    <string name="color_selection">color selection</string>
+    <string name="alpha">alpha</string>
+    <string name="ok">OK</string>
+    <string name="clearCanvas_mess">Вы точно хотите очистить холст?</string>
+    <string name="weight_gm">вес гм\n</string>
     <string name="exit">выйти</string>
-
+    <string name="type_name_product">Введите название продукта</string>
+    <string name="count_products">%d шт</string>
+    <string name="count_protein">Белки %.2f г</string>
+    <string name="count_fats">Жиры %.2f г</string>
+    <string name="count_carbohydrates">Углеводы %.2f г</string>
+    <string name="count_calorie">Количество  ккал %.2f</string>
+    <string name="create_notes">Создаение заметки</string>
+    <string name="save">Сохранить</string>
+    <string name="disabled">Отменить</string>
+    <string name="type_weight">Введите вес</string>
+    <string name="type_height">Введите рост</string>
+    <string name="male">М</string>
+    <string name="female">Ж</string>
+    <string name="select_meta">Выберите цель</string>
+    <string-array name="type_modes">
+        <item>Похудеть</item>
+        <item>Набрать вес</item>
+    </string-array>
+    <string name="pix_0">Pix 0</string>
+    <string name="alpha_0">Alpha 0</string>
+    <string name="alpha_string">Alpha</string>
+    <string name="pix_string">Pix</string>
 </resources>

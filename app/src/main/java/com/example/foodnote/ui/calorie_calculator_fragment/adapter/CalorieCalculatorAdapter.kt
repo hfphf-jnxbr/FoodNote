@@ -10,9 +10,14 @@ class CalorieCalculatorAdapter(private val itemClickListener: ItemClickListener)
     RecyclerView.Adapter<DiaryViewHolder>() {
 
     private var list = mutableListOf<DiaryItem>()
-    fun setItem(newList: MutableList<DiaryItem>) {
+    fun setItems(newList: MutableList<DiaryItem>) {
         list = newList
-        notifyDataSetChanged()
+        notifyItemRangeInserted(0, list.size)
+    }
+
+    fun addItem(item: DiaryItem) {
+        list.add(item)
+        notifyItemInserted(list.size)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiaryViewHolder {
@@ -28,7 +33,7 @@ class CalorieCalculatorAdapter(private val itemClickListener: ItemClickListener)
     }
 
     override fun onBindViewHolder(holder: DiaryViewHolder, position: Int) {
-        holder.bind(list[position])
+        holder.bind(list[position], itemClickListener)
     }
 
     override fun getItemCount(): Int {

@@ -8,11 +8,14 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
+import com.example.foodnote.ui.base.customView.customViewInterfaces.DiagramViewInterface
+import kotlinx.coroutines.delay
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
-class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : AttributeSet? = null, style: Int = 0) : View(context,attrs,style) , DiagramViewInterface{
+class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : AttributeSet? = null, style: Int = 0) : View(context,attrs,style) ,
+    DiagramViewInterface {
 
     @SuppressLint("DrawAllocation")
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -43,7 +46,7 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
     }
 
     private val paintCircleBek4 = Paint().apply { color = Color.rgb(255, 255, 255)
-        setShadowLayer(8.0f, 1f, 5.0f, Color.GRAY)
+        setShadowLayer(7.0f, 1f, 1f, Color.GRAY)
         isAntiAlias = true
     }
 
@@ -57,9 +60,9 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
         textSize = 35f
     }
 
-    private val paintLine = Paint().apply { color = Color.rgb(168, 168, 168)
+    private val paintLine = Paint().apply { color = Color.rgb(255, 255, 255)
+        setShadowLayer(3.0f, 1f, 1f, Color.GRAY)
         strokeWidth = 6f
-        isAntiAlias = true
     }
 
     private var angle = 0f
@@ -86,11 +89,11 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
     private var x2 = 0
     private var x3 = 0
 
+    private var animStop = false
+
     private var rectF : RectF = RectF(0f,0f,0f,0f)
     private var rectF2 : RectF = RectF(0f,0f,0f,0f)
     private var rectF3 : RectF = RectF(0f,0f,0f,0f)
-
-    private var flag = true
 
     private var widthDiagram = 12f
     private var radiuse = 120f
@@ -104,7 +107,9 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
         drawCircles(canvas)
         drawText(canvas)
 
-        invalidate()
+        if (animStop) {
+            invalidate()
+        }
     }
 
     private fun drawCircles(canvas: Canvas){
@@ -132,12 +137,12 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
             val y2 = width/2f - (width/2f - radiuse/2 ) * sin(- (angle * 2 * PI) / 360).toFloat()
 
             canvas.drawLine(width/2f,width/2f, x, y, paintLine)
-            canvas.drawCircle(x, y,10f,paintLine)
+            canvas.drawCircle(x, y,25f,paintLine)
 
             if(angle <= 180) {
                 canvas.drawText(text,x2 - 90f,y2 + 32f,paintSmallText)
             } else {
-                canvas.drawText(text,x2 - 90f,y2 - 10f ,paintSmallText)
+                canvas.drawText(text,x2 - 90f,y2 - 18f ,paintSmallText)
             }
         }
     }
@@ -145,11 +150,13 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
     private fun angleSpeed() {
         if(angle < length) angle += angleSpeed
         if(angle2 < length2) angle2 += angleSpeed2
-        if(angle3 < length3) angle3 += angleSpeed3
+        if(angle3 < length3) { angle3 += angleSpeed3 }
 
         angleSpeed = angleSpeedStart * ( length - angle)
         angleSpeed2 = angleSpeedStart2 * ( length2 - angle2)
         angleSpeed3 = angleSpeedStart3 * ( length3 - angle3)
+
+        if(angleSpeed3 <= 0.002f) animStop = false
     }
 
     private fun createRect(width: Int) {
@@ -174,8 +181,6 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
         angle2 = 0f
         angle3 = 0f
 
-        flag = true
-
         this.maxCalories = maxCalories
         this.maxFats = maxFats
         this.maxProtein = maxProtein
@@ -187,6 +192,12 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
         length = (360f * ((x1 * 100) / maxCalories)) / 100f
         length2 = (360f * ((x2 * 100) / maxFats)) / 100f
         length3 = (360f * ((x3 * 100) / maxProtein)) / 100f
+
+        Thread {
+            Thread.sleep(170)
+            animStop = true
+            invalidate()
+        }.start()
     }
 
 }

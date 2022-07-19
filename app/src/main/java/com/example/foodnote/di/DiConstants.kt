@@ -6,7 +6,10 @@ internal const val NAME_PREF_APP_REPOSITORY = "Pref app repository"
 
 
 internal const val NAME_DATASOURCE_REMOTE = "Data Source Remote"
+internal const val NAME_DATASOURCE_REMOTE_SERVICE = "Data Source Remote Servise"
 internal const val NAME_DATASOURCE_FIREBASE = "Data Source Remote"
 
 internal const val DATA_BASE = "Data base room"
-internal const val DATA_BASE_NAME = "notesDB_1.9"
+internal const val DATA_BASE_NAME = "notesDB_2.0"
+
+internal const val VIEW_MODEL_NOTES = "VIEW_MODEL_NOTES"

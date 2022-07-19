@@ -37,7 +37,7 @@ class SplashScreenFragment :
                     getUserId()
                 }
             }
-        }, 3000)
+        }, 6000)
 
     }
 

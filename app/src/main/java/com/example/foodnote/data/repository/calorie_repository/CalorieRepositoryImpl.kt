@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.Flow
 
 class CalorieRepositoryImpl(private val firebaseCalorieDataSource: FirebaseCalorieDataSource) :
     CalorieRepository {
-    override fun saveDiary(item: DiaryItem): DiaryItem {
-        return firebaseCalorieDataSource.saveDiaryItem(item)
+    override fun saveDiary(item: DiaryItem): Flow<AppState<String>> {
+        return firebaseCalorieDataSource.saveDiaryItem(item, null)
     }
 
     override fun getDiaryCollection(

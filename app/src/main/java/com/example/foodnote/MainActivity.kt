@@ -2,10 +2,11 @@ package com.example.foodnote
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.foodnote.databinding.ActivityMainBinding
+import com.example.foodnote.utils.hide
+import com.example.foodnote.utils.show
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,6 +26,14 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
 
         navView.setupWithNavController(navController)
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.splashScreenFragment, R.id.authFragment -> {
+                    binding.bottomNavigation.hide()
+                }
+                else -> binding.bottomNavigation.show()
+            }
+        }
     }
 
 }

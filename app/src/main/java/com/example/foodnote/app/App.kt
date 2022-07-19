@@ -14,9 +14,11 @@ class App : Application() {
                 listOf(
                     applicationModule,
                     calorieCalculatorScreenModule,
+                    noteBookModule,
                     dataStoreModule,
                     authScreenModule,
-                    splashScreenModule
+                    splashScreenModule,
+                    diaryItemDetailScreenModule
                 )
             )
         }
