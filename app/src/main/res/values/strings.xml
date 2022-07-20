@@ -84,4 +84,6 @@
     <string name="alpha_0">Alpha 0</string>
     <string name="alpha_string">Alpha</string>
     <string name="pix_string">Pix</string>
+    <string name="name_splash_app">FoodNote</string>
+    <string name="loading_splash">Loading ...</string>
 </resources>
