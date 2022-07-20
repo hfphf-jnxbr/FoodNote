@@ -2,34 +2,22 @@ package com.example.foodnote.ui.diary_item_detail_fragment.viewModel
 
 import androidx.lifecycle.viewModelScope
 import com.example.foodnote.data.base.AppState
-import com.example.foodnote.data.base.SampleState
 import com.example.foodnote.data.interactor.diary_item_detail_interactor.DiaryItemDetailInteractor
 import com.example.foodnote.data.model.DiaryItem
 import com.example.foodnote.data.model.food.FoodDto
 import com.example.foodnote.data.model.food.TotalFoodResult
 import com.example.foodnote.data.repository.datastore_pref_repository.UserPreferencesRepository
 import com.example.foodnote.ui.base.viewModel.BaseViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class DiaryItemDetailViewModel(
-    private val dataStorePref: UserPreferencesRepository,
+    dataStorePref: UserPreferencesRepository,
     private val interactor: DiaryItemDetailInteractor
 ) :
-    BaseViewModel<SampleState>(dataStorePref) {
-    init {
-        stateLiveData.value = SampleState()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        stateLiveData.value = SampleState()
-    }
-
+    BaseViewModel<AppState<*>>(dataStorePref) {
+    private var diaryItem: DiaryItem? = null
     fun saveDiaryItem(item: DiaryItem) {
-        viewModelScope.launch {
-            stateLiveData.value = stateLiveData.value?.copy(diaryItem = item)
-        }
+        diaryItem = item
     }
 
     fun searchFood(name: String) {
@@ -37,14 +25,24 @@ class DiaryItemDetailViewModel(
             kotlin.runCatching {
                 interactor.searchFood(name)
             }.onSuccess {
-                stateLiveData.value = stateLiveData.value?.copy(foodDtoItems = it)
+                stateLiveData.value = AppState.Success(it)
             }.onFailure {
-                stateLiveData.value = stateLiveData.value?.copy(error = it)
+                stateLiveData.value = AppState.Error<Throwable>(it)
             }
         }
     }
 
-    fun saveFood(item: FoodDto) = interactor.saveDiaryItem(stateLiveData.value!!.diaryItem!!, item)
+    fun saveFood(item: FoodDto) {
+        viewModelScope.launch {
+            interactor.saveDiaryItem(diaryItem!!, item).collect {
+                when (it) {
+                    is AppState.Error -> stateLiveData.value = it
+                    is AppState.Loading -> stateLiveData.value = it
+                    is AppState.Success -> stateLiveData.value = it
+                }
+            }
+        }
+    }
 
 
     fun calculateTotalData(list: List<FoodDto>) {
@@ -52,22 +50,39 @@ class DiaryItemDetailViewModel(
             kotlin.runCatching {
                 interactor.calculateTotalData(list)
             }.onSuccess {
-                stateLiveData.value = stateLiveData.value?.copy(totalFoodResult = it)
+                stateLiveData.value = AppState.Success(it)
             }.onFailure {
-                stateLiveData.value = stateLiveData.value?.copy(error = it)
+                stateLiveData.value = AppState.Error<Throwable>(it)
             }
         }
     }
 
-    fun saveTotalCalculate(item: TotalFoodResult):
-            Flow<AppState<String>> {
-        val diaryItem = stateLiveData.value!!.diaryItem!!.apply {
-            calories = item.calorieSum.toLong()
-            proteinSum = item.proteinSum
-            fatSum = item.fatSum
-            carbSum = item.carbohydrateSum
+    fun saveTotalCalculate(item: TotalFoodResult) {
+        viewModelScope.launch {
+            kotlin.runCatching {
+                val diaryItem = diaryItem!!.apply {
+                    calories = item.calorieSum.toLong()
+                    proteinSum = item.proteinSum
+                    fatSum = item.fatSum
+                    carbSum = item.carbohydrateSum
+                }
+                interactor.saveDiaryItem(diaryItem, null).collect {
+                    when (it) {
+                        is AppState.Error -> {
+                            stateLiveData.value = it
+                        }
+                        is AppState.Loading -> {
+                            stateLiveData.value = it
+                        }
+                        is AppState.Success -> {
+                            stateLiveData.value = it
+                        }
+                    }
+                }
+            }
+
         }
-        return interactor.saveDiaryItem(diaryItem, null)
+
     }
 
 
@@ -75,8 +90,22 @@ class DiaryItemDetailViewModel(
 
     }
 
-    fun getSavedFoodCollection(idUser: String, dbId: String) =
-        interactor.getSavedFoodCollection(idUser, dbId)
-
+    fun getSavedFoodCollection(idUser: String, dbId: String) {
+        viewModelScope.launch {
+            interactor.getSavedFoodCollection(idUser, dbId).collect {
+                when (it) {
+                    is AppState.Error -> {
+                        stateLiveData.value = it
+                    }
+                    is AppState.Loading -> {
+                        stateLiveData.value = it
+                    }
+                    is AppState.Success -> {
+                        stateLiveData.value = it
+                    }
+                }
+            }
+        }
+    }
 
 }

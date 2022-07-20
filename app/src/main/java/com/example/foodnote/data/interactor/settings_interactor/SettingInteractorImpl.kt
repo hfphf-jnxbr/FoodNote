@@ -26,7 +26,7 @@ class SettingInteractorImpl(private val repo: SettingRepository) : SettingIntera
         return repo.saveProfile(data, userId)
     }
 
-    override fun getProfile(userId: String): Flow<AppState<Profile>> {
+    override fun getProfile(userId: String): Flow<AppState<Profile?>> {
         return repo.getProfile(userId)
     }
 }

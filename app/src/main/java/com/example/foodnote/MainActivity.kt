@@ -5,12 +5,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.foodnote.databinding.ActivityMainBinding
+import com.example.foodnote.ui.base.viewModel.MainViewModel
 import com.example.foodnote.utils.hide
 import com.example.foodnote.utils.show
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private val viewModel: MainViewModel by viewModel()
     override fun onCreate(bundle: Bundle?) {
         super.onCreate(bundle)
         binding = ActivityMainBinding.inflate(layoutInflater)

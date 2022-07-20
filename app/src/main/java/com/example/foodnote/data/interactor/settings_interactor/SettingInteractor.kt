@@ -14,5 +14,5 @@ interface SettingInteractor {
     ): List<Pair<SettingColumnRequire, Boolean>>
 
     fun saveProfile(data: Profile, userId: String): Flow<AppState<String>>
-    fun getProfile(userId: String): Flow<AppState<Profile>>
+    fun getProfile(userId: String): Flow<AppState<Profile?>>
 }

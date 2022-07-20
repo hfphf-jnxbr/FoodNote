@@ -61,9 +61,7 @@ class SettingsViewModel(
                 female = female
             )
             interactor.saveProfile(profile, userId).collect {
-                withContext(Dispatchers.Main) {
                     stateLiveData.value = it
-                }
             }
         }
     }

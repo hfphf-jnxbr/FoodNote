@@ -29,6 +29,7 @@ class SettingsFragment :
         viewModel.getStateLiveData().observe(viewLifecycleOwner) { appState: AppState<*> ->
             setState(appState)
         }
+
         if (idUser.isEmpty()) {
             uiScope.launch {
                 getUserId()

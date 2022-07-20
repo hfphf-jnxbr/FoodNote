@@ -63,8 +63,8 @@ class FireBaseDataSourceImpl(private val db: FirebaseFirestore) : FirebaseDataSo
     /**
      * Сохранение заметки
      *
-     * @param DiaryItem Данные заметки по питанию
-     * @param FoodDto Данные о продукте в заметке
+     * @param diaryItem Данные заметки по питанию
+     * @param foodItem Данные о продукте в заметке
      */
     override fun saveDiaryItem(diaryItem: DiaryItem, foodItem: FoodDto?): Flow<AppState<String>> {
         return flow {
@@ -126,7 +126,7 @@ class FireBaseDataSourceImpl(private val db: FirebaseFirestore) : FirebaseDataSo
         idUser: String,
         diaryId: String
     ): Flow<AppState<List<FoodDto>>> {
-        return flow<AppState<List<FoodDto>>> {
+        return flow {
             val path =
                 "/$idUser/$DIARY_DOCUMENT_NAME/$DIARY_ITEM_COLLECTION_NAME/$diaryId/$PRODUCT_COLLECTION_NAME"
             emit(AppState.Loading())

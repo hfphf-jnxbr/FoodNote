@@ -11,7 +11,7 @@ class SettingRepositoryImpl(private val fireBaseDataSource: FirebaseDataSource) 
         return fireBaseDataSource.saveProfileData(profile = data, userId)
     }
 
-    override fun getProfile(userId: String): Flow<AppState<Profile>> {
+    override fun getProfile(userId: String): Flow<AppState<Profile?>> {
         return fireBaseDataSource.getProfileData(userId)
     }
 }

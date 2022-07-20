@@ -2,7 +2,6 @@ package com.example.foodnote.ui.calorie_calculator_fragment
 
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +16,7 @@ import com.example.foodnote.data.base.SampleState
 import com.example.foodnote.data.model.DiaryItem
 import com.example.foodnote.databinding.FragmentCalorieCalculatorBinding
 import com.example.foodnote.ui.base.BaseViewBindingFragment
+import com.example.foodnote.ui.base.viewModel.MainViewModel
 import com.example.foodnote.ui.calorie_calculator_fragment.adapter.rc_view_adapter.CalorieCalculatorAdapter
 import com.example.foodnote.ui.calorie_calculator_fragment.adapter.rc_view_adapter.ItemClickListener
 import com.example.foodnote.ui.calorie_calculator_fragment.adapter.view_pager_adapter.TotalViewAdapter
@@ -27,6 +27,7 @@ import com.example.foodnote.utils.show
 import com.example.foodnote.utils.showToast
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -40,6 +41,8 @@ class CalorieCalculatorFragment :
     ItemClickListener {
 
     private val viewModel: CalorieCalculatorViewModel by viewModel()
+    private val mainViewModel: MainViewModel by sharedViewModel()
+
     private val adapter by lazy {
         CalorieCalculatorAdapter(this)
     }
@@ -53,6 +56,9 @@ class CalorieCalculatorFragment :
     ): View {
         viewModel.getStateLiveData().observe(viewLifecycleOwner) { appState: SampleState ->
             setState(appState)
+        }
+        mainViewModel.getStateLiveData().observe(viewLifecycleOwner) { String ->
+
         }
         if (idUser.isEmpty()) {
             uiScope.launch {
@@ -69,6 +75,7 @@ class CalorieCalculatorFragment :
     }
 
     private fun initView() {
+        mainViewModel.setDataIntoSubscribe()
         initDate()
         initStartData()
         initPager()
@@ -185,16 +192,18 @@ class CalorieCalculatorFragment :
         builder
             .setView(view)
             .setTitle(R.string.create_notes)
-            .setPositiveButton(R.string.save,
-                DialogInterface.OnClickListener { _, _ ->
-                    val text = editText.text.toString()
-                    val time = "${timePicker.hour}:${timePicker.minute}"
-                    callback(time, text)
-                })
-            .setNegativeButton(R.string.disabled,
-                DialogInterface.OnClickListener { dialog, _ ->
-                    dialog.cancel()
-                })
+            .setPositiveButton(
+                R.string.save
+            ) { _, _ ->
+                val text = editText.text.toString()
+                val time = String.format("%02d:%02d", timePicker.hour, timePicker.minute)
+                callback(time, text)
+            }
+            .setNegativeButton(
+                R.string.disabled
+            ) { dialog, _ ->
+                dialog.cancel()
+            }
 
         builder.create()
         builder.show()
