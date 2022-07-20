@@ -37,7 +37,7 @@ class CalorieCalculatorInteractorImpl(private val repository: CalorieRepository)
             val carbSum = list.sumOf {
                 it.carbSum ?: 0.0
             }
-            TotalFoodResult(calorieSum.toDouble(), proteinSum, fatSum, carbSum)
+            TotalFoodResult(0.0, calorieSum.toDouble(), 0.0, proteinSum, 0.0, fatSum, 0.0, carbSum)
         }
     }
 }

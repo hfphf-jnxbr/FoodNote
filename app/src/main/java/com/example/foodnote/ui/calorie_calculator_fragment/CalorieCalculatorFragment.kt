@@ -12,8 +12,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.foodnote.R
 import com.example.foodnote.data.base.AppState
-import com.example.foodnote.data.base.SampleState
 import com.example.foodnote.data.model.DiaryItem
+import com.example.foodnote.data.model.food.TotalFoodResult
 import com.example.foodnote.databinding.FragmentCalorieCalculatorBinding
 import com.example.foodnote.ui.base.BaseViewBindingFragment
 import com.example.foodnote.ui.base.viewModel.MainViewModel
@@ -22,8 +22,6 @@ import com.example.foodnote.ui.calorie_calculator_fragment.adapter.rc_view_adapt
 import com.example.foodnote.ui.calorie_calculator_fragment.adapter.view_pager_adapter.TotalViewAdapter
 import com.example.foodnote.ui.calorie_calculator_fragment.const.FragmentIndex
 import com.example.foodnote.ui.calorie_calculator_fragment.viewModel.CalorieCalculatorViewModel
-import com.example.foodnote.utils.hide
-import com.example.foodnote.utils.show
 import com.example.foodnote.utils.showToast
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.launch
@@ -54,7 +52,7 @@ class CalorieCalculatorFragment :
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel.getStateLiveData().observe(viewLifecycleOwner) { appState: SampleState ->
+        viewModel.getStateLiveData().observe(viewLifecycleOwner) { appState: AppState<*> ->
             setState(appState)
         }
         mainViewModel.getStateLiveData().observe(viewLifecycleOwner) { String ->
@@ -64,6 +62,8 @@ class CalorieCalculatorFragment :
             uiScope.launch {
                 getUserId()
             }
+        } else {
+            initStartData()
         }
         return super.onCreateView(inflater, container, savedInstanceState)
     }
@@ -75,40 +75,23 @@ class CalorieCalculatorFragment :
     }
 
     private fun initView() {
-        mainViewModel.setDataIntoSubscribe()
         initDate()
-        initStartData()
         initPager()
     }
 
     private suspend fun getUserId() {
         viewModel.getUserId().collect {
             idUser = it
+            initStartData()
         }
     }
 
     private fun initStartData() {
-        uiScope.launch {
-            getDiary()
-            binding.addDiaryButton.setOnClickListener {
-                showDialog { time, name ->
-                    val diaryItem = viewModel.generateRandomItem(idUser, time, name)
-                    uiScope.launch {
-                        viewModel.saveDiary(diaryItem).collect { state ->
-                            when (state) {
-                                is AppState.Success -> {
-                                    adapter.addItem(diaryItem)
-                                }
-                                is AppState.Error -> {
-                                    context?.showToast(state.error?.message)
-                                }
-                                is AppState.Loading -> {
-                                    context?.showToast("Loading")
-                                }
-                            }
-                        }
-                    }
-                }
+        viewModel.getDiary(idUser)
+        binding.addDiaryButton.setOnClickListener {
+            showDialog { time, name ->
+                val diaryItem = viewModel.generateRandomItem(idUser, time, name)
+                viewModel.saveDiary(diaryItem)
             }
         }
     }
@@ -144,32 +127,39 @@ class CalorieCalculatorFragment :
                 resources.getString(R.string.format_challenge, fat.first, fat.second)
             carbohydratesValueTextView.text =
                 resources.getString(R.string.format_challenge, carb.first, carb.second)
+            val total = TotalFoodResult(
+                calorieSum = kotlin.random.Random.nextDouble(300.0, 3000.0),
+                calorieSumMax = kotlin.random.Random.nextDouble(1500.0, 3000.0),
+                proteinSumMax = protein.second.toDouble(),
+                proteinSum = protein.first.toDouble(),
+                fatSum = fat.first.toDouble(),
+                fatSumMax = fat.second.toDouble(),
+                carbohydrateSumMax = 0.0,
+                carbohydrateSum = 0.0
+            )
+            mainViewModel.initCircle(total)
         }
 
-    private suspend fun getDiary() {
-        viewModel.getDiary(idUser).collect { state ->
-            when (state) {
-                is AppState.Loading -> {
-                    binding.root.context.showToast("LOADING")
-                    binding.diaryCardView.hide()
-                }
 
-                is AppState.Success -> {
-                    binding.diaryCardView.show()
-                    initRcView(state.data)
-                }
-
-                is AppState.Error -> {
-                    binding.diaryCardView.hide()
+    private fun setState(state: AppState<*>) {
+        when (state) {
+            is AppState.Error -> context?.showToast(state.error?.message)
+            is AppState.Loading -> context?.showToast("LOADING")
+            is AppState.Success -> {
+                when (val item = state.data) {
+                    is List<*> -> {
+                        when (item.firstOrNull()) {
+                            is DiaryItem -> {
+                                initRcView(state.data as MutableList<DiaryItem>)
+                            }
+                        }
+                    }
+                    is Triple<*, *, *> -> {
+                        item as Triple<Pair<Int, Int>, Pair<Int, Int>, Pair<Int, Int>>
+                        initCalories(item.first, item.second, item.third)
+                    }
                 }
             }
-        }
-    }
-
-    private fun setState(state: SampleState) {
-        if (state.calorie != null) {
-            val calorie = state.calorie
-            initCalories(calorie.first, calorie.second, calorie.third)
         }
     }
 
