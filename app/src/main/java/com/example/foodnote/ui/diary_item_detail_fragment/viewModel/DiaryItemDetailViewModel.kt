@@ -9,10 +9,8 @@ import com.example.foodnote.data.model.food.FoodDto
 import com.example.foodnote.data.model.food.TotalFoodResult
 import com.example.foodnote.data.repository.datastore_pref_repository.UserPreferencesRepository
 import com.example.foodnote.ui.base.viewModel.BaseViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class DiaryItemDetailViewModel(
     private val dataStorePref: UserPreferencesRepository,
@@ -46,9 +44,8 @@ class DiaryItemDetailViewModel(
         }
     }
 
-    suspend fun saveFood(item: FoodDto) = withContext(Dispatchers.IO) {
-        interactor.saveDiaryItem(stateLiveData.value!!.diaryItem!!, item)
-    }
+    fun saveFood(item: FoodDto) = interactor.saveDiaryItem(stateLiveData.value!!.diaryItem!!, item)
+
 
     fun calculateTotalData(list: List<FoodDto>) {
         viewModelScope.launch {
@@ -62,23 +59,24 @@ class DiaryItemDetailViewModel(
         }
     }
 
-    suspend fun saveTotalCalculate(item: TotalFoodResult) = withContext(Dispatchers.IO) {
+    fun saveTotalCalculate(item: TotalFoodResult):
+            Flow<AppState<String>> {
         val diaryItem = stateLiveData.value!!.diaryItem!!.apply {
             calories = item.calorieSum.toLong()
             proteinSum = item.proteinSum
             fatSum = item.fatSum
             carbSum = item.carbohydrateSum
         }
-        interactor.saveDiaryItem(diaryItem, null)
+        return interactor.saveDiaryItem(diaryItem, null)
     }
+
 
     fun calculateTotalData() {
 
     }
 
-    suspend fun getSavedFoodCollection(idUser: String, dbId: String)
-            : Flow<AppState<List<FoodDto>>> = withContext(Dispatchers.IO) {
+    fun getSavedFoodCollection(idUser: String, dbId: String) =
         interactor.getSavedFoodCollection(idUser, dbId)
-    }
+
 
 }

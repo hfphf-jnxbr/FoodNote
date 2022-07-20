@@ -43,9 +43,8 @@ class CalorieCalculatorFragment :
     private val adapter by lazy {
         CalorieCalculatorAdapter(this)
     }
-    private val totalViewAdapter by lazy {
-        TotalViewAdapter(this)
-    }
+    private var totalViewAdapter: TotalViewAdapter? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,12 +64,12 @@ class CalorieCalculatorFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        totalViewAdapter = TotalViewAdapter(this)
         initView()
     }
 
     private fun initView() {
         initDate()
-        initCircle()
         initStartData()
         initPager()
     }
@@ -79,10 +78,6 @@ class CalorieCalculatorFragment :
         viewModel.getUserId().collect {
             idUser = it
         }
-    }
-
-    private fun initCircle() = with(binding) {
-        //circleDiagramView.start(1420, 1500, 100, 150, 24, 70)
     }
 
     private fun initStartData() {
@@ -210,5 +205,10 @@ class CalorieCalculatorFragment :
         val action = CalorieCalculatorFragmentDirections
             .actionCalorieCalculatorFragmentToDiaryItemDetailFragment(item)
         navController.navigate(action)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        totalViewAdapter = null
     }
 }
