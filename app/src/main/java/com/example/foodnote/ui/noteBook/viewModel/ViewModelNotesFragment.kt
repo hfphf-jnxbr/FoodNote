@@ -22,6 +22,8 @@ class ViewModelNotesFragment(private val notesDao: DaoDB) : ViewModel() , ViewMo
     fun getLiveData() = liveData
 
     override fun loadDataNote() {
+        liveData.value = StateDataNotes.Loading("Loading")
+
         scope.launch {
             val dataStandardNotes = notesDao.getAllNotesStandard()
             val dataPaintNotes = notesDao.getAllNotesPaint()

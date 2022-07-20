@@ -35,4 +35,6 @@ object Const {
     const val TABLE_PAINT = "notePaint"
     const val TABLE_STANDARD = "noteStandard"
     const val TABLE_FOOD = "noteFood"
+
+    const val IS_FIRST_RUN = "isFirstRun"
 }

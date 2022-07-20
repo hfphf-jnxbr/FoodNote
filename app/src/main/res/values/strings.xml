@@ -88,4 +88,6 @@
     <string name="pix_string">Pix</string>
     <string name="water">Вода</string>
     <string name="select_sex">Выберите пол</string>
+    <string name="name_splash_app">FoodNote</string>
+    <string name="loading_splash">Loading ...</string>
 </resources>
