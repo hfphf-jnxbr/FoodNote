@@ -55,7 +55,7 @@
     <string name="network_error_mess">Network ERROR</string>
     <string name="general">General:</string>
     <string name="search">search</string>
-    <string name="recipe_search">Recipe search</string>
+    <string name="recipe_search">recipe search</string>
     <string name="color_selection">color selection</string>
     <string name="alpha">alpha</string>
     <string name="ok">OK</string>
@@ -76,6 +76,8 @@
     <string name="male">М</string>
     <string name="female">Ж</string>
     <string name="select_meta">Выберите цель</string>
+    <string name="select_weight">Выберите вес</string>
+    <string name="select_height">Выберите рост</string>
     <string-array name="type_modes">
         <item>Похудеть</item>
         <item>Набрать вес</item>
@@ -84,6 +86,8 @@
     <string name="alpha_0">Alpha 0</string>
     <string name="alpha_string">Alpha</string>
     <string name="pix_string">Pix</string>
+    <string name="water">Вода</string>
+    <string name="select_sex">Выберите пол</string>
     <string name="name_splash_app">FoodNote</string>
     <string name="loading_splash">Loading ...</string>
 </resources>

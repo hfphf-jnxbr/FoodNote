@@ -2,14 +2,12 @@ package com.example.foodnote.ui.calorie_calculator_fragment.viewModel
 
 
 import androidx.lifecycle.viewModelScope
-import com.example.foodnote.data.base.SampleState
+import com.example.foodnote.data.base.AppState
 import com.example.foodnote.data.interactor.calorie_interactor.CalorieCalculatorInteractor
 import com.example.foodnote.data.model.DiaryItem
 import com.example.foodnote.data.repository.datastore_pref_repository.UserPreferencesRepository
 import com.example.foodnote.ui.base.viewModel.BaseViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.random.Random
@@ -18,16 +16,9 @@ class CalorieCalculatorViewModel(
     private val interactor: CalorieCalculatorInteractor,
     dataStorePref: UserPreferencesRepository
 ) :
-    BaseViewModel<SampleState>(dataStorePref) {
-    init {
-        stateLiveData.value = SampleState()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        stateLiveData.value = SampleState()
-    }
-
+    BaseViewModel<AppState<*>>(dataStorePref) {
+    private val diaryList = ArrayList<DiaryItem>()
+    private val currentDate = SimpleDateFormat("dd.MMMM.YYYY").format(Date())
     fun initCalorie() {
         viewModelScope.launch {
             kotlin.runCatching {
@@ -46,9 +37,9 @@ class CalorieCalculatorViewModel(
                     ),
                 )
             }.onSuccess {
-                stateLiveData.value = stateLiveData.value?.copy(calorie = it)
+                stateLiveData.value = AppState.Success(it)
             }.onFailure {
-                stateLiveData.value = stateLiveData.value?.copy(error = it)
+                stateLiveData.value = AppState.Error<Throwable>(it)
             }
         }
     }
@@ -58,39 +49,46 @@ class CalorieCalculatorViewModel(
             name,
             0,
             time,
-            SimpleDateFormat("dd.MMMM.YYYY").format(Date()),
+            currentDate,
             idUser,
             UUID.randomUUID().toString()
         )
-        stateLiveData.value?.diaryList?.add(item)
+        diaryList.add(item)
         return item
     }
 
-    suspend fun getDiary(idUser: String) = withContext(Dispatchers.IO) {
-        interactor
-            .getDiaryCollection(
-                SimpleDateFormat("dd.MMMM.YYYY")
-                    .format(Date()),
-                idUser
-            )
+    fun getDiary(idUser: String) {
+        viewModelScope.launch {
+            interactor
+                .getDiaryCollection(
+                    currentDate,
+                    idUser
+                ).collect {
+                    stateLiveData.value = it
+                }
+        }
     }
+
 
     fun calculateTotalData() {
         viewModelScope.launch {
             kotlin.runCatching {
-                stateLiveData.value?.diaryList?.let {
+                diaryList.let {
                     interactor.calculateTotalData(it)
                 }
             }.onSuccess {
-                stateLiveData.value = stateLiveData.value?.copy(totalFoodResult = it)
+                stateLiveData.value = AppState.Success(it)
             }.onFailure {
-                stateLiveData.value = stateLiveData.value?.copy(error = it)
+                stateLiveData.value = AppState.Error<Throwable>(it)
             }
         }
     }
 
-    suspend fun saveDiary(item: DiaryItem) = withContext(Dispatchers.IO) {
-        interactor.saveDiary(item)
+    fun saveDiary(item: DiaryItem) {
+        viewModelScope.launch {
+            interactor.saveDiary(item).collect {
+                stateLiveData.value = it
+            }
+        }
     }
-
 }

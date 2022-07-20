@@ -9,30 +9,42 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <com.example.foodnote.ui.base.customView.CircleDiagramView
-            android:id="@+id/circleDiagramView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/waterButton"
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginHorizontal="18dp"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
-            app:cardCornerRadius="44dp"
-            app:strokeColor="#D5D5D5"
-            app:strokeWidth="2dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/circleDiagramView">
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <com.example.foodnote.ui.base.customView.WaterButton
-                android:id="@+id/waterButtonView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#D4F8F5" />
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pager"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tab_layout" />
 
-        </com.google.android.material.card.MaterialCardView>
+        <!--        <com.google.android.material.card.MaterialCardView-->
+        <!--            android:id="@+id/waterButton"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="100dp"-->
+        <!--            android:layout_marginHorizontal="18dp"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:cardCornerRadius="44dp"-->
+        <!--            app:strokeColor="#D5D5D5"-->
+        <!--            app:strokeWidth="2dp"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/circleDiagramView">-->
+
+        <!--            <com.example.foodnote.ui.base.customView.WaterButton-->
+        <!--                android:id="@+id/waterButtonView"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="match_parent"-->
+        <!--                android:background="#D4F8F5" />-->
+
+        <!--        </com.google.android.material.card.MaterialCardView>-->
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/day_week_material_text_view"
@@ -42,7 +54,7 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/waterButton"
+            app:layout_constraintTop_toBottomOf="@id/pager"
             tools:text="понедельник 27.июн" />
 
         <androidx.cardview.widget.CardView

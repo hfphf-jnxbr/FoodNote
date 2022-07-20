@@ -7,27 +7,33 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
 import com.example.foodnote.data.base.RetrofitImpl
+import com.example.foodnote.data.base.firebase.FireBaseDataSourceImpl
+import com.example.foodnote.data.base.firebase.FirebaseDataSource
 import com.example.foodnote.data.databaseRoom.DataBase
 import com.example.foodnote.data.databaseRoom.dao.DaoDB
-import com.example.foodnote.data.datasource.calorire_datasource.firebase.FireBaseCalorieDataSourceImpl
-import com.example.foodnote.data.datasource.calorire_datasource.firebase.FirebaseCalorieDataSource
 import com.example.foodnote.data.datasource.diary_item_detail_repository.DiaryItemDetailDatasource
 import com.example.foodnote.data.datasource.diary_item_detail_repository.DiaryItemDetailDatasourceImpl
 import com.example.foodnote.data.interactor.calorie_interactor.CalorieCalculatorInteractor
 import com.example.foodnote.data.interactor.calorie_interactor.CalorieCalculatorInteractorImpl
 import com.example.foodnote.data.interactor.diary_item_detail_interactor.DiaryItemDetailInteractor
 import com.example.foodnote.data.interactor.diary_item_detail_interactor.DiaryItemDetailInteractorImpl
+import com.example.foodnote.data.interactor.settings_interactor.SettingInteractor
+import com.example.foodnote.data.interactor.settings_interactor.SettingInteractorImpl
 import com.example.foodnote.data.repository.calorie_repository.CalorieRepository
 import com.example.foodnote.data.repository.calorie_repository.CalorieRepositoryImpl
 import com.example.foodnote.data.repository.datastore_pref_repository.UserPreferencesRepository
 import com.example.foodnote.data.repository.datastore_pref_repository.UserPreferencesRepositoryImpl
 import com.example.foodnote.data.repository.diary_item_detail_repository.DiaryItemDetailRepository
 import com.example.foodnote.data.repository.diary_item_detail_repository.DiaryItemDetailRepositoryImpl
+import com.example.foodnote.data.repository.settings_repository.SettingRepository
+import com.example.foodnote.data.repository.settings_repository.SettingRepositoryImpl
 import com.example.foodnote.ui.auth_fragment.viewModel.AuthViewModel
+import com.example.foodnote.ui.base.viewModel.MainViewModel
 import com.example.foodnote.ui.calorie_calculator_fragment.viewModel.CalorieCalculatorViewModel
 import com.example.foodnote.ui.diary_item_detail_fragment.viewModel.DiaryItemDetailViewModel
 import com.example.foodnote.ui.noteBook.viewModel.ViewModelConstructorFragment
 import com.example.foodnote.ui.noteBook.viewModel.ViewModelNotesFragment
+import com.example.foodnote.ui.settings_fragment.viewModel.SettingsViewModel
 import com.example.foodnote.ui.splash_screen_fragment.viewModel.SplashScreenViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
@@ -55,6 +61,12 @@ val applicationModule = module {
     }
 
 }
+
+val activityMainScreenModule = module {
+    viewModel {
+        MainViewModel(get(named(NAME_PREF_APP_REPOSITORY)))
+    }
+}
 val splashScreenModule = module {
     viewModel {
         SplashScreenViewModel(get(named(NAME_PREF_APP_REPOSITORY)))
@@ -75,8 +87,8 @@ val dataStoreModule = module {
     }
 }
 val calorieCalculatorScreenModule = module {
-    factory<FirebaseCalorieDataSource> {
-        FireBaseCalorieDataSourceImpl(get(named(NAME_DATASOURCE_FIREBASE)))
+    factory<FirebaseDataSource> {
+        FireBaseDataSourceImpl(get(named(NAME_DATASOURCE_FIREBASE)))
     }
 
     factory<CalorieRepository> {
@@ -99,8 +111,8 @@ val authScreenModule = module {
 
 
 val diaryItemDetailScreenModule = module {
-    factory<FirebaseCalorieDataSource> {
-        FireBaseCalorieDataSourceImpl(get(named(NAME_DATASOURCE_FIREBASE)))
+    factory<FirebaseDataSource> {
+        FireBaseDataSourceImpl(get(named(NAME_DATASOURCE_FIREBASE)))
     }
 
     factory<DiaryItemDetailDatasource> {
@@ -127,5 +139,23 @@ val noteBookModule = module {
 
     viewModel(named(VIEW_MODEL_NOTES)) { (dao : DaoDB) ->
         ViewModelNotesFragment(dao)
+    }
+}
+
+val settingScreenModule = module {
+    factory<FirebaseDataSource> {
+        FireBaseDataSourceImpl(get(named(NAME_DATASOURCE_FIREBASE)))
+    }
+
+    factory<SettingRepository> {
+        SettingRepositoryImpl(get())
+    }
+
+    factory<SettingInteractor> {
+        SettingInteractorImpl(get())
+    }
+
+    viewModel {
+        SettingsViewModel(get(named(NAME_PREF_APP_REPOSITORY)), get())
     }
 }
