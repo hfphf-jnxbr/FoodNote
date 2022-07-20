@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
+import com.example.foodnote.ui.base.customView.AnimatorX.ValueAnimatorX
 import com.example.foodnote.ui.base.customView.customViewInterfaces.WaterButtonInterface
 import kotlin.math.cos
 import kotlin.math.round
@@ -36,15 +37,28 @@ class WaterButton @JvmOverloads constructor(context : Context, attrs : Attribute
 
     private var marginText = 20f
 
+    private lateinit var canvas: Canvas
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        this.canvas = canvas
 
-        drawWater(canvas)
+        animWater.render()
+
         drawText(canvas)
         invalidate()
     }
 
-    private fun drawWater(canvas: Canvas) {
+
+
+    private val animWater = ValueAnimatorX.ofValue(0f, 5000f).apply {
+        vectorFunction { x -> if (x > x2) {currentX = x1}
+            2f
+        }
+        render { parameter -> drawWater(parameter) }
+    }
+////////////////
+    private fun drawWater(parameter : Float) {
         val maxWaterH = ((width * currentWaterValue) / maxWaterValue).toFloat()
 
         var x = startX
@@ -54,8 +68,9 @@ class WaterButton @JvmOverloads constructor(context : Context, attrs : Attribute
             drawLineWater(value,canvas,x)
             x += stopX/height
         }
-        parameter += speed
     }
+
+
 
     private fun drawText(canvas: Canvas) {
         val string = "${currentWaterValue}/${maxWaterValue} милл"
