@@ -15,7 +15,7 @@ class TotalViewAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
     override fun getItemCount(): Int = fragments.size
     override fun createFragment(position: Int) =
         when (position) {
-            FragmentIndex.CIRCLE_FRAGMENT.value.first -> fragments[FragmentIndex.CIRCLE_FRAGMENT.value.first]
+            FragmentIndex.CIRCLE_FRAGMENT.value.first -> CircleFragment()
             FragmentIndex.WATER_FRAGMENT.value.first -> fragments[FragmentIndex.WATER_FRAGMENT.value.first]
             else -> fragments[FragmentIndex.CIRCLE_FRAGMENT.value.first]
         }

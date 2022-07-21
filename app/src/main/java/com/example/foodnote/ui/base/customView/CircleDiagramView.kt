@@ -180,11 +180,11 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
     }
 
     private fun createRect(width: Int) {
-        rectF = RectF(0f + radiuse,0f + radiuse, width.toFloat() - radiuse, width.toFloat() - radiuse)
+        this.radiuse = width / 6f
+        rectF =
+            RectF(0f + radiuse, 0f + radiuse, width.toFloat() - radiuse, width.toFloat() - radiuse)
         rectF2 = RectF(widthDiagram + radiuse,widthDiagram + radiuse,width.toFloat() - widthDiagram - radiuse,width.toFloat() - widthDiagram - radiuse)
         rectF3 = RectF(widthDiagram*2 + radiuse,widthDiagram*2 + radiuse,width.toFloat() - widthDiagram*2 - radiuse,width.toFloat() - widthDiagram*2 - radiuse)
-
-        this.radiuse = width / 6f
     }
 
     override fun start(x1 : Int, maxCalories : Int,x2 : Int, maxFats :Int , x3 : Int, maxProtein : Int) {
