@@ -9,6 +9,10 @@
         android:icon="@drawable/diary_icon"
         android:title="@string/calculator" />
     <item
+        android:id="@+id/anotherFragment"
+        android:icon="@drawable/ic_profile"
+        android:title="@string/profile" />
+    <item
         android:id="@+id/recipesFragment"
         android:icon="@drawable/ic_cook"
         android:title="@string/recipes" />
@@ -16,8 +20,4 @@
         android:id="@+id/settingsFragment"
         android:icon="@drawable/ic_settings"
         android:title="@string/settings" />
-    <item
-        android:id="@+id/anotherFragment"
-        android:icon="@drawable/ic_profile"
-        android:title="@string/other" />
 </menu>
