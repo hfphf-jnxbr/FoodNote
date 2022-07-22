@@ -55,7 +55,7 @@
     <string name="network_error_mess">Network ERROR</string>
     <string name="general">General:</string>
     <string name="search">search</string>
-    <string name="recipe_search">recipe search</string>
+    <string name="recipe_search">Recipe search</string>
     <string name="color_selection">color selection</string>
     <string name="alpha">alpha</string>
     <string name="ok">OK</string>
@@ -90,4 +90,8 @@
     <string name="select_sex">Выберите пол</string>
     <string name="name_splash_app">FoodNote</string>
     <string name="loading_splash">Loading ...</string>
+    <string name="night_theme">Night theme</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="you_profile">You profile</string>
+    <string name="profile">Profile</string>
 </resources>

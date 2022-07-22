@@ -51,7 +51,7 @@
             android:layout_height="27dp"
             android:layout_marginStart="8dp"
             android:layout_marginBottom="4dp"
-            android:backgroundTint="#EEFFF5"
+            android:backgroundTint="#E6FBEF"
             android:textSize="6sp"
             app:cardCornerRadius="@dimen/margin_16dp"
             app:cornerRadius="0dp"
