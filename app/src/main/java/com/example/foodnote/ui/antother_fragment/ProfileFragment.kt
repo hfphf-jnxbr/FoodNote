@@ -1,9 +1,16 @@
 package com.example.foodnote.ui.antother_fragment
 
 import android.animation.ObjectAnimator
+import android.app.Activity.RESULT_OK
+import android.content.Intent
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
 import android.os.Looper
+import android.provider.DocumentsContract
+import android.provider.MediaStore
 import android.util.Property
 import android.view.View
 import android.view.animation.AlphaAnimation
@@ -26,8 +33,10 @@ import com.example.foodnote.ui.base.BaseViewBindingFragment
 import com.example.foodnote.ui.settings_fragment.SettingsFragment
 import com.example.foodnote.utils.hide
 import com.example.foodnote.utils.show
+import java.io.File
 
-class AnotherFragment : BaseViewBindingFragment<ProfileFragmentBinding>(ProfileFragmentBinding::inflate) , ViewSwitcher.ViewFactory {
+
+class ProfileFragment : BaseViewBindingFragment<ProfileFragmentBinding>(ProfileFragmentBinding::inflate) , ViewSwitcher.ViewFactory {
 
     companion object {
         const val DAY = "day"
@@ -50,6 +59,7 @@ class AnotherFragment : BaseViewBindingFragment<ProfileFragmentBinding>(ProfileF
         chekSwitch()
         editProfile()
         backArrow()
+        editAvatar()
 
         Handler(Looper.myLooper()!!).postDelayed({
             animation(binding.root)
@@ -57,8 +67,59 @@ class AnotherFragment : BaseViewBindingFragment<ProfileFragmentBinding>(ProfileF
         }, 0)
     }
 
+    private fun editAvatar() {
+        binding.cardAvatar.setOnClickListener {
+            if (flagBlockBekArrow) {
+                val photoPickerIntent = Intent(Intent.ACTION_GET_CONTENT)
+                photoPickerIntent.type = "image/*"
+                startActivityForResult(photoPickerIntent, 1)
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            1 -> { if (resultCode == RESULT_OK) {
+                val chosenImageUri: Uri = (data?.data ?: "") as Uri
+
+                try {
+                    val wholeID = DocumentsContract.getDocumentId(chosenImageUri)
+                    val id = wholeID.split(":").toTypedArray()[1]
+
+                    val column = arrayOf(MediaStore.Images.Media.DATA)
+
+                    val sel = MediaStore.Images.Media._ID + "=?"
+
+                    val cursor = requireActivity().contentResolver.query(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        column, sel, arrayOf(id), null
+                    )
+
+                    val filePath: String
+
+                    if (cursor != null) {
+                        val columnIndex: Int = cursor.getColumnIndex(column[0])
+
+                        if (cursor.moveToFirst()) {
+                            filePath = cursor.getString(columnIndex)
+                            loadPhotoAvatar(filePath)
+                        }
+                        cursor.close()
+                    }
+                } catch (e : Exception) {}
+            } }
+        }
+    }
+
+    private fun loadPhotoAvatar(filePath : String) {
+        val bitmap = BitmapFactory.decodeFile(filePath)
+        binding.photoProfile.setImageBitmap( bitmap )
+    }
+
     private fun backArrow() = with(binding) {
         binding.back.hide()
+        flagBlockBekArrow = false
         binding.back.setOnClickListener {
 
             if(flagBlockBekArrow) {
