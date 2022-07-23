@@ -27,7 +27,7 @@ import com.example.foodnote.ui.settings_fragment.SettingsFragment
 import com.example.foodnote.utils.hide
 import com.example.foodnote.utils.show
 
-class AnotherFragment : BaseViewBindingFragment<ProfileFragmentBinding>(ProfileFragmentBinding::inflate) , ViewSwitcher.ViewFactory {
+class ProfileFragment : BaseViewBindingFragment<ProfileFragmentBinding>(ProfileFragmentBinding::inflate) , ViewSwitcher.ViewFactory {
 
     companion object {
         const val DAY = "day"

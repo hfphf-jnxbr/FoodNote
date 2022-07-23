@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    tools:background="#D1D9E8"
+    tools:background="@drawable/night_image_low"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -35,7 +35,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView8"
-        app:strokeColor="#D5C9C9"
+        app:strokeColor="#D5CACA"
         app:strokeWidth="2dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -63,7 +63,7 @@
                 app:cardCornerRadius="250dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:strokeColor="#FFA0A0"
+                app:strokeColor="#F48686"
                 app:strokeWidth="2dp">
 
                 <ImageView
@@ -186,13 +186,19 @@
         android:layout_height="90dp"
         android:layout_marginHorizontal="@dimen/margin_16dp"
         android:layout_marginTop="@dimen/margin_16dp"
-        android:backgroundTint="#FFFFFF"
+        android:backgroundTint="#F5FFFF"
         app:cardCornerRadius="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/materialCardView2"
         app:strokeColor="#FBC02D"
         app:strokeWidth="2dp">
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:alpha="0.7"
+            android:src="@drawable/texture_line"/>
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -218,6 +224,16 @@
         app:layout_constraintTop_toBottomOf="@+id/viewSun">
 
     </ImageView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#9A9A9A"
+        android:layout_marginStart="@dimen/squareColor_24dp"
+        android:layout_marginBottom="12dp"
+        android:text="NoteFood 2022"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
