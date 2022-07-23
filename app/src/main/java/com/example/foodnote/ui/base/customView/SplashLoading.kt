@@ -9,7 +9,7 @@ import com.example.foodnote.ui.base.customView.AnimatorX.ValueAnimatorX
 
 class SplashLoading @JvmOverloads constructor(context : Context, attrs : AttributeSet? = null, style: Int = 0) : View(context,attrs,style) {
 
-    private val paintText = Paint().apply { color = Color.argb(255,150, 150, 170)
+    private val paintText = Paint().apply { color = Color.argb(255,150, 150, 150)
         isAntiAlias = true
         textSize = 90f
         typeface = Typeface.createFromAsset(context.assets, "fonts/aquire.otf")

@@ -4,12 +4,14 @@ package com.example.foodnote.ui.calorie_calculator_fragment
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.ScrollCaptureCallback
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TimePicker
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager2.widget.ViewPager2
 import com.example.foodnote.R
 import com.example.foodnote.data.base.AppState
 import com.example.foodnote.data.model.DiaryItem
@@ -25,6 +27,7 @@ import com.example.foodnote.ui.calorie_calculator_fragment.viewModel.CalorieCalc
 import com.example.foodnote.utils.showToast
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.launch
+import org.koin.androidx.scope.scopeActivity
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.time.LocalDate
@@ -96,20 +99,38 @@ class CalorieCalculatorFragment :
         }
     }
 
-    private fun initPager() {
+    private fun initPager() = with(binding) {
         viewModel.initCalorie()
-        binding.pager.adapter = totalViewAdapter
-        TabLayoutMediator(binding.tabLayout, binding.pager) { tab, position ->
-            when (position) {
-                FragmentIndex.CIRCLE_FRAGMENT.value.first -> {
-                    tab.text = context?.getString(FragmentIndex.CIRCLE_FRAGMENT.value.second)
-                }
-                FragmentIndex.WATER_FRAGMENT.value.first -> {
-                    tab.text = context?.getString(FragmentIndex.WATER_FRAGMENT.value.second)
+        pager.adapter = totalViewAdapter
+
+        diagrams.elevation = 20f
+        buttonRight.setOnClickListener {
+            if(pager.currentItem != 1) {
+                pager.setCurrentItem(1,true)
+                customTextView.setText("Water")
+            }
+        }
+
+        pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                if(position == 0) {
+                    customTextView.setText("Circles")
+                } else {
+                    customTextView.setText("Water")
                 }
             }
-        }.attach()
+        })
+
+        buttonLeft.setOnClickListener {
+            if(pager.currentItem != 0) {
+                pager.setCurrentItem(0, true)
+                customTextView.setText("Circles")
+            }
+        }
     }
+
+
 
     private fun initDate() = with(binding) {
         val current = LocalDateTime.now()
