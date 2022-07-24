@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/notesFragment"
-        android:icon="@drawable/book"
+        android:icon="@drawable/ic_baseline_book_24"
         android:title="@string/notebook" />
     <item
         android:id="@+id/calorieCalculatorFragment"
