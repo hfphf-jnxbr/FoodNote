@@ -52,7 +52,7 @@ class WaterButton @JvmOverloads constructor(context : Context, attrs : Attribute
     private val valueFunctionX = ValueFunctionX()
 
     private val animWater = ValueAnimatorX.ofValue(0f, 5000f).apply {
-        vectorFunction { x -> if (x > x2) {currentX = x1} ; 2f }
+        vectorFunction { x -> if (x >= x2) {currentX = x1} ; 2f }
         render { parameter -> drawWater(parameter) }
     }
 ////////////////

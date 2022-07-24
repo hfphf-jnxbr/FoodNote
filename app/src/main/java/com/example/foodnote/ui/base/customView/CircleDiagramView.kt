@@ -2,10 +2,7 @@ package com.example.foodnote.ui.base.customView
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.RectF
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import com.example.foodnote.ui.base.customView.AnimatorX.ValueAnimatorX
@@ -57,7 +54,7 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
 
     private val paintSmallText = Paint().apply { color = Color.rgb(135, 135, 135)
         isAntiAlias = true
-        textSize = 35f
+        textSize = 29f
     }
 
     private val paintLine = Paint().apply { color = Color.rgb(255, 255, 255)
@@ -157,16 +154,22 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
             val x = width/2f + (width/2f - radiuse/2 - 32) * cos(- (angle * 2 * PI) / 360).toFloat()
             val y = width/2f - (width/2f - radiuse/2 - 32) * sin(- (angle * 2 * PI) / 360).toFloat()
 
-            val x2 = width/2f + (width/2f - radiuse/2 ) * cos(- (angle * 2 * PI) / 360).toFloat()
-            val y2 = width/2f - (width/2f - radiuse/2 ) * sin(- (angle * 2 * PI) / 360).toFloat()
-
             canvas.drawLine(width/2f,width/2f, x, y, paintLine)
             canvas.drawCircle(x, y,25f,paintLine)
 
-            if(angle <= 180) {
-                canvas.drawText(text,x2 - 90f,y2 + 32f,paintSmallText)
+            val x2 = width/2f + (width/2f - radiuse/2 - 32) * cos(- (angle * 2 * PI) / 360).toFloat()
+            val y2 = width/2f - (width/2f - radiuse/2 - 32) * sin(- (angle * 2 * PI) / 360).toFloat()
+
+            val widthText = paintSmallText.measureText(text)
+
+            val bounds = Rect()
+            paintSmallText.getTextBounds(text, 0, text.length, bounds)
+            val heightText: Int = bounds.height()
+
+           if(angle <= 180) {
+                canvas.drawText(text,x2 - widthText/2f,y2 + heightText/2f + 44f,paintSmallText)
             } else {
-                canvas.drawText(text,x2 - 90f,y2 - 18f ,paintSmallText)
+                canvas.drawText(text,x2 - widthText/2f,y2 + heightText/2f - 44f,paintSmallText)
             }
         }
     }
@@ -181,8 +184,7 @@ class CircleDiagramView @JvmOverloads constructor(context : Context, attrs : Att
 
     private fun createRect(width: Int) {
         this.radiuse = width / 6f
-        rectF =
-            RectF(0f + radiuse, 0f + radiuse, width.toFloat() - radiuse, width.toFloat() - radiuse)
+        rectF = RectF(0f + radiuse, 0f + radiuse, width.toFloat() - radiuse, width.toFloat() - radiuse)
         rectF2 = RectF(widthDiagram + radiuse,widthDiagram + radiuse,width.toFloat() - widthDiagram - radiuse,width.toFloat() - widthDiagram - radiuse)
         rectF3 = RectF(widthDiagram*2 + radiuse,widthDiagram*2 + radiuse,width.toFloat() - widthDiagram*2 - radiuse,width.toFloat() - widthDiagram*2 - radiuse)
     }
