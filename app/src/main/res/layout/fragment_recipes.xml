@@ -33,6 +33,13 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <TextView
+        android:id="@+id/ddddd"
+        android:text="dddddddd"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
 <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/recyclerViewRecipes"
     android:layout_width="match_parent"
