@@ -18,7 +18,9 @@ class App : Application() {
                     dataStoreModule,
                     authScreenModule,
                     splashScreenModule,
-                    diaryItemDetailScreenModule
+                    diaryItemDetailScreenModule,
+                    settingScreenModule,
+                    activityMainScreenModule
                 )
             )
         }

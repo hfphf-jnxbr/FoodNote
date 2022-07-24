@@ -1,4 +1,4 @@
-package com.example.foodnote.ui.calorie_calculator_fragment.adapter
+package com.example.foodnote.ui.calorie_calculator_fragment.adapter.rc_view_adapter
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
