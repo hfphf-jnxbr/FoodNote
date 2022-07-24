@@ -96,4 +96,5 @@
     <string name="profile">Profile</string>
     <string name="profile_header">Ваш профиль</string>
     <string name="save_profile">Сохранить профиль</string>
+    <string name="info_app">Info app</string>
 </resources>
