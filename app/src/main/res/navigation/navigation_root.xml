@@ -35,9 +35,13 @@
 
     <fragment
         android:id="@+id/anotherFragment"
-        android:name="com.example.foodnote.ui.antother_fragment.ProfileFragment"
+        android:name="com.example.foodnote.ui.profile.ProfileFragment"
         android:label="fragment_another"
-        tools:layout="@layout/fragment_another" />
+        tools:layout="@layout/fragment_another" >
+        <action
+            android:id="@+id/action_anotherFragment_to_authFragment"
+            app:destination="@id/authFragment" />
+    </fragment>
     <fragment
         android:id="@+id/authFragment"
         android:name="com.example.foodnote.ui.auth_fragment.AuthFragment"

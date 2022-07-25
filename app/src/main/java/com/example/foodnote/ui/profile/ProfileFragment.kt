@@ -1,18 +1,22 @@
-package com.example.foodnote.ui.antother_fragment
+package com.example.foodnote.ui.profile
 
 import android.animation.ObjectAnimator
 import android.app.Activity.RESULT_OK
+import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.provider.DocumentsContract
 import android.provider.MediaStore
+import android.util.Log
 import android.util.Property
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.view.animation.AnticipateOvershootInterpolator
@@ -20,51 +24,111 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ViewSwitcher
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.doOnEnd
+import androidx.navigation.fragment.findNavController
 import androidx.transition.ChangeBounds
 import androidx.transition.TransitionManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.foodnote.R
+import com.example.foodnote.data.model.DiaryItem
+import com.example.foodnote.data.repository.datastore_pref_repository.UserPreferencesRepository
 import com.example.foodnote.databinding.ProfileFragmentBinding
+import com.example.foodnote.di.NAME_PREF_APP_REPOSITORY
+import com.example.foodnote.ui.auth_fragment.AuthFragment
 import com.example.foodnote.ui.base.BaseViewBindingFragment
+import com.example.foodnote.ui.calorie_calculator_fragment.CalorieCalculatorFragmentDirections
 import com.example.foodnote.ui.settings_fragment.SettingsFragment
 import com.example.foodnote.utils.hide
 import com.example.foodnote.utils.show
-import java.io.File
-
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.common.api.ApiException
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
+import org.koin.android.ext.android.inject
+import org.koin.core.qualifier.named
 
 class ProfileFragment : BaseViewBindingFragment<ProfileFragmentBinding>(ProfileFragmentBinding::inflate) , ViewSwitcher.ViewFactory {
 
-    companion object {
-        const val DAY = "day"
+    private companion object {
+        const val DAY = "light"
         const val NIGHT = "night"
         const val STACK = "STACK_NEW"
         const val DURATION_ANIMATION_ALPHA = 1000L
         const val DURATION_ANIMATION_AVATAR = 1200L
     }
 
+    private val userPreferencesRepository : UserPreferencesRepository by inject(named(NAME_PREF_APP_REPOSITORY))
+    private val scope = CoroutineScope(Dispatchers.Main)
+
     private val fragment = SettingsFragment()
     private var theme = DAY
     private var saveH = 0
     private var flagBlockBekArrow = true
+    private var jobTheme : Job? = null
+    private var jobAvatar : Job? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         initImageSwitcher()
-        loadTheme()
-        chekSwitch()
+        loadThemeDataStore()
+        loadAvatarDataStore()
+
         editProfile()
         backArrow()
         editAvatar()
+        accountButton()
+    }
 
-        Handler(Looper.myLooper()!!).postDelayed({
-            animation(binding.root)
-            animationExpanded(binding.viewSun)
-        }, 0)
+    private fun loadThemeDataStore() {
+        jobTheme = scope.launch {
+            userPreferencesRepository.theme.collect { nameTheme ->
+                theme = nameTheme
+
+                binding.switchTheme.isChecked = nameTheme != DAY
+
+                loadTheme()
+                showTheme()
+                chekSwitch()
+
+                jobTheme?.cancel()
+            }
+        }
+    }
+
+    private fun loadAvatarDataStore() {
+        jobAvatar = scope.launch {
+            userPreferencesRepository.avatar.collect { filePath ->
+
+                if(filePath != "null") {
+                    loadPhotoAvatar(filePath)
+                }
+                jobAvatar?.cancel()
+            }
+        }
+    }
+
+    private fun saveThemeToDataStore(theme : String) {
+        scope.launch { userPreferencesRepository.setTheme(theme) }
+    }
+
+    private fun saveAvatarToDataStore(path : String) {
+        scope.launch { userPreferencesRepository.setAvatar(path) }
+    }
+
+    private fun accountButton() {
+        binding.accountButton.setOnClickListener { navigateToDiaryDetail() }
+    }
+
+    private fun navigateToDiaryDetail() {
+        val navController = findNavController()
+        val action = ProfileFragmentDirections.actionAnotherFragmentToAuthFragment()
+        navController.navigate(action)
     }
 
     private fun editAvatar() {
@@ -72,16 +136,14 @@ class ProfileFragment : BaseViewBindingFragment<ProfileFragmentBinding>(ProfileF
             if (flagBlockBekArrow) {
                 val photoPickerIntent = Intent(Intent.ACTION_GET_CONTENT)
                 photoPickerIntent.type = "image/*"
-                startActivityForResult(photoPickerIntent, 1)
+                getResult.launch(photoPickerIntent)
             }
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            1 -> { if (resultCode == RESULT_OK) {
-                val chosenImageUri: Uri = (data?.data ?: "") as Uri
+    private val getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == RESULT_OK) {
+                val chosenImageUri: Uri = (it.data?.data ?: "") as Uri
 
                 try {
                     val wholeID = DocumentsContract.getDocumentId(chosenImageUri)
@@ -103,12 +165,13 @@ class ProfileFragment : BaseViewBindingFragment<ProfileFragmentBinding>(ProfileF
 
                         if (cursor.moveToFirst()) {
                             filePath = cursor.getString(columnIndex)
+
+                            saveAvatarToDataStore(filePath)
                             loadPhotoAvatar(filePath)
                         }
                         cursor.close()
                     }
                 } catch (e : Exception) {}
-            } }
         }
     }
 
@@ -133,6 +196,11 @@ class ProfileFragment : BaseViewBindingFragment<ProfileFragmentBinding>(ProfileF
                 flagBlockBekArrow = false
             }
         }
+    }
+
+    private fun showTheme() {
+        animation(binding.root)
+        animationExpanded(binding.viewSun)
     }
 
     private fun editProfile() = with(binding) {
@@ -196,10 +264,14 @@ class ProfileFragment : BaseViewBindingFragment<ProfileFragmentBinding>(ProfileF
     private fun loadTheme() {
         if(theme == DAY) {
             loadImage(R.drawable.sun)
-            binding.mImageSwitcher.setImageResource(R.drawable.day_image_low)
+
+            binding.mImageSwitcher.setImageResource(R.drawable.light2)
+            binding.textHeaderProfile.setTextColor(Color.GRAY)
         } else {
             loadImage(R.drawable.moon)
-            binding.mImageSwitcher.setImageResource(R.drawable.night_image_low)
+
+            binding.mImageSwitcher.setImageResource(R.drawable.dark_night)
+            binding.textHeaderProfile.setTextColor(Color.WHITE)
         }
     }
 
@@ -208,18 +280,27 @@ class ProfileFragment : BaseViewBindingFragment<ProfileFragmentBinding>(ProfileF
     private fun convertDpToPixels(dp: Int) = (dp * requireContext().resources.displayMetrics.density).toInt()
 
     private fun chekSwitch() {
-        binding.switchTheme.setOnClickListener {
-            animation(binding.root)
-            animationClose(binding.viewSun)
-
-            Handler(Looper.myLooper()!!).postDelayed({
-                theme = if(theme == DAY) { NIGHT } else { DAY }
-                loadTheme()
-
-                animation(binding.root)
-                animationExpanded(binding.viewSun)
-            }, DURATION_ANIMATION_AVATAR)
+        binding.switchTheme.setOnCheckedChangeListener { _, _ ->
+           setTheme()
         }
+    }
+
+    private fun setTheme() {
+        animation(binding.root)
+        animationClose(binding.viewSun)
+
+        Handler(Looper.myLooper()!!).postDelayed({
+            theme = if(theme == DAY) {
+                saveThemeToDataStore(NIGHT)
+                NIGHT
+            } else {
+                saveThemeToDataStore(DAY)
+                DAY
+            }
+            loadTheme()
+            showTheme()
+
+        }, DURATION_ANIMATION_AVATAR)
     }
 
     private fun animation(root: ConstraintLayout, timeAnimation: Long = DURATION_ANIMATION_AVATAR, startDelay: Long = 0) {
