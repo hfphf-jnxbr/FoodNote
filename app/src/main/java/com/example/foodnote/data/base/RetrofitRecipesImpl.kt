@@ -7,7 +7,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-class RetrofitImpl {
+class RetrofitRecipesImpl {
 
     fun getService(): ApiService {
         return createRetrofit().create(ApiService::class.java)
@@ -32,8 +32,8 @@ class RetrofitImpl {
             val requestBuilder = original.newBuilder()
                 .url(
                     original.url.newBuilder()
-                        .addQueryParameter("app_id", BuildConfig.EDADIM_APP_Id)
-                        .addQueryParameter("app_key", BuildConfig.EDADIM_APP_KEY)
+                        .addQueryParameter("app_id", BuildConfig.EDADIM_APP_ID_RECIPES)
+                        .addQueryParameter("app_key", BuildConfig.EDADIM_APP_KEY_RECIPES)
                         .build()
                 )
                 .method(original.method, original.body)
@@ -42,5 +42,4 @@ class RetrofitImpl {
         }
         return httpClient.build()
     }
-
 }

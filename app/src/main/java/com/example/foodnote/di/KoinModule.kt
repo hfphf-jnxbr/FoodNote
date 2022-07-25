@@ -7,12 +7,14 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
 import com.example.foodnote.data.base.RetrofitImpl
+import com.example.foodnote.data.base.RetrofitRecipesImpl
 import com.example.foodnote.data.base.firebase.FireBaseDataSourceImpl
 import com.example.foodnote.data.base.firebase.FirebaseDataSource
 import com.example.foodnote.data.databaseRoom.DataBase
 import com.example.foodnote.data.databaseRoom.dao.DaoDB
 import com.example.foodnote.data.datasource.diary_item_detail_repository.DiaryItemDetailDatasource
 import com.example.foodnote.data.datasource.diary_item_detail_repository.DiaryItemDetailDatasourceImpl
+import com.example.foodnote.data.datasource.recipes_datasource.RepositoryRecipesImpl
 import com.example.foodnote.data.interactor.calorie_interactor.CalorieCalculatorInteractor
 import com.example.foodnote.data.interactor.calorie_interactor.CalorieCalculatorInteractorImpl
 import com.example.foodnote.data.interactor.diary_item_detail_interactor.DiaryItemDetailInteractor
@@ -33,6 +35,7 @@ import com.example.foodnote.ui.calorie_calculator_fragment.viewModel.CalorieCalc
 import com.example.foodnote.ui.diary_item_detail_fragment.viewModel.DiaryItemDetailViewModel
 import com.example.foodnote.ui.noteBook.viewModel.ViewModelConstructorFragment
 import com.example.foodnote.ui.noteBook.viewModel.ViewModelNotesFragment
+import com.example.foodnote.ui.recipes_fragment.RecipesViewModel
 import com.example.foodnote.ui.settings_fragment.viewModel.SettingsViewModel
 import com.example.foodnote.ui.splash_screen_fragment.viewModel.SplashScreenViewModel
 import com.google.firebase.firestore.FirebaseFirestore
@@ -131,14 +134,27 @@ val diaryItemDetailScreenModule = module {
         DiaryItemDetailViewModel(get(named(NAME_PREF_APP_REPOSITORY)), get())
     }
 }
-    
+
 val noteBookModule = module {
     viewModel {
         ViewModelConstructorFragment()
     }
 
-    viewModel(named(VIEW_MODEL_NOTES)) { (dao : DaoDB) ->
+    viewModel(named(VIEW_MODEL_NOTES)) { (dao: DaoDB) ->
         ViewModelNotesFragment(dao)
+    }
+}
+
+val recipesModule = module {
+    single(named(DATASOURCE_RECIPES)) { RetrofitRecipesImpl() }
+
+    factory(named(REPOSITORY_RECIPES)) {
+        RepositoryRecipesImpl(get(named(DATASOURCE_RECIPES)))
+    }
+
+    viewModel {
+        RecipesViewModel(
+            get(named(NAME_PREF_APP_REPOSITORY)), get(named(REPOSITORY_RECIPES)))
     }
 }
 
