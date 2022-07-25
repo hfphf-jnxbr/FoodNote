@@ -1,12 +1,12 @@
-package com.example.foodnote.ui.antother_fragment
+package com.example.foodnote.ui.profile
 
 import android.animation.ObjectAnimator
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.provider.DocumentsContract
@@ -20,6 +20,8 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ViewSwitcher
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.doOnEnd
 import androidx.transition.ChangeBounds
@@ -33,12 +35,12 @@ import com.example.foodnote.ui.base.BaseViewBindingFragment
 import com.example.foodnote.ui.settings_fragment.SettingsFragment
 import com.example.foodnote.utils.hide
 import com.example.foodnote.utils.show
-import java.io.File
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 
 
 class ProfileFragment : BaseViewBindingFragment<ProfileFragmentBinding>(ProfileFragmentBinding::inflate) , ViewSwitcher.ViewFactory {
 
-    companion object {
+    private companion object {
         const val DAY = "day"
         const val NIGHT = "night"
         const val STACK = "STACK_NEW"
@@ -60,11 +62,14 @@ class ProfileFragment : BaseViewBindingFragment<ProfileFragmentBinding>(ProfileF
         editProfile()
         backArrow()
         editAvatar()
+        accountButton()
+    }
 
-        Handler(Looper.myLooper()!!).postDelayed({
-            animation(binding.root)
-            animationExpanded(binding.viewSun)
-        }, 0)
+    private fun accountButton() {
+        binding.accountButton.setOnClickListener {
+
+
+        }
     }
 
     private fun editAvatar() {
@@ -136,6 +141,12 @@ class ProfileFragment : BaseViewBindingFragment<ProfileFragmentBinding>(ProfileF
     }
 
     private fun editProfile() = with(binding) {
+
+        Handler(Looper.myLooper()!!).postDelayed({
+            animation(binding.root)
+            animationExpanded(binding.viewSun)
+        }, 0)
+
         editProfile.setOnClickListener {
             saveH = binding.materialCardView2.height
 
@@ -196,10 +207,12 @@ class ProfileFragment : BaseViewBindingFragment<ProfileFragmentBinding>(ProfileF
     private fun loadTheme() {
         if(theme == DAY) {
             loadImage(R.drawable.sun)
-            binding.mImageSwitcher.setImageResource(R.drawable.day_image_low)
+            binding.mImageSwitcher.setImageResource(R.drawable.light2)
+            binding.textHeaderProfile.setTextColor(Color.GRAY)
         } else {
             loadImage(R.drawable.moon)
-            binding.mImageSwitcher.setImageResource(R.drawable.night_image_low)
+            binding.mImageSwitcher.setImageResource(R.drawable.dark_night)
+            binding.textHeaderProfile.setTextColor(Color.WHITE)
         }
     }
 
@@ -208,7 +221,7 @@ class ProfileFragment : BaseViewBindingFragment<ProfileFragmentBinding>(ProfileF
     private fun convertDpToPixels(dp: Int) = (dp * requireContext().resources.displayMetrics.density).toInt()
 
     private fun chekSwitch() {
-        binding.switchTheme.setOnClickListener {
+        binding.switchTheme.setOnCheckedChangeListener { _, _ ->
             animation(binding.root)
             animationClose(binding.viewSun)
 
