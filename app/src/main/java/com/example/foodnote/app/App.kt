@@ -20,7 +20,8 @@ class App : Application() {
                     splashScreenModule,
                     diaryItemDetailScreenModule,
                     settingScreenModule,
-                    activityMainScreenModule
+                    activityMainScreenModule,
+                    recipesModule
                 )
             )
         }

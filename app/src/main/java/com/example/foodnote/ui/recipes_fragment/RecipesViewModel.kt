@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.example.foodnote.data.base.AppState
 import com.example.foodnote.data.base.SampleState
+import com.example.foodnote.data.databaseRoom.dao.DaoDB
 import com.example.foodnote.data.datasource.recipes_datasource.RepositoryRecipesImpl
 import com.example.foodnote.data.model.recipes.RecipesList
 import com.example.foodnote.data.model.recipes.RecipesX
@@ -11,7 +12,9 @@ import com.example.foodnote.data.repository.datastore_pref_repository.UserPrefer
 import com.example.foodnote.ui.base.viewModel.BaseViewModel
 import kotlinx.coroutines.launch
 
-class RecipesViewModel(private val repositoryRecipesImpl: RepositoryRecipesImpl) : ViewModel(){
+class RecipesViewModel(dataStorePref: UserPreferencesRepository,
+                       private val repositoryRecipesImpl: RepositoryRecipesImpl,
+                       daoDB: DaoDB) : BaseViewModel<AppState<*>>(dataStorePref) {
 
 
     private val _listRecipes = MutableLiveData<RecipesList>()
@@ -20,22 +23,11 @@ class RecipesViewModel(private val repositoryRecipesImpl: RepositoryRecipesImpl)
 
 
     fun searchRecipesByIngr(ingr:String) {
-
         viewModelScope.launch {
             val response = repositoryRecipesImpl.searchRecipes(ingr)
             Log.i("youTag","${response.hints}")
             _listRecipes.postValue(response)
-
         }
-
     }
 
-    fun <T> LiveData<T>.observeOnce(observer: (T) -> Unit) {
-        observeForever(object: Observer<T> {
-            override fun onChanged(value: T) {
-                removeObserver(this)
-                observer(value)
-            }
-        })
-    }
 }

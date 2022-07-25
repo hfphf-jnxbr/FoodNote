@@ -3,16 +3,17 @@ package com.example.foodnote.ui.recipes_fragment
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.SearchView
 import android.widget.Toast
-import androidx.lifecycle.Observer
+import androidx.core.view.get
 import com.bumptech.glide.Glide
 import com.example.foodnote.data.base.RetrofitRecipesImpl
 import com.example.foodnote.data.datasource.recipes_datasource.RepositoryRecipesImpl
 import com.example.foodnote.data.model.recipes.Recipes
-import com.example.foodnote.data.model.recipes.RecipesList
 import com.example.foodnote.databinding.FragmentRecipesBinding
 import com.example.foodnote.ui.base.BaseViewBindingFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import java.util.*
 
 
 class RecipesFragment :
@@ -40,7 +41,7 @@ class RecipesFragment :
         adapterRecipes.setListenerRecipes(object : RecipesListener {
             override fun onClickRecipes(recipes: Recipes) {
 
-                behavior!!.state = BottomSheetBehavior.STATE_EXPANDED
+                behavior!!.state = BottomSheetBehavior.STATE_DRAGGING
                 Glide.with(requireContext()).load(recipes.images.REGULAR.url)
                     .into(binding.includeRecipesDetails.imageViewRecipes)
 
@@ -57,7 +58,9 @@ class RecipesFragment :
             }
         })
 
-        binding.ddddd.setOnClickListener { viewModel.searchRecipesByIngr("chicken") }
+        binding.searchViewRecipes?.setOnClickListener {
+            viewModel.searchRecipesByIngr("chicken")
+        }
 
         viewModel.listRecipes.observe(viewLifecycleOwner) { list ->
             Log.i("youTag","${list.hints}")

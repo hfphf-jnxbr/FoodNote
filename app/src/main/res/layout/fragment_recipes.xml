@@ -9,36 +9,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.recipes_fragment.RecipesFragment">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/innerOrderNumberField"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/topAppBar"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_gravity="top"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        app:boxCornerRadiusBottomStart="15dp"
-        app:boxCornerRadiusBottomEnd="15dp"
-        app:boxCornerRadiusTopEnd="15dp"
-        app:boxCornerRadiusTopStart="15dp"
-        app:boxStrokeColor="@android:color/black"
-        app:boxStrokeWidth="1dp"
-        app:boxStrokeWidthFocused="2dp"
-        android:hint="Название рецепта">
+        android:layout_height="?attr/actionBarSize"
+        style="@style/Widget.MaterialComponents.Toolbar.Surface"
+        android:elevation="3dp">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <TextView
+            android:id="@+id/searchViewRecipes"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="?attr/actionBarSize"/>
 
-    </com.google.android.material.textfield.TextInputLayout>
+    </androidx.appcompat.widget.Toolbar>
 
-    <TextView
-        android:id="@+id/ddddd"
-        android:text="dddddddd"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+
 
 <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/recyclerViewRecipes"

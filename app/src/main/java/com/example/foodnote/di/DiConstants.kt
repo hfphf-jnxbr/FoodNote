@@ -13,3 +13,5 @@ internal const val DATA_BASE = "Data base room"
 internal const val DATA_BASE_NAME = "notesDB_2.0"
 
 internal const val VIEW_MODEL_NOTES = "VIEW_MODEL_NOTES"
+
+internal const val VIEW_MODEL_RECIPES = "VIEW_MODEL_RECIPES"
