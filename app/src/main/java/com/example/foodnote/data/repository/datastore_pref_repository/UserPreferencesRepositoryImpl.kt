@@ -51,7 +51,7 @@ class UserPreferencesRepositoryImpl(private val dataStore: DataStore<Preferences
         .distinctUntilChanged()
         .map { preferences ->
             // No type safety.
-            preferences[THEME] ?: "night"
+            preferences[THEME] ?: "light"
         }
 
     override val avatar: Flow<String> = dataStore.data

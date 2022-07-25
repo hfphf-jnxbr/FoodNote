@@ -115,7 +115,7 @@ class CalorieCalculatorFragment :
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 if(position == 0) {
-                    customTextView.setText("Circles")
+                    customTextView.setText("Calories")
                 } else {
                     customTextView.setText("Water")
                 }
@@ -125,7 +125,7 @@ class CalorieCalculatorFragment :
         buttonLeft.setOnClickListener {
             if(pager.currentItem != 0) {
                 pager.setCurrentItem(0, true)
-                customTextView.setText("Circles")
+                customTextView.setText("Calories")
             }
         }
     }
