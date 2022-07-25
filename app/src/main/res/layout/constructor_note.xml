@@ -14,10 +14,9 @@
         app:strokeColor="?attr/strokeColorCardConstructor"
         app:strokeWidth="4dp">
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
             android:layout_marginTop="70dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -193,7 +192,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
 
 
 
