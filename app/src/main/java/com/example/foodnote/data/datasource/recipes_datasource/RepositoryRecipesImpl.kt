@@ -5,8 +5,6 @@ import com.example.foodnote.data.model.recipes.RecipesList
 
 class RepositoryRecipesImpl(private val retrofitRecipesImpl: RetrofitRecipesImpl) :
     RepositoryRecipes {
-    override suspend fun searchRecipes(product: String): RecipesList {
-        val l = retrofitRecipesImpl.getService().getRecipesByName(nameIngr = product)
-        return l
-    }
+    override suspend fun searchRecipes(product: String): RecipesList =
+        retrofitRecipesImpl.getService().getRecipesByName(nameIngr = product)
 }

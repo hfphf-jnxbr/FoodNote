@@ -39,12 +39,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:layout_marginStart="25dp"
             tools:text="Название"
             android:textColor="#6f6f6f"
-            android:textSize="18sp"
+            android:textSize="14sp"
             app:layout_constraintTop_toBottomOf="@+id/imageViewRecipes"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

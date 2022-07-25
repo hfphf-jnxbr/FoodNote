@@ -16,10 +16,12 @@
         style="@style/Widget.MaterialComponents.Toolbar.Surface"
         android:elevation="3dp">
 
-        <TextView
+        <androidx.appcompat.widget.SearchView
             android:id="@+id/searchViewRecipes"
             android:layout_width="match_parent"
+            android:title="@string/search"
             android:layout_height="?attr/actionBarSize"/>
+
 
     </androidx.appcompat.widget.Toolbar>
 

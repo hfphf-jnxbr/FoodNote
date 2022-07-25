@@ -13,7 +13,7 @@ class RecipesViewHolder(
 ): RecyclerView.ViewHolder(binding.root){
     fun bind(item: RecipesX) {
         binding.textViewNameRecipes.text = item.recipe.label
-        glide.load(item.recipe.images.THUMBNAIL.url).into(binding.imageViewRecipes)
+        glide.load(item.recipe.images.SMALL.url).into(binding.imageViewRecipes)
         binding.cardViewRecipes.setOnClickListener { listener.onClickRecipes(item.recipe) }
         binding.imageViewRecipesLike.setOnClickListener { listener.onClickRecipesLike(item.recipe) }
     }
