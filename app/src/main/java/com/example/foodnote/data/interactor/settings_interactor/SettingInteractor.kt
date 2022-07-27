@@ -9,10 +9,11 @@ interface SettingInteractor {
         type: String,
         weight: String,
         height: String,
+        age: String,
         male: Boolean,
         female: Boolean
     ): List<Pair<SettingColumnRequire, Boolean>>
 
-    fun saveProfile(data: Profile, userId: String): Flow<AppState<String>>
+    suspend fun saveProfile(data: Profile, userId: String): Flow<AppState<String>>
     fun getProfile(userId: String): Flow<AppState<Profile?>>
 }

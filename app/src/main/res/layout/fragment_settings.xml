@@ -110,15 +110,44 @@
             android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/age_text_input_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="@string/type_age"
+        android:visibility="visible"
+        app:boxCornerRadiusBottomEnd="20dp"
+        app:boxCornerRadiusBottomStart="20dp"
+        app:boxCornerRadiusTopEnd="20dp"
+        app:boxCornerRadiusTopStart="20dp"
+        app:boxStrokeColor="#FFA000"
+        app:boxStrokeWidth="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/height_text_input_layout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/age_text_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:singleLine="true" />
+    </com.google.android.material.textfield.TextInputLayout>
+
     <RadioGroup
         android:id="@+id/radioGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/height_text_input_layout">
+        app:layout_constraintTop_toBottomOf="@+id/age_text_input_layout">
 
         <RadioButton
             android:id="@+id/male_radio_button"
@@ -132,7 +161,6 @@
             android:layout_height="match_parent"
             android:text="@string/female" />
     </RadioGroup>
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/save_button"
         android:layout_width="wrap_content"

@@ -3,7 +3,6 @@ package com.example.foodnote.data.datasource.api
 import com.example.foodnote.data.model.food.Food
 import com.example.foodnote.data.model.recipes.RecipesList
 import retrofit2.http.GET
-import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface ApiService {

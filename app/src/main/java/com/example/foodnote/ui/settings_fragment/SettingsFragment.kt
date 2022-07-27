@@ -94,16 +94,25 @@ class SettingsFragment :
                                 val height = binding.heightTextInput.text.toString()
                                 val weight = binding.weightTextInput.text.toString()
                                 val types = binding.modeAutoCompleteTextView.text.toString()
+                                val age = binding.ageTextInput.text.toString()
                                 val isFemale = binding.femaleRadioButton.isChecked
                                 val isMale = binding.maleRadioButton.isChecked
                                 viewModel.saveProfileData(
                                     types,
                                     weight,
                                     height,
+                                    age,
                                     isMale,
                                     isFemale,
                                     idUser
                                 )
+                            }
+                            SettingColumnRequire.AGE -> {
+                                if (!item.second) {
+                                    ageTextInput.error = getString(R.string.type_age)
+                                } else {
+                                    ageTextInput.error = null
+                                }
                             }
                         }
                     }
@@ -123,16 +132,18 @@ class SettingsFragment :
         binding.saveButton.setOnClickListener {
             val height = binding.heightTextInput.text.toString()
             val weight = binding.weightTextInput.text.toString()
+            val age = binding.ageTextInput.text.toString()
             val types = binding.modeAutoCompleteTextView.text.toString()
             val isFemale = binding.femaleRadioButton.isChecked
             val isMale = binding.maleRadioButton.isChecked
-            viewModel.checkRequireColumn(types, weight, height, isMale, isFemale)
+            viewModel.checkRequireColumn(types, weight, height, age, isMale, isFemale)
         }
     }
 
     private fun setRequireColumns(profile: Profile) {
         binding.heightTextInput.setText(profile.height.toString())
         binding.weightTextInput.setText(profile.weight.toString())
+        binding.ageTextInput.setText(profile.age.toString())
         binding.modeAutoCompleteTextView.setText(profile.meta.toString())
         binding.femaleRadioButton.isChecked = profile.female ?: false
         binding.maleRadioButton.isChecked = profile.male ?: false
