@@ -39,7 +39,7 @@ import com.example.foodnote.ui.noteBook.helperView.ExpandView
 import com.example.foodnote.ui.noteBook.helperView.MovedView
 import com.example.foodnote.ui.noteBook.interfaces.NoteBookFragmentInterface
 import com.example.foodnote.ui.noteBook.modelNotes.*
-import com.example.foodnote.ui.noteBook.viewModel.StateDataNotes
+import com.example.foodnote.ui.noteBook.stateData.StateDataNotes
 import com.example.foodnote.ui.noteBook.viewModel.ViewModelNotesFragment
 import com.example.foodnote.utils.hide
 import com.example.foodnote.utils.show

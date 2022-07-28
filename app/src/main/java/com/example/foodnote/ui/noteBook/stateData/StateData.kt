@@ -1,4 +1,4 @@
-package com.example.foodnote.ui.noteBook.viewModel
+package com.example.foodnote.ui.noteBook.stateData
 
 import com.example.foodnote.ui.noteBook.modelNotes.NoteFood
 import com.example.foodnote.ui.noteBook.modelNotes.NotePaint
@@ -18,4 +18,8 @@ sealed class StateDataNotes {
 
     data class Loading(val loading : String)     : StateDataNotes()
     data class Error  (val error   : Throwable)  : StateDataNotes()
+}
+
+sealed class StateDataCompose {
+    data class Success(val currentValue : Int, val maxValue : Int) : StateDataCompose()
 }

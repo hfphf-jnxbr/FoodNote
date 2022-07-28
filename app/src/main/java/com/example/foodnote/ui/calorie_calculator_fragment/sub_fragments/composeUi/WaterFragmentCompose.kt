@@ -1,4 +1,4 @@
-package com.example.foodnote.ui.calorie_calculator_fragment.sub_fragments
+package com.example.foodnote.ui.calorie_calculator_fragment.sub_fragments.composeUi
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,13 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -23,27 +22,60 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.example.foodnote.ui.base.customView.AnimatorX.ValueFunctionX
+import com.example.foodnote.ui.noteBook.stateData.StateDataCompose
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.cos
 import kotlin.math.sin
 
-class WaterFragment : Fragment() {
+class WaterFragmentCompose : Fragment() {
+
+    private val viewModel : ViewModelWaterFragmentCompose by viewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return ComposeView(requireContext()).apply {
             setContent {
-                Card("1450/2100 милл")
+                StateCompose()
             }
         }
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setDataViewModel()
+    }
+
+    private fun setDataViewModel() { viewModel.setWaterMill(1050,2100) }
+
     @Preview
     @Composable
-    fun ComposablePreview() { Card("1450/2100 милл") }
+    fun StateCompose() {
+        val message = mutableStateOf("Hello Compose")
+        Card(message)
+
+        ChangeState(message)
+    }
 
     @Composable
-    fun Card(name: String) {
+    fun ChangeState(message: MutableState<String>) {
 
-        ConstraintLayout(modifier = Modifier.fillMaxWidth().height(100.dp)) {
+        viewModel.getLiveData().observe(viewLifecycleOwner) { stateData ->
+            when(stateData) {
+                is StateDataCompose.Success -> {
+                    this.currentWaterValue = stateData.currentValue
+                    this.maxWaterValue = stateData.maxValue
+
+                    message.value = "$currentWaterValue/$maxWaterValue милл"
+                }
+                else -> {}
+            }
+        }
+    }
+
+    @Composable
+    fun Card(name: MutableState<String>) {
+        ConstraintLayout(modifier = Modifier
+            .fillMaxWidth()
+            .height(100.dp)) {
             val (card) = createRefs()
 
             androidx.compose.material.Card(modifier = Modifier
@@ -79,11 +111,11 @@ class WaterFragment : Fragment() {
     }
 
     @Composable
-    fun DrawText(name: String) {
+    fun DrawText(name: MutableState<String>) {
         ConstraintLayout(modifier = Modifier.fillMaxSize()) {
             val (text) = createRefs()
 
-            Text(text = name, color = Color.White, fontSize = 20.sp, modifier = Modifier
+            Text(text = name.value, color = Color.White, fontSize = 20.sp, modifier = Modifier
                 .padding()
                 .constrainAs(text) {
                     bottom.linkTo(parent.bottom)
