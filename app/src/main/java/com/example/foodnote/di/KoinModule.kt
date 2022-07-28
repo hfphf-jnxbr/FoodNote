@@ -31,6 +31,7 @@ import com.example.foodnote.data.repository.settings_repository.SettingRepositor
 import com.example.foodnote.data.repository.settings_repository.SettingRepositoryImpl
 import com.example.foodnote.ui.auth_fragment.viewModel.AuthViewModel
 import com.example.foodnote.ui.base.viewModel.MainViewModel
+import com.example.foodnote.ui.calorie_calculator_fragment.sub_fragments.composeUi.ViewModelWaterFragmentCompose
 import com.example.foodnote.ui.calorie_calculator_fragment.viewModel.CalorieCalculatorViewModel
 import com.example.foodnote.ui.diary_item_detail_fragment.viewModel.DiaryItemDetailViewModel
 import com.example.foodnote.ui.noteBook.viewModel.ViewModelConstructorFragment
@@ -103,6 +104,10 @@ val calorieCalculatorScreenModule = module {
     }
     viewModel {
         CalorieCalculatorViewModel(get(), get(named(NAME_PREF_APP_REPOSITORY)))
+    }
+
+    viewModel {
+        ViewModelWaterFragmentCompose()
     }
 }
 

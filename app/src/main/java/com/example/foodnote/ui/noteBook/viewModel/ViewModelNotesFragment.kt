@@ -11,6 +11,7 @@ import com.example.foodnote.ui.noteBook.constNote.Const
 import com.example.foodnote.ui.noteBook.modelNotes.NoteFood
 import com.example.foodnote.ui.noteBook.modelNotes.NotePaint
 import com.example.foodnote.ui.noteBook.modelNotes.NoteStandard
+import com.example.foodnote.ui.noteBook.stateData.StateDataNotes
 import com.example.foodnote.ui.noteBook.viewModel.VievModelInterfaces.ViewModelNotesInterface
 import kotlinx.coroutines.*
 

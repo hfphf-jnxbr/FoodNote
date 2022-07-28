@@ -3,6 +3,7 @@ package com.example.foodnote.ui.noteBook.viewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.foodnote.ui.noteBook.stateData.StateData
 import com.example.foodnote.ui.noteBook.viewModel.VievModelInterfaces.ViewModelConstructorInterface
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
