@@ -85,11 +85,6 @@ class DiaryItemDetailViewModel(
 
     }
 
-
-    fun calculateTotalData() {
-
-    }
-
     fun getSavedFoodCollection(idUser: String, dbId: String) {
         viewModelScope.launch {
             interactor.getSavedFoodCollection(idUser, dbId).collect {
@@ -102,6 +97,7 @@ class DiaryItemDetailViewModel(
                     }
                     is AppState.Success -> {
                         stateLiveData.value = it
+                        calculateTotalData(it.data)
                     }
                 }
             }

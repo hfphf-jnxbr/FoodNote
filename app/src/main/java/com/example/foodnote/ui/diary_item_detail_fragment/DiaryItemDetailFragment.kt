@@ -76,7 +76,6 @@ class DiaryItemDetailFragment :
                             is FoodDto -> {
                                 if (item.isNotEmpty()) {
                                     initRcView(item as List<FoodDto>)
-                                    viewModel.calculateTotalData(item)
                                 }
                             }
                         }
