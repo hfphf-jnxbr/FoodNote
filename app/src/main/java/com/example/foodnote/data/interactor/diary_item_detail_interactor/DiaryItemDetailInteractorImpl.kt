@@ -31,18 +31,18 @@ class DiaryItemDetailInteractorImpl(private val repo: DiaryItemDetailRepository)
         return withContext(Dispatchers.Default) {
             val calorieSum = list.sumOf {
                 it.kiloCalories * list.size
-            }.toInt()
+            }
             val proteinSum = list.sumOf {
                 it.protein * it.count
-            }.toInt()
+            }
 
             val fatSum = list.sumOf {
                 it.fat * it.count
-            }.toInt()
+            }
 
             val carbSum = list.sumOf {
                 it.carbohydrate * it.count
-            }.toInt()
+            }
             TotalFoodResult(0, calorieSum, 0, proteinSum, 0, fatSum, 0, carbSum)
         }
     }
