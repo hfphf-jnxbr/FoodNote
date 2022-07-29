@@ -33,12 +33,12 @@ class CircleFragment : BaseViewBindingFragment<CircleLayoutBinding>(CircleLayout
                     is TotalFoodResult -> {
                         val total = appState.data
                         binding.circleContainerDiagramView.start(
-                            total.calorieSum.toInt(),
-                            total.calorieSumMax.toInt(),
-                            total.fatSum.toInt(),
-                            total.fatSumMax.toInt(),
-                            total.proteinSum.toInt(),
-                            total.proteinSumMax.toInt()
+                            total.calorieSum,
+                            total.calorieSumMax,
+                            total.fatSum,
+                            total.fatSumMax,
+                            total.proteinSum,
+                            total.proteinSumMax
                         )
                     }
                 }

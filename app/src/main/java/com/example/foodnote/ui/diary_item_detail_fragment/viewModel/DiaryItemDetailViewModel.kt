@@ -61,7 +61,7 @@ class DiaryItemDetailViewModel(
         viewModelScope.launch {
             kotlin.runCatching {
                 val diaryItem = diaryItem!!.apply {
-                    calories = item.calorieSum.toLong()
+                    calories = item.calorieSum
                     proteinSum = item.proteinSum
                     fatSum = item.fatSum
                     carbSum = item.carbohydrateSum

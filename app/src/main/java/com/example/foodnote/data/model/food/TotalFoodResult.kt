@@ -1,12 +1,12 @@
 package com.example.foodnote.data.model.food
 
 data class TotalFoodResult(
-    val calorieSumMax: Double,
-    val calorieSum: Double,
-    val proteinSumMax: Double,
-    val proteinSum: Double,
-    val fatSumMax: Double,
-    val fatSum: Double,
-    val carbohydrateSumMax: Double,
-    val carbohydrateSum: Double
+    val calorieSumMax: Int,
+    val calorieSum: Int,
+    val proteinSumMax: Int,
+    val proteinSum: Int,
+    val fatSumMax: Int,
+    val fatSum: Int,
+    val carbohydrateSumMax: Int,
+    val carbohydrateSum: Int
 )
