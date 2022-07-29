@@ -5,11 +5,11 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.foodnote.ui.calorie_calculator_fragment.const.FragmentIndex
 import com.example.foodnote.ui.calorie_calculator_fragment.sub_fragments.CircleFragment
-import com.example.foodnote.ui.calorie_calculator_fragment.sub_fragments.WaterFragment
+import com.example.foodnote.ui.calorie_calculator_fragment.sub_fragments.composeUi.WaterFragmentCompose
 
 class TotalViewAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
     private val fragments by lazy {
-        arrayOf(CircleFragment(), WaterFragment())
+        arrayOf(CircleFragment(), WaterFragmentCompose())
     }
 
     override fun getItemCount(): Int = fragments.size

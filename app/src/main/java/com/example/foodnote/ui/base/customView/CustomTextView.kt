@@ -5,8 +5,9 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import com.example.foodnote.ui.base.customView.AnimatorX.ValueAnimatorX
+import com.example.foodnote.ui.base.customView.customViewInterfaces.CustomTextViewInterface
 
-class CustomTextView @JvmOverloads constructor(context : Context, attrs : AttributeSet? = null, style: Int = 0) : View(context,attrs,style) {
+class CustomTextView @JvmOverloads constructor(context : Context, attrs : AttributeSet? = null, style: Int = 0) : View(context,attrs,style) , CustomTextViewInterface{
 
     private val paintText = Paint().apply { color = Color.argb(255,120, 120,120)
         isAntiAlias = true
@@ -40,7 +41,7 @@ class CustomTextView @JvmOverloads constructor(context : Context, attrs : Attrib
         canvas.drawText(string,0,value.toInt(),width/2f - widthText/2f,height - heightText/2f,paintText)
     }
 
-    fun setText(text : String) {
+    override fun setText(text : String) {
         animText.currentX = 0f
         animText.x2 = text.length.toFloat()
         this.string = text

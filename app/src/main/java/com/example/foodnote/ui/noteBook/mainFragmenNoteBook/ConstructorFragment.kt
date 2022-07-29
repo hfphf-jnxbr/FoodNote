@@ -25,7 +25,7 @@ import com.example.foodnote.ui.noteBook.interfaces.NoteBookFragmentInterface
 import com.example.foodnote.ui.noteBook.modelNotes.NoteFood
 import com.example.foodnote.ui.noteBook.modelNotes.NotePaint
 import com.example.foodnote.ui.noteBook.modelNotes.NoteStandard
-import com.example.foodnote.ui.noteBook.viewModel.StateData
+import com.example.foodnote.ui.noteBook.stateData.StateData
 import com.example.foodnote.ui.noteBook.viewModel.ViewModelConstructorFragment
 import com.example.foodnote.utils.showToast
 import kotlinx.coroutines.*
