@@ -27,7 +27,7 @@ class CustomTextView @JvmOverloads constructor(context : Context, attrs : Attrib
     }
 
     private val animText = ValueAnimatorX.ofValue(0f, string.length.toFloat()).apply {
-        vectorFunction { 8f }
+        vectorFunction { 15f }
         render { value -> drawText(value) }
     }
 
