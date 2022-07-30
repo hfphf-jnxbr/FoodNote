@@ -37,6 +37,7 @@ import com.example.foodnote.ui.diary_item_detail_fragment.viewModel.DiaryItemDet
 import com.example.foodnote.ui.noteBook.viewModel.ViewModelConstructorFragment
 import com.example.foodnote.ui.noteBook.viewModel.ViewModelNotesFragment
 import com.example.foodnote.ui.recipes_fragment.RecipesViewModel
+import com.example.foodnote.ui.recipes_fragment.ViewModelDonatViewCompose
 import com.example.foodnote.ui.settings_fragment.viewModel.SettingsViewModel
 import com.example.foodnote.ui.splash_screen_fragment.viewModel.SplashScreenViewModel
 import com.google.firebase.firestore.FirebaseFirestore
@@ -106,9 +107,8 @@ val calorieCalculatorScreenModule = module {
         CalorieCalculatorViewModel(get(), get(named(NAME_PREF_APP_REPOSITORY)))
     }
 
-    viewModel {
-        ViewModelWaterFragmentCompose()
-    }
+    viewModel { ViewModelWaterFragmentCompose() }
+    viewModel { ViewModelDonatViewCompose() }
 }
 
 val authScreenModule = module {

@@ -23,3 +23,8 @@ sealed class StateDataNotes {
 sealed class StateDataCompose {
     data class Success(val currentValue : Int, val maxValue : Int) : StateDataCompose()
 }
+
+sealed class StateDataDonat {
+    data class SetData(val expanded : Boolean, val angle : Boolean) : StateDataDonat()
+    data class Animated(val name: String) : StateDataDonat()
+}
