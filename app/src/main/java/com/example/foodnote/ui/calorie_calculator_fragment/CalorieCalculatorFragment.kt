@@ -3,6 +3,7 @@ package com.example.foodnote.ui.calorie_calculator_fragment
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,8 +55,8 @@ class CalorieCalculatorFragment :
         viewModel.getStateLiveData().observe(viewLifecycleOwner) { appState: AppState<*> ->
             setState(appState)
         }
-        mainViewModel.getStateLiveData().observe(viewLifecycleOwner) { String ->
-
+        mainViewModel.getStateLiveData().observe(viewLifecycleOwner) { str ->
+            Log.d("tag", str.toString())
         }
         if (idUser.isEmpty()) {
             uiScope.launch {

@@ -24,15 +24,20 @@ android {
         Properties properties = new Properties()
         properties.load(project.rootProject.file("app_edadim.properties").newDataInputStream())
         def appId  = properties.getProperty("EDADIM_APP_ID", "")
+        def translateServiceApiKey = properties.getProperty("TRANSLATE_SERVICE_API_KEY", "")
         def appKey  = properties.getProperty("EDADIM_APP_KEY", "")
         def appIdRecipes  = properties.getProperty("EDADIM_APP_ID_RECIPES", "")
         def appKeyRecipes  = properties.getProperty("EDADIM_APP_KEY_RECIPES", "")
         def baseURl  = properties.getProperty("BASE_URL", "")
+        def baseUrlTranslateService = properties.getProperty("BASE_URL_TRANSLATE_SERVICE", "")
+
+        it.buildConfigField "String", "TRANSLATE_SERVICE_API_KEY", translateServiceApiKey
         it.buildConfigField "String", "EDADIM_APP_Id", appId
         it.buildConfigField "String", "EDADIM_APP_KEY", appKey
         it.buildConfigField "String", "EDADIM_APP_ID_RECIPES", appIdRecipes
         it.buildConfigField "String", "EDADIM_APP_KEY_RECIPES", appKeyRecipes
         it.buildConfigField "String", "BASE_URL", baseURl
+        it.buildConfigField "String", "BASE_URL_TRANSLATE_SERVICE", baseUrlTranslateService
     }
     buildTypes {
         release {

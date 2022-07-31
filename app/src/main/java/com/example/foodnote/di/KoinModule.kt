@@ -50,11 +50,7 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val applicationModule = module {
-    single(named(NAME_DATASOURCE_REMOTE)) { RetrofitImpl() }
-    // Получаем сервис
-    single(named(NAME_DATASOURCE_REMOTE_SERVICE)) {
-        get<RetrofitImpl>(qualifier = named(NAME_DATASOURCE_REMOTE)).getService()
-    }
+
 
     // FireStore db
     single(named(NAME_DATASOURCE_FIREBASE)) {
@@ -92,7 +88,8 @@ val dataStoreModule = module {
     }
 }
 val calorieCalculatorScreenModule = module {
-    factory<FirebaseDataSource> {
+
+factory<FirebaseDataSource> {
         FireBaseDataSourceImpl(get(named(NAME_DATASOURCE_FIREBASE)))
     }
 
@@ -119,6 +116,12 @@ val authScreenModule = module {
 
 
 val diaryItemDetailScreenModule = module {
+    factory(named(NAME_DATASOURCE_REMOTE)) { RetrofitImpl() }
+
+    // Получаем сервис
+    factory(named(NAME_DATASOURCE_REMOTE_SERVICE)) {
+        get<RetrofitImpl>(qualifier = named(NAME_DATASOURCE_REMOTE)).getService()
+    }
     factory<FirebaseDataSource> {
         FireBaseDataSourceImpl(get(named(NAME_DATASOURCE_FIREBASE)))
     }
