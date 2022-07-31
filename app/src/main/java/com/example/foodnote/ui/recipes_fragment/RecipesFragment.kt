@@ -69,7 +69,7 @@ class RecipesFragment :
 
         scope.launch { delay(100)
             viewModelDonat.setStateDonat(expanded = false,angle = false)
-            delay(3000)
+            delay(2000)
             viewModelDonat.setStateDonat(expanded = true,angle = false)
             scope.cancel()
         }
@@ -81,7 +81,7 @@ class RecipesFragment :
     fun AnimationCompose(angle: Boolean): Float {
         val value by animateFloatAsState(
             targetValue = if (angle) { 0f } else { 360f },
-            animationSpec = tween(durationMillis = 3000, easing = LinearOutSlowInEasing)
+            animationSpec = tween(durationMillis = 2000, easing = LinearOutSlowInEasing)
         )
         return value
     }
