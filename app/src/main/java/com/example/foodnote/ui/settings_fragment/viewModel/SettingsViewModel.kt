@@ -20,12 +20,13 @@ class SettingsViewModel(
         type: String,
         weight: String,
         height: String,
+        age: String,
         male: Boolean,
         female: Boolean
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             kotlin.runCatching {
-                interactor.checkRequireColumn(type, weight, height, male, female)
+                interactor.checkRequireColumn(type, weight, height, age, male, female)
             }.onSuccess { data ->
                 val errorData = data.filter { item -> !item.second }
                 withContext(Dispatchers.Main) {
@@ -48,14 +49,16 @@ class SettingsViewModel(
         type: String,
         weight: String,
         height: String,
+        age: String,
         male: Boolean,
         female: Boolean,
         userId: String
     ) {
         viewModelScope.launch {
             val profile = Profile(
-                weight = weight.toDouble(),
-                height = height.toDouble(),
+                weight = weight.toInt(),
+                height = height.toInt(),
+                age = age.toInt(),
                 meta = type,
                 male = male,
                 female = female

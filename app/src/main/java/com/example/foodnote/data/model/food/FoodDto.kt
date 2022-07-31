@@ -7,10 +7,10 @@ import kotlinx.parcelize.Parcelize
 data class FoodDto(
     val image: String,
     val name: String,
-    val kiloCalories: Double,
-    val protein: Double,
-    val fat: Double,
-    val carbohydrate: Double,
+    val kiloCalories: Int,
+    val protein: Int,
+    val fat: Int,
+    val carbohydrate: Int,
     var count: Int = 0,
     var docId: String? = null
 ) : Parcelable {

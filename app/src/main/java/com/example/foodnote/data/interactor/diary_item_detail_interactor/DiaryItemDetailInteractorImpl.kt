@@ -43,7 +43,7 @@ class DiaryItemDetailInteractorImpl(private val repo: DiaryItemDetailRepository)
             val carbSum = list.sumOf {
                 it.carbohydrate * it.count
             }
-            TotalFoodResult(0.0, calorieSum, 0.0, proteinSum, 0.0, fatSum, 0.0, carbSum)
+            TotalFoodResult(0, calorieSum, 0, proteinSum, 0, fatSum, 0, carbSum)
         }
     }
 
