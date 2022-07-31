@@ -148,7 +148,7 @@ class RecipesFragment :
             override fun onClickRecipes(recipes: Recipes) {
                 behavior!!.state = BottomSheetBehavior.STATE_EXPANDED
                 Glide.with(requireContext()).load(recipes.images.REGULAR.url)
-                    .into(binding.includeRecipesDetails.imageViewRecipes)
+                    .into(binding.includeRecipesDetails.imageRecipes)
 
                 binding.includeRecipesDetails.textViewNameRecipes.text = recipes.label
                 val sb = StringBuilder()
