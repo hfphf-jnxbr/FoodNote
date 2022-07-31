@@ -23,6 +23,8 @@ import com.example.foodnote.ui.calorie_calculator_fragment.adapter.rc_view_adapt
 import com.example.foodnote.ui.calorie_calculator_fragment.adapter.rc_view_adapter.ItemClickListener
 import com.example.foodnote.ui.calorie_calculator_fragment.adapter.view_pager_adapter.TotalViewAdapter
 import com.example.foodnote.ui.calorie_calculator_fragment.viewModel.CalorieCalculatorViewModel
+import com.example.foodnote.utils.hide
+import com.example.foodnote.utils.show
 import com.example.foodnote.utils.showToast
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -158,8 +160,13 @@ class CalorieCalculatorFragment :
     private fun setState(state: AppState<*>) {
         when (state) {
             is AppState.Error -> context?.showToast(state.error?.message)
-            is AppState.Loading -> context?.showToast("LOADING")
+            is AppState.Loading -> {
+                binding.mainContainerNestedScroll.hide()
+                binding.progressBar.show()
+            }
             is AppState.Success -> {
+                binding.mainContainerNestedScroll.show()
+                binding.progressBar.hide()
                 when (val item = state.data) {
                     is List<*> -> {
                         when (item.firstOrNull()) {
