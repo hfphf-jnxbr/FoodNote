@@ -22,9 +22,11 @@ import com.example.foodnote.ui.noteBook.editorNote.EditorPaintNoteFragment
 import com.example.foodnote.ui.noteBook.editorNote.EditorStandardNoteFragment
 import com.example.foodnote.ui.noteBook.interfaces.ConstructorFragmentInterface
 import com.example.foodnote.ui.noteBook.interfaces.NoteBookFragmentInterface
-import com.example.foodnote.ui.noteBook.viewModel.StateData
+import com.example.foodnote.ui.noteBook.modelNotes.NoteFood
+import com.example.foodnote.ui.noteBook.modelNotes.NotePaint
+import com.example.foodnote.ui.noteBook.modelNotes.NoteStandard
+import com.example.foodnote.ui.noteBook.stateData.StateData
 import com.example.foodnote.ui.noteBook.viewModel.ViewModelConstructorFragment
-import com.example.foodnote.ui.noteBook.viewModel.ViewModelConstructorInterface
 import com.example.foodnote.utils.showToast
 import kotlinx.coroutines.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -75,26 +77,23 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
 
     private fun setEditorType() {
         when (typeNote) {
-            ConstType.STANDARD_TYPE -> { setNoteStandardEditor( EditorStandardNoteFragment() ) }
-            ConstType.PAINT_TYPE ->    { setNotePaintEditor( EditorPaintNoteFragment.newInstance(this)) }
-            ConstType.FOOD_TYPE ->     { setNoteFoodEditor( EditorFoodsNoteFragment()) }
+            ConstType.STANDARD_TYPE -> {
+                val fragment = EditorStandardNoteFragment()
+                editorStandardNoteFragmentEditor = fragment
+                childFragmentManager.beginTransaction().replace(R.id.containerEditNotes,fragment).commitNow()
+            }
+            ConstType.PAINT_TYPE ->    {
+                val fragment = EditorPaintNoteFragment.newInstance(this)
+                editorPaintNoteFragmentEditor = fragment
+                childFragmentManager.beginTransaction().replace(R.id.containerEditNotes,fragment).commitNow()
+            }
+            ConstType.FOOD_TYPE ->     {
+                val fragment = EditorFoodsNoteFragment()
+                editorFoodNoteFragmentEditor = fragment
+                childFragmentManager.beginTransaction().replace(R.id.containerEditNotes,fragment).commitNow()
+            }
             else -> {}
         }
-    }
-
-    private fun setNoteStandardEditor(fragment: EditorStandardNoteFragment) {
-        editorStandardNoteFragmentEditor = fragment
-        childFragmentManager.beginTransaction().replace(R.id.containerEditNotes,fragment).commitNow()
-    }
-
-    private fun setNotePaintEditor(fragment: EditorPaintNoteFragment) {
-        editorPaintNoteFragmentEditor = fragment
-        childFragmentManager.beginTransaction().replace(R.id.containerEditNotes,fragment).commitNow()
-    }
-
-    private fun setNoteFoodEditor(fragment: EditorFoodsNoteFragment) {
-        editorFoodNoteFragmentEditor = fragment
-        childFragmentManager.beginTransaction().replace(R.id.containerEditNotes,fragment).commitNow()
     }
 
     private fun editTextFilter() {
@@ -182,13 +181,17 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
             ConstType.STANDARD_TYPE -> {
                 val string = editorStandardNoteFragmentEditor.getNoteText()
                 val randomId = Random().nextInt(RANDOM_ID)
-                fragmentNoteBook.saveAndCreateDataNotesStandard(width, height, colorCard, string,0,0, randomId, NOTES_ELEVATION)
+
+                val note = NoteStandard(width, height, colorCard, string,0,0, randomId, NOTES_ELEVATION)
+                fragmentNoteBook.saveAndCreateDataNotesStandard(note)
                 fragmentNoteBook.constructorFragmentClose()
             }
             ConstType.PAINT_TYPE  ->    {
                 val bitmapURL = editorPaintNoteFragmentEditor.getImageURL()
                 val randomId = Random().nextInt(RANDOM_ID)
-                fragmentNoteBook.saveAndCreateDataNotesPaint(width, height, colorCard, bitmapURL,0 ,0, randomId, NOTES_ELEVATION)
+
+                val note = NotePaint(width, height, colorCard, bitmapURL,0 ,0, randomId, NOTES_ELEVATION)
+                fragmentNoteBook.saveAndCreateDataNotesPaint(note)
                 fragmentNoteBook.constructorFragmentClose()
             }
             ConstType.FOOD_TYPE  ->    {
@@ -209,7 +212,8 @@ class ConstructorFragment : BaseViewBindingFragment<ConstructorNoteBinding>(Cons
         val stringWeight = editorFoodNoteFragmentEditor.getListWeightText()
         val randomId = Random().nextInt(RANDOM_ID)
 
-        fragmentNoteBook.saveAndCreateDataNotesFoods(getWidth(), getHeight(), colorCard, stringFoods, stringWeight, general,0 ,0, randomId, NOTES_ELEVATION)
+        val note = NoteFood(getWidth(), getHeight(), colorCard, stringFoods, stringWeight, general,0 ,0, randomId, NOTES_ELEVATION)
+        fragmentNoteBook.saveAndCreateDataNotesFoods(note)
         fragmentNoteBook.constructorFragmentClose()
     }
 

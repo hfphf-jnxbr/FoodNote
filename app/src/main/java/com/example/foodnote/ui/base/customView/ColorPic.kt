@@ -5,9 +5,11 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import com.example.foodnote.ui.base.customView.customViewInterfaces.ColorPicInterface
 import com.example.foodnote.ui.noteBook.canvas.CanvasPaintFragment
 
-class ColorPic @JvmOverloads constructor(context : Context, attrs : AttributeSet? = null, style: Int = 0) : View(context,attrs,style) , View.OnTouchListener  {
+class ColorPic @JvmOverloads constructor(context : Context, attrs : AttributeSet? = null, style: Int = 0) : View(context,attrs,style) , View.OnTouchListener ,
+    ColorPicInterface {
 
     init {
         this.setOnTouchListener(this)
@@ -22,23 +24,27 @@ class ColorPic @JvmOverloads constructor(context : Context, attrs : AttributeSet
         bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
         myCanvas = Canvas(bitmap)
     }
+
     private lateinit var canvasPaintFragment: CanvasPaintFragment
 
     private val hsvArray = FloatArray(3)
 
     private val paint = Paint()
     private val paintCircles = Paint().apply {
-        color = Color.argb(200,10,10,10)
+        color = Color.argb(200,255,255,255)
     }
 
     private var targetX = 0f
     private var targetY = 0f
 
     private val scale = 10
+    private var colorH = 360f
+
+    private val radiusCircles = 8f
 
     private lateinit var bitmap : Bitmap
     private lateinit var myCanvas : Canvas
-    private var colorH = 360f
+
     private var flag = true
 
     override fun onDraw(canvas: Canvas) {
@@ -47,7 +53,7 @@ class ColorPic @JvmOverloads constructor(context : Context, attrs : AttributeSet
         createBitmap()
 
         canvas.drawBitmap(bitmap, null, Rect(0, 0, width, height), paint)
-        canvas.drawCircle(targetX, targetY,8f,paintCircles)
+        canvas.drawCircle(targetX, targetY, radiusCircles,paintCircles)
     }
 
     private fun createBitmap() {
@@ -70,7 +76,7 @@ class ColorPic @JvmOverloads constructor(context : Context, attrs : AttributeSet
         }
     }
 
-    fun setColorH(colorH : Int) {
+    override fun setColorH(colorH : Int) {
         this.colorH = colorH.toFloat()
         flag = true
         invalidate()
@@ -110,7 +116,7 @@ class ColorPic @JvmOverloads constructor(context : Context, attrs : AttributeSet
         invalidate()
     }
 
-    fun setFragment(fragment: CanvasPaintFragment) {
+    override fun setFragment(fragment: CanvasPaintFragment) {
         canvasPaintFragment = fragment
     }
 }

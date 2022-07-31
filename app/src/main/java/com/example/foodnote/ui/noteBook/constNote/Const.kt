@@ -9,6 +9,10 @@ object Const {
 
     const val DURATION_ANIMATION_CONSTRUCTOR = 1300L
 
+    const val MAX_SIZE_TEXT = 15f
+    const val PRESENT_100 = 100
+    const val CONST_SCALE = 1f/3f
+
     const val MAX_NOTE_SIZE = 99
     const val MIN_NOTE_SIZE = 30
 
@@ -31,4 +35,6 @@ object Const {
     const val TABLE_PAINT = "notePaint"
     const val TABLE_STANDARD = "noteStandard"
     const val TABLE_FOOD = "noteFood"
+
+    const val IS_FIRST_RUN = "isFirstRun"
 }

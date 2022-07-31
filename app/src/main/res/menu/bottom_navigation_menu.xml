@@ -2,12 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/notesFragment"
-        android:icon="@drawable/book"
+        android:icon="@drawable/ic_baseline_book_24"
         android:title="@string/notebook" />
     <item
         android:id="@+id/calorieCalculatorFragment"
         android:icon="@drawable/diary_icon"
         android:title="@string/calculator" />
+    <item
+        android:id="@+id/anotherFragment"
+        android:icon="@drawable/ic_profile"
+        android:title="@string/profile" />
     <item
         android:id="@+id/recipesFragment"
         android:icon="@drawable/ic_cook"
@@ -16,8 +20,4 @@
         android:id="@+id/settingsFragment"
         android:icon="@drawable/ic_settings"
         android:title="@string/settings" />
-    <item
-        android:id="@+id/anotherFragment"
-        android:icon="@drawable/ic_profile"
-        android:title="@string/other" />
 </menu>

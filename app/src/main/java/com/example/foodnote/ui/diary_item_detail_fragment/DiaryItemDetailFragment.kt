@@ -9,7 +9,6 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.foodnote.R
 import com.example.foodnote.data.base.AppState
-import com.example.foodnote.data.base.SampleState
 import com.example.foodnote.data.model.food.FoodDto
 import com.example.foodnote.data.model.food.TotalFoodResult
 import com.example.foodnote.databinding.FragmentDiaryItemDetailBinding
@@ -36,12 +35,17 @@ class DiaryItemDetailFragment :
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel.getStateLiveData().observe(viewLifecycleOwner) { appState: SampleState ->
+        viewModel.getStateLiveData().observe(viewLifecycleOwner) { appState: AppState<*> ->
             setState(appState)
         }
         if (idUser.isEmpty()) {
             uiScope.launch {
                 getUserId()
+            }
+        } else {
+            viewModel.saveDiaryItem(args.diaryItem)
+            args.diaryItem.dbId?.let { dbId ->
+                viewModel.getSavedFoodCollection(idUser, dbId)
             }
         }
         return super.onCreateView(inflater, container, savedInstanceState)
@@ -50,23 +54,38 @@ class DiaryItemDetailFragment :
     private suspend fun getUserId() {
         viewModel.getUserId().collect {
             idUser = it
+            viewModel.saveDiaryItem(args.diaryItem)
+            args.diaryItem.dbId?.let { dbId ->
+                viewModel.getSavedFoodCollection(idUser, dbId)
+            }
         }
     }
 
-    private fun setState(appState: SampleState) {
-
-        uiScope.launch {
-            if (appState.foodDtoItems.isNotEmpty()) {
-                initRcView(appState.foodDtoItems)
+    private fun setState(appState: AppState<*>) {
+        when (appState) {
+            is AppState.Error -> {
+                context?.showToast(appState.error?.message)
             }
+            is AppState.Loading -> {
 
-            appState.totalFoodResult?.let { totalResult ->
-                viewModel.saveTotalCalculate(totalResult).collect {}
-                setTotalView(totalResult)
             }
-
-            if (appState.totalFoodResult != null) {
-
+            is AppState.Success -> {
+                when (val item = appState.data) {
+                    is List<*> -> {
+                        when (item.firstOrNull()) {
+                            is FoodDto -> {
+                                if (item.isNotEmpty()) {
+                                    initRcView(item as List<FoodDto>)
+                                    viewModel.calculateTotalData(item)
+                                }
+                            }
+                        }
+                    }
+                    is TotalFoodResult -> {
+                        viewModel.saveTotalCalculate(item)
+                        setTotalView(item)
+                    }
+                }
             }
         }
     }
@@ -97,27 +116,8 @@ class DiaryItemDetailFragment :
     }
 
     private fun initTotalContainer() = with(binding) {
-        uiScope.launch {
             timeItemTextView.text = args.diaryItem.time
             titleTextView.text = args.diaryItem.name
-            viewModel.saveDiaryItem(args.diaryItem)
-            args.diaryItem.dbId?.let { dbId ->
-                viewModel.getSavedFoodCollection(idUser, dbId).collect { state ->
-                    when (state) {
-                        is AppState.Error -> {
-                            context?.showToast(state.error?.message)
-                        }
-                        is AppState.Loading -> {
-                            context?.showToast("Saved")
-                        }
-                        is AppState.Success -> {
-                            initRcView(state.data)
-                            viewModel.calculateTotalData(state.data)
-                        }
-                    }
-                }
-            }
-        }
     }
 
     private fun initRcView(list: List<FoodDto>) {
@@ -130,27 +130,15 @@ class DiaryItemDetailFragment :
     }
 
     override fun addProduct(item: FoodDto, pos: Int) {
-        uiScope.launch {
-            item.incCount()
-            viewModel.saveFood(item).collect { state ->
-                if (state is AppState.Success) {
-                    adapter.notifyItemChanged(pos)
-                    context?.showToast(state.data)
-                }
-            }
-        }
+        item.incCount()
+        viewModel.saveFood(item)
+        adapter.notifyItemChanged(pos)
     }
 
     override fun deleteProduct(item: FoodDto, pos: Int) {
-        uiScope.launch {
-            item.decCount()
-            viewModel.saveFood(item).collect { state ->
-                if (state is AppState.Success) {
-                    adapter.notifyItemChanged(pos)
-                    context?.showToast(state.data)
-                }
-            }
-        }
+        item.decCount()
+        viewModel.saveFood(item)
+        adapter.notifyItemChanged(pos)
     }
 
     private companion object {

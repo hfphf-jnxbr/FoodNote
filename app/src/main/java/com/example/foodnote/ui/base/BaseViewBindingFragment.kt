@@ -44,6 +44,7 @@ abstract class BaseViewBindingFragment<VB : ViewBinding>(
         savedInstanceState: Bundle?
     ): View {
         _binding = inflate(inflater, container, false)
+
         return binding.root
     }
 

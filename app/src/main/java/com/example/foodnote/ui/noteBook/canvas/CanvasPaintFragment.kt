@@ -69,6 +69,8 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
         binding.viewCanvasContainer.addView(viewCanvasPaint)
         binding.viewCanvas.setCardBackgroundColor(colorCardBackground)
 
+        binding.palette.setFragment(this@CanvasPaintFragment)
+
         binding.apply {
            listView = listOf(colorBlue,colorPink,colorYellow,colorGray,colorWhite,colorBlack,colorPurple,colorGreen,colorMulti)
         }
@@ -168,15 +170,9 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
             saveImage()
         }
         cancelButton.setOnClickListener {
-            requireActivity().supportFragmentManager
-                .beginTransaction()
-                .setCustomAnimations(R.anim.anim_layout_2,R.anim.anim_layout)
-                .replace(R.id.containerCanvas, Fragment())
-                .commit()
-
+            setEmptyFragment()
             fragment.setFlagAnBlockButton()
         }
-
         colorMultiPic.visibility = View.GONE
 
         buttonOk.setOnClickListener {
@@ -188,9 +184,6 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
         pic.setOnClickListener {
             viewCanvasPaint.setPic(true)
         }
-
-        palette.setFragment(this@CanvasPaintFragment)
-
         seekBarAlpha.setOnSeekBarChangeListener(seekBarChangeListener)
         seekBarPixSize.setOnSeekBarChangeListener(seekBarChangeListener)
         seekBar.setOnSeekBarChangeListener(seekBarChangeListener)
@@ -198,8 +191,8 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
         seekBarAlpha.progress = DEFAULT_ALPHA
         seekBarPixSize.progress = DEFAULT_SIZE_BRUSH
 
-        binding.textViewAlpha.text = "Alpha $DEFAULT_ALPHA"
-        binding.textViewSizeBrash.text = "Alpha $DEFAULT_SIZE_BRUSH"
+        binding.textViewAlpha.text = getString(R.string.alpha_string) + " " + DEFAULT_ALPHA
+        binding.textViewSizeBrash.text = getString(R.string.pix_string) + " " + DEFAULT_SIZE_BRUSH
     }
 
     private val seekBarChangeListener: OnSeekBarChangeListener = object : OnSeekBarChangeListener {
@@ -211,11 +204,11 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
                 }
                 R.id.seekBarAlpha -> {
                     viewCanvasPaint.setAlphaColor(progress)
-                    binding.textViewAlpha.text = "Alpha $progress"
+                    binding.textViewAlpha.text = getString(R.string.alpha_string) + " " + progress
                 }
                 R.id.seekBarPixSize -> {
                     viewCanvasPaint.setSize(progress.toFloat())
-                    binding.textViewSizeBrash.text = "Pix $progress"
+                    binding.textViewSizeBrash.text = getString(R.string.pix_string) + " " + progress
                 }
             }
         }
@@ -238,6 +231,13 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
         dialog.create().show()
     }
 
+    private fun setEmptyFragment() {
+        requireActivity().supportFragmentManager
+            .beginTransaction()
+            .setCustomAnimations(R.anim.anim_layout_2,R.anim.anim_layout)
+            .replace(R.id.containerCanvas, Fragment()).commit()
+    }
+
     private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { saveImage() }
     private fun requestLocationPermissions() = permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
@@ -247,19 +247,13 @@ class CanvasPaintFragment : BaseViewBindingFragment<CanvasFragmentBinding>(Canva
 
             val bitmap = viewCanvasPaint.getBitmap()
             bitmapToFile(bitmap, getRandomName())
-
-            requireActivity().supportFragmentManager
-                .beginTransaction()
-                .setCustomAnimations(R.anim.anim_layout_2,R.anim.anim_layout)
-                .replace(R.id.containerCanvas, Fragment())
-                .commit()
-
+            setEmptyFragment()
         } else {
             requestLocationPermissions()
         }
     }
 
-    private fun getRandomName() = "image2${Random(SEED)}.png"
+    private fun getRandomName() = "imageBase${Random(SEED)}.png"
 
     private fun bitmapToFile(bitmap: Bitmap, fileNameToSave: String): File? {
         var file: File? = null

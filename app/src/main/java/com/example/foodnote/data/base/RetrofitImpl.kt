@@ -42,4 +42,5 @@ class RetrofitImpl {
         }
         return httpClient.build()
     }
+
 }
