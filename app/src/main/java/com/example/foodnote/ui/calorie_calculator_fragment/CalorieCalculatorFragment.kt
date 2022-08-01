@@ -60,6 +60,11 @@ class CalorieCalculatorFragment :
         mainViewModel.getStateLiveData().observe(viewLifecycleOwner) { str ->
             Log.d("tag", str.toString())
         }
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         if (idUser.isEmpty()) {
             uiScope.launch {
                 getUserId()
@@ -67,11 +72,6 @@ class CalorieCalculatorFragment :
         } else {
             initStartData()
         }
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         totalViewAdapter = TotalViewAdapter(this)
         initView()
     }
