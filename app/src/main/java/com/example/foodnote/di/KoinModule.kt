@@ -61,10 +61,12 @@ val applicationModule = module {
         FirebaseFirestore.getInstance()
     }
 
-    single(named(DATA_BASE)) { (context: Context) ->
-        Room.databaseBuilder(context, DataBase::class.java, DATA_BASE_NAME).build().dataBase()
+    single(named(DATA_BASE)) {
+        Room.databaseBuilder(androidContext(), DataBase::class.java, DATA_BASE_NAME).build().dataBase()
     }
-
+    single(named(DATA_BASE_RECIPES)) {
+        Room.databaseBuilder(androidContext(), DataBase::class.java, DATA_BASE_NAME).build().getDBRecipes()
+    }
 }
 
 val activityMainScreenModule = module {
@@ -159,7 +161,8 @@ val recipesModule = module {
 
     viewModel {
         RecipesViewModel(
-            get(named(NAME_PREF_APP_REPOSITORY)), get(named(REPOSITORY_RECIPES)))
+            get(named(NAME_PREF_APP_REPOSITORY)), get(named(REPOSITORY_RECIPES)),get(named(
+                DATA_BASE_RECIPES)))
     }
 }
 

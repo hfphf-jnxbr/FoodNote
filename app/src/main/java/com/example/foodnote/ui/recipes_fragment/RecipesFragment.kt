@@ -160,10 +160,7 @@ class RecipesFragment :
             }
 
             override fun onClickRecipesLike(recipes: Recipes) {
-                //TODO добавить в БД
-                Toast.makeText(requireContext(),
-                    "В избранное добавлен рецепт ${recipes.label}",
-                    Toast.LENGTH_LONG).show()
+              viewModel.addRecipesInDatabase(recipes)
             }
         })
     }
