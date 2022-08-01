@@ -24,6 +24,7 @@ import com.example.foodnote.ui.calorie_calculator_fragment.adapter.rc_view_adapt
 import com.example.foodnote.ui.calorie_calculator_fragment.adapter.view_pager_adapter.TotalViewAdapter
 import com.example.foodnote.ui.calorie_calculator_fragment.viewModel.CalorieCalculatorViewModel
 import com.example.foodnote.utils.hide
+import com.example.foodnote.utils.invisible
 import com.example.foodnote.utils.show
 import com.example.foodnote.utils.showToast
 import kotlinx.coroutines.launch
@@ -171,7 +172,13 @@ class CalorieCalculatorFragment :
                     is List<*> -> {
                         when (item.firstOrNull()) {
                             is DiaryItem -> {
+                                binding.diaryCardView.show()
+                                binding.containerStateCardView.show()
                                 initRcView(state.data as MutableList<DiaryItem>)
+                            }
+                            else -> {
+                                binding.diaryCardView.invisible()
+                                binding.containerStateCardView.invisible()
                             }
                         }
                     }
