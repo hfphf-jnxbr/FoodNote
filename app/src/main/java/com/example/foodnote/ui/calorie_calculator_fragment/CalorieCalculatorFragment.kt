@@ -105,8 +105,12 @@ class CalorieCalculatorFragment :
         diagrams.elevation = 20f
         buttonRight.setOnClickListener {
             if(pager.currentItem != 1) {
-                pager.setCurrentItem(1,true)
-                customTextView.setText("Water")
+                pager.setCurrentItem(1, true)
+                customTextView.setText(
+                    resources.getString(
+                        R.string.water
+                    )
+                )
             }
         }
 
@@ -114,9 +118,17 @@ class CalorieCalculatorFragment :
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 if(position == 0) {
-                    customTextView.setText("Calories")
+                    customTextView.setText(
+                        resources.getString(
+                            R.string.calorie
+                        )
+                    )
                 } else {
-                    customTextView.setText("Water")
+                    customTextView.setText(
+                        resources.getString(
+                            R.string.water
+                        )
+                    )
                 }
             }
         })
@@ -124,7 +136,11 @@ class CalorieCalculatorFragment :
         buttonLeft.setOnClickListener {
             if(pager.currentItem != 0) {
                 pager.setCurrentItem(0, true)
-                customTextView.setText("Calories")
+                customTextView.setText(
+                    resources.getString(
+                        R.string.calorie
+                    )
+                )
             }
         }
     }
