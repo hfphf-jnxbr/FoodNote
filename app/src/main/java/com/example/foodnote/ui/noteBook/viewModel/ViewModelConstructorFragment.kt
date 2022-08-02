@@ -19,17 +19,12 @@ class ViewModelConstructorFragment : ViewModel() , ViewModelConstructorInterface
         viewModelScope.launch {
             kotlin.runCatching {
 
-                delay(200)
+                var sum = 0
+                weights.forEach { e -> sum += e.toInt() }
+                "$sum gm"
 
-                "3600cals"
             }.onSuccess {
-
-                // response.isSuccessful && response.body() != null
-                if (true) {
-                    liveData.value = StateData.Success(it)
-                } else {
-                    liveData.value = StateData.Error(Throwable("Not Found"))
-                }
+                liveData.value = StateData.Success(it)
             }.onFailure {
                 liveData.value = StateData.Error(Throwable("NetWork ERROR"))
             }
