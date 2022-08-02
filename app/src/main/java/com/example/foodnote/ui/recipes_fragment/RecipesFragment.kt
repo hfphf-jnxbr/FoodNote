@@ -49,7 +49,6 @@ class RecipesFragment :
         initObservers()
 
         initComposeView()
-        button()
     }
 
     @Composable
@@ -115,10 +114,6 @@ class RecipesFragment :
     }
 
     private fun initComposeView() { binding.composeView.setContent { StateCompose() } }
-
-    private fun button() {
-        binding.topAppBar.setOnClickListener { }
-    }
 
     private fun initObservers() {
         viewModel.listRecipes.observe(viewLifecycleOwner) { list ->
