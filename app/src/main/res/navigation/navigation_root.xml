@@ -29,9 +29,9 @@
 
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.foodnote.ui.settings_fragment.SettingsFragment"
+        android:name="com.example.foodnote.ui.recipes_favorite_fragment.FavoriteRecipesFragment"
         android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_favorite_recipes" />
 
     <fragment
         android:id="@+id/anotherFragment"

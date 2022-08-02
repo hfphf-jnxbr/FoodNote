@@ -1,6 +1,5 @@
 package com.example.foodnote.di
 
-import android.content.Context
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.emptyPreferences
@@ -38,7 +37,7 @@ import com.example.foodnote.ui.noteBook.viewModel.ViewModelConstructorFragment
 import com.example.foodnote.ui.noteBook.viewModel.ViewModelNotesFragment
 import com.example.foodnote.ui.recipes_fragment.RecipesViewModel
 import com.example.foodnote.ui.recipes_fragment.ViewModelDonatViewCompose
-import com.example.foodnote.ui.settings_fragment.viewModel.SettingsViewModel
+import com.example.foodnote.ui.recipes_favorite_fragment.viewModel.FavoriteRecipesViewModel
 import com.example.foodnote.ui.splash_screen_fragment.viewModel.SplashScreenViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
@@ -57,10 +56,12 @@ val applicationModule = module {
         FirebaseFirestore.getInstance()
     }
 
-    single(named(DATA_BASE)) { (context: Context) ->
-        Room.databaseBuilder(context, DataBase::class.java, DATA_BASE_NAME).build().dataBase()
+    single(named(DATA_BASE)) {
+        Room.databaseBuilder(androidContext(), DataBase::class.java, DATA_BASE_NAME).build().dataBase()
     }
-
+    single(named(DATA_BASE_RECIPES)) {
+        Room.databaseBuilder(androidContext(), DataBase::class.java, DATA_BASE_NAME).build().getDBRecipes()
+    }
 }
 
 val activityMainScreenModule = module {
@@ -162,7 +163,8 @@ val recipesModule = module {
 
     viewModel {
         RecipesViewModel(
-            get(named(NAME_PREF_APP_REPOSITORY)), get(named(REPOSITORY_RECIPES)))
+            get(named(NAME_PREF_APP_REPOSITORY)), get(named(REPOSITORY_RECIPES)),get(named(
+                DATA_BASE_RECIPES)))
     }
 }
 
@@ -180,6 +182,7 @@ val settingScreenModule = module {
     }
 
     viewModel {
-        SettingsViewModel(get(named(NAME_PREF_APP_REPOSITORY)), get())
+        FavoriteRecipesViewModel(get(named(NAME_PREF_APP_REPOSITORY)), get(),get(named(
+            DATA_BASE_RECIPES)))
     }
 }

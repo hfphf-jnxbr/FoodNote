@@ -2,7 +2,6 @@ package com.example.foodnote.ui.profile
 
 import android.animation.ObjectAnimator
 import android.app.Activity.RESULT_OK
-import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -12,11 +11,8 @@ import android.os.Handler
 import android.os.Looper
 import android.provider.DocumentsContract
 import android.provider.MediaStore
-import android.util.Log
 import android.util.Property
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.view.animation.AnticipateOvershootInterpolator
@@ -24,7 +20,6 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ViewSwitcher
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.doOnEnd
@@ -35,20 +30,14 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.foodnote.R
-import com.example.foodnote.data.model.DiaryItem
 import com.example.foodnote.data.repository.datastore_pref_repository.UserPreferencesRepository
 import com.example.foodnote.databinding.ProfileFragmentBinding
 import com.example.foodnote.di.NAME_PREF_APP_REPOSITORY
-import com.example.foodnote.ui.auth_fragment.AuthFragment
 import com.example.foodnote.ui.base.BaseViewBindingFragment
-import com.example.foodnote.ui.calorie_calculator_fragment.CalorieCalculatorFragmentDirections
-import com.example.foodnote.ui.settings_fragment.SettingsFragment
+import com.example.foodnote.ui.recipes_favorite_fragment.FavoriteRecipesFragment
 import com.example.foodnote.utils.hide
 import com.example.foodnote.utils.show
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.common.api.ApiException
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
 import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named
 
@@ -65,7 +54,7 @@ class ProfileFragment : BaseViewBindingFragment<ProfileFragmentBinding>(ProfileF
     private val userPreferencesRepository : UserPreferencesRepository by inject(named(NAME_PREF_APP_REPOSITORY))
     private val scope = CoroutineScope(Dispatchers.Main)
 
-    private val fragment = SettingsFragment()
+    private val fragment = FavoriteRecipesFragment()
     private var theme = DAY
     private var saveH = 0
     private var flagBlockBekArrow = true

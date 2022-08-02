@@ -1,8 +1,10 @@
 package com.example.foodnote.utils
 
+import com.example.foodnote.data.databaseRoom.entities.EntitiesRecipes
 import com.example.foodnote.data.model.food.Food
 import com.example.foodnote.data.model.food.FoodDto
 import com.example.foodnote.data.model.food.FoodFireBase
+import com.example.foodnote.data.model.recipes.Recipes
 
 fun Food.toFoodListDto(): List<FoodDto> {
     val foods = this.parsed.map {
@@ -36,3 +38,25 @@ fun FoodFireBase.toFoodDto(): FoodDto {
         this.docId
     )
 }
+
+
+fun Recipes.totoEntityRecipes(): EntitiesRecipes {
+    return EntitiesRecipes(
+        label = this.label ?: "",
+        image = this.image ?: "",
+        calories = this.calories ?: "",
+        totalTime = this.totalTime ?: "",
+        totalWeight = this.totalWeight ?: ""
+    )
+}
+
+/*
+fun EntitiesRecipes.totoRecipes(): Recipes {
+    return Recipes(
+        label = this.label ?: "",
+        image = this.image ?: "",
+        calories = this.calories ?: "",
+        totalTime = this.totalTime ?: "",
+        totalWeight = this.totalWeight ?: ""
+    )
+}*/
