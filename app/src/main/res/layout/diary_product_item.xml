@@ -20,8 +20,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="24dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/order" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/product_name_text_view"
@@ -58,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:textColor="@color/black"
             app:layout_constraintEnd_toStartOf="@+id/fats_count_text_view"
             app:layout_constraintHorizontal_bias="0.5"
@@ -92,14 +91,29 @@
             tools:text="Углеводы 30г" />
 
         <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/addIntoDiaryButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/corner_border_fill"
+            android:contentDescription="@string/age"
+            android:src="@drawable/plus_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/addImageButton"
+            app:layout_constraintStart_toEndOf="@+id/deleteImageButton"
+            app:layout_constraintTop_toBottomOf="@+id/carbohydrates_count_text_view" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/deleteImageButton"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_alignParentTop="true"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:background="@drawable/corner_border"
+            android:contentDescription="@string/alert_dialog_header"
             android:src="@drawable/minus_icon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/count_product_text_view"
@@ -108,13 +122,14 @@
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/addImageButton"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_alignParentTop="true"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:background="@drawable/corner_border"
+            android:contentDescription="@string/Name"
             android:src="@drawable/plus_icon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

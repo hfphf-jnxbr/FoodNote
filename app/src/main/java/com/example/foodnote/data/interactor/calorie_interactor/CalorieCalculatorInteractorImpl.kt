@@ -22,6 +22,10 @@ class CalorieCalculatorInteractorImpl(private val repository: CalorieRepository)
         return repository.getDiaryCollection(date, idUser)
     }
 
+    override fun generateColorItem(time: String): String {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun saveProfile(data: Profile, userId: String): Flow<AppState<String>> {
         TODO("Not yet implemented")
     }

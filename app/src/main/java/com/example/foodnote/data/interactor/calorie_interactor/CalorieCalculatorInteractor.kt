@@ -11,4 +11,5 @@ interface CalorieCalculatorInteractor : BaseIntеractor {
     suspend fun calculateTotalData(list: List<DiaryItem>, profile: Profile): TotalFoodResult
     fun saveDiary(item: DiaryItem): Flow<AppState<String>>
     fun getDiaryCollection(date: String, idUser: String): Flow<AppState<MutableList<DiaryItem>>>
+    fun generateColorItem(time: String): String
 }
