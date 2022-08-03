@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.foodnote.R
@@ -16,6 +18,9 @@ import com.example.foodnote.ui.base.BaseViewBindingFragment
 import com.example.foodnote.ui.diary_item_detail_fragment.adapter.DiaryItemProductAdapter
 import com.example.foodnote.ui.diary_item_detail_fragment.adapter.ItemClickListener
 import com.example.foodnote.ui.diary_item_detail_fragment.viewModel.DiaryItemDetailViewModel
+import com.example.foodnote.utils.ViewComposeProgressBar
+import com.example.foodnote.utils.hide
+import com.example.foodnote.utils.show
 import com.example.foodnote.utils.showToast
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -51,6 +56,11 @@ class DiaryItemDetailFragment :
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
+    override fun onStart() {
+        initComposeProgressBar()
+        super.onStart()
+    }
+
     private suspend fun getUserId() {
         viewModel.getUserId().collect {
             idUser = it
@@ -67,16 +77,19 @@ class DiaryItemDetailFragment :
                 context?.showToast(appState.error?.message)
             }
             is AppState.Loading -> {
-
+                if (appState.visible) {
+                    viewModel.showProgressBar()
+                    binding.productRcView.hide()
+                }
             }
             is AppState.Success -> {
                 when (val item = appState.data) {
                     is List<*> -> {
+                        viewModel.hideProgressBar()
                         when (item.firstOrNull()) {
                             is FoodDto -> {
-                                if (item.isNotEmpty()) {
-                                    initRcView(item as List<FoodDto>)
-                                }
+                                binding.productRcView.show()
+                                initRcView(item as List<FoodDto>)
                             }
                         }
                     }
@@ -84,6 +97,7 @@ class DiaryItemDetailFragment :
                         viewModel.saveTotalCalculate(item)
                         setTotalView(item)
                     }
+                    else -> viewModel.hideProgressBar()
                 }
             }
         }
@@ -132,6 +146,15 @@ class DiaryItemDetailFragment :
         item.incCount()
         viewModel.saveFood(item)
         adapter.notifyItemChanged(pos)
+    }
+
+    private fun initComposeProgressBar() {
+        binding.progressBar.setContent {
+            val isVisible by viewModel.getComposeLiveData().observeAsState()
+            if (isVisible == true) {
+                context?.ViewComposeProgressBar()
+            }
+        }
     }
 
     override fun deleteProduct(item: FoodDto, pos: Int) {

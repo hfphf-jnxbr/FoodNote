@@ -117,7 +117,7 @@ dependencies {
 
 
     //--------------Compose-----------------///
-
+    implementation "androidx.compose.runtime:runtime-livedata:1.1.1"
     // Integration with activities
     implementation 'androidx.activity:activity-compose:1.5.0'
     // Compose Material Design

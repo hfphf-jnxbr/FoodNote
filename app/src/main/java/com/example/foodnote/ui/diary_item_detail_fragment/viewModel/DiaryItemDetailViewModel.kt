@@ -24,6 +24,7 @@ class DiaryItemDetailViewModel(
     fun searchFood(name: String) {
         viewModelScope.launch {
             kotlin.runCatching {
+                stateLiveData.value = AppState.Loading<Any>()
                 interactor.searchFood(name)
             }.onSuccess {
                 stateLiveData.value = AppState.Success(it)

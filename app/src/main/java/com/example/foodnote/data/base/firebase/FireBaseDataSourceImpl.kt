@@ -69,7 +69,7 @@ class FireBaseDataSourceImpl(private val db: FirebaseFirestore) : FirebaseDataSo
     override fun saveDiaryItem(diaryItem: DiaryItem, foodItem: FoodDto?): Flow<AppState<String>> {
         return flow {
             diaryItem.idUser?.let {
-                emit(AppState.Loading())
+                emit(AppState.Loading(false))
                 val collection = db.collection(diaryItem.idUser)
                     .document(DIARY_DOCUMENT_NAME)
                     .collection(DIARY_ITEM_COLLECTION_NAME)
