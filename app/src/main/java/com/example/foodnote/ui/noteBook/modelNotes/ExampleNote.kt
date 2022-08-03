@@ -56,7 +56,7 @@ class ExampleNote(private val fragment: NotesFragment, private val context: Cont
 
         val stringFoods = "Milk\nApple\nOrange"
         val stringWeight = "1300\n700\n430"
-        val general = "3600cals"
+        val general = "2430 gm"
 
         val height = ((55 * widthScreen) / 100) + convertDpToPixels(Const.CARD_NOTE_DP)
         val width = (42 * widthScreen) / 100
