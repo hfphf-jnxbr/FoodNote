@@ -58,10 +58,10 @@ val applicationModule = module {
     }
 
     single(named(DATA_BASE)) {
-        Room.databaseBuilder(androidContext(), DataBase::class.java, DATA_BASE_NAME).build().dataBase()
+        Room.databaseBuilder(androidContext(), DataBase::class.java, DATA_BASE_NAME).fallbackToDestructiveMigration().build().dataBase()
     }
     single(named(DATA_BASE_RECIPES)) {
-        Room.databaseBuilder(androidContext(), DataBase::class.java, DATA_BASE_NAME).build().getDBRecipes()
+        Room.databaseBuilder(androidContext(), DataBase::class.java, DATA_BASE_NAME).fallbackToDestructiveMigration().build().getDBRecipes()
     }
 }
 

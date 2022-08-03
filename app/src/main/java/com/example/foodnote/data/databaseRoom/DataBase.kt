@@ -9,7 +9,7 @@ import com.example.foodnote.data.databaseRoom.entities.EntitiesNotesPaint
 import com.example.foodnote.data.databaseRoom.entities.EntitiesNotesStandard
 import com.example.foodnote.data.databaseRoom.entities.EntitiesRecipes
 
-@Database(entities = [EntitiesNotesPaint::class, EntitiesNotesStandard::class, EntitiesNotesFood::class, EntitiesRecipes::class], version = 1, exportSchema = false)
+@Database(entities = [EntitiesNotesPaint::class, EntitiesNotesStandard::class, EntitiesNotesFood::class, EntitiesRecipes::class], version = 2, exportSchema = false)
 abstract class DataBase : RoomDatabase() {
     abstract fun dataBase() : DaoDB
     abstract fun getDBRecipes() : RecipesDao

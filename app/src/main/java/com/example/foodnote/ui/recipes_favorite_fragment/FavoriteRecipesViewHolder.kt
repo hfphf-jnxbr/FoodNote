@@ -1,5 +1,6 @@
 package com.example.foodnote.ui.recipes_favorite_fragment
 
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -13,8 +14,19 @@ class FavoriteRecipesViewHolder(
     private var glide: RequestManager
 ): RecyclerView.ViewHolder(binding.root){
     fun bind(item: EntitiesRecipes) {
+        var isVisibleIngr = false
         binding.textViewNameRecipes.text = item.label
         glide.load(item.image).apply(RequestOptions.bitmapTransform ( RoundedCorners (20))).into(binding.imageViewRecipes)
-        binding.cardViewRecipes.setOnClickListener { listener.onClickRecipes(item) }
+        val sb = StringBuilder()
+        repeat(10) {
+            sb.append("● $it\n")
+        }
+        binding.textViewIngrRecipes.text = sb.trim()
+
+        binding.cardViewRecipes.setOnClickListener {
+          isVisibleIngr = !isVisibleIngr
+            binding.textViewIngrRecipes.isVisible = isVisibleIngr
+        //    listener.onClickRecipes(item)
+        }
     }
 }
