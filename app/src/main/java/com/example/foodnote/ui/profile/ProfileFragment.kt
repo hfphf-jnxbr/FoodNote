@@ -34,10 +34,13 @@ import com.example.foodnote.data.repository.datastore_pref_repository.UserPrefer
 import com.example.foodnote.databinding.ProfileFragmentBinding
 import com.example.foodnote.di.NAME_PREF_APP_REPOSITORY
 import com.example.foodnote.ui.base.BaseViewBindingFragment
-import com.example.foodnote.ui.recipes_favorite_fragment.FavoriteRecipesFragment
+import com.example.foodnote.ui.settings_fragment.SettingsFragment
 import com.example.foodnote.utils.hide
 import com.example.foodnote.utils.show
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named
 
@@ -54,7 +57,7 @@ class ProfileFragment : BaseViewBindingFragment<ProfileFragmentBinding>(ProfileF
     private val userPreferencesRepository : UserPreferencesRepository by inject(named(NAME_PREF_APP_REPOSITORY))
     private val scope = CoroutineScope(Dispatchers.Main)
 
-    private val fragment = FavoriteRecipesFragment()
+    private val fragment = SettingsFragment()
     private var theme = DAY
     private var saveH = 0
     private var flagBlockBekArrow = true

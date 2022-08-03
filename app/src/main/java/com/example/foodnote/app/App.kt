@@ -19,7 +19,8 @@ class App : Application() {
                     authScreenModule,
                     splashScreenModule,
                     diaryItemDetailScreenModule,
-                    settingScreenModule,
+                    favoriteScreenModule,
+                    settingsScreenModule,
                     activityMainScreenModule,
                     recipesModule
                 )

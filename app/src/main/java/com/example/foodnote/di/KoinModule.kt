@@ -35,9 +35,10 @@ import com.example.foodnote.ui.calorie_calculator_fragment.viewModel.CalorieCalc
 import com.example.foodnote.ui.diary_item_detail_fragment.viewModel.DiaryItemDetailViewModel
 import com.example.foodnote.ui.noteBook.viewModel.ViewModelConstructorFragment
 import com.example.foodnote.ui.noteBook.viewModel.ViewModelNotesFragment
+import com.example.foodnote.ui.recipes_favorite_fragment.viewModel.FavoriteRecipesViewModel
 import com.example.foodnote.ui.recipes_fragment.RecipesViewModel
 import com.example.foodnote.ui.recipes_fragment.ViewModelDonatViewCompose
-import com.example.foodnote.ui.recipes_favorite_fragment.viewModel.FavoriteRecipesViewModel
+import com.example.foodnote.ui.settings_fragment.viewModel.SettingsViewModel
 import com.example.foodnote.ui.splash_screen_fragment.viewModel.SplashScreenViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
@@ -168,7 +169,7 @@ val recipesModule = module {
     }
 }
 
-val settingScreenModule = module {
+val favoriteScreenModule = module {
     factory<FirebaseDataSource> {
         FireBaseDataSourceImpl(get(named(NAME_DATASOURCE_FIREBASE)))
     }
@@ -182,7 +183,30 @@ val settingScreenModule = module {
     }
 
     viewModel {
-        FavoriteRecipesViewModel(get(named(NAME_PREF_APP_REPOSITORY)), get(),get(named(
-            DATA_BASE_RECIPES)))
+        FavoriteRecipesViewModel(
+            get(named(NAME_PREF_APP_REPOSITORY)), get(), get(
+                named(
+                    DATA_BASE_RECIPES
+                )
+            )
+        )
+    }
+}
+
+val settingsScreenModule = module {
+    factory<FirebaseDataSource> {
+        FireBaseDataSourceImpl(get(named(NAME_DATASOURCE_FIREBASE)))
+    }
+
+    factory<SettingRepository> {
+        SettingRepositoryImpl(get())
+    }
+
+    factory<SettingInteractor> {
+        SettingInteractorImpl(get())
+    }
+
+    viewModel {
+        SettingsViewModel(get(named(NAME_PREF_APP_REPOSITORY)), get())
     }
 }
