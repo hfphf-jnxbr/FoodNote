@@ -79,5 +79,9 @@
             android:name="diaryItem"
             app:argType="com.example.foodnote.data.model.DiaryItem" />
     </fragment>
+    <fragment
+        android:id="@+id/settingsFragment2"
+        android:name="com.example.foodnote.ui.settings_fragment.SettingsFragment"
+        android:label="SettingsFragment" />
 
 </navigation>
