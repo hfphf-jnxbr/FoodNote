@@ -29,15 +29,19 @@
 
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.foodnote.ui.settings_fragment.SettingsFragment"
+        android:name="com.example.foodnote.ui.recipes_favorite_fragment.FavoriteRecipesFragment"
         android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_favorite_recipes" />
 
     <fragment
         android:id="@+id/anotherFragment"
-        android:name="com.example.foodnote.ui.antother_fragment.AnotherFragment"
+        android:name="com.example.foodnote.ui.profile.ProfileFragment"
         android:label="fragment_another"
-        tools:layout="@layout/fragment_another" />
+        tools:layout="@layout/fragment_another" >
+        <action
+            android:id="@+id/action_anotherFragment_to_authFragment"
+            app:destination="@id/authFragment" />
+    </fragment>
     <fragment
         android:id="@+id/authFragment"
         android:name="com.example.foodnote.ui.auth_fragment.AuthFragment"
@@ -47,6 +51,9 @@
             app:destination="@id/notesFragment"
             app:popUpTo="@id/authFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_authFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/splashScreenFragment"
@@ -72,5 +79,9 @@
             android:name="diaryItem"
             app:argType="com.example.foodnote.data.model.DiaryItem" />
     </fragment>
+    <fragment
+        android:id="@+id/settingsFragment2"
+        android:name="com.example.foodnote.ui.settings_fragment.SettingsFragment"
+        android:label="SettingsFragment" />
 
 </navigation>

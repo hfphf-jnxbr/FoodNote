@@ -1,31 +1,43 @@
 package com.example.foodnote.di
 
-import android.content.Context
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
 import com.example.foodnote.data.base.RetrofitImpl
+import com.example.foodnote.data.base.RetrofitRecipesImpl
+import com.example.foodnote.data.base.firebase.FireBaseDataSourceImpl
+import com.example.foodnote.data.base.firebase.FirebaseDataSource
 import com.example.foodnote.data.databaseRoom.DataBase
-import com.example.foodnote.data.datasource.calorire_datasource.firebase.FireBaseCalorieDataSourceImpl
-import com.example.foodnote.data.datasource.calorire_datasource.firebase.FirebaseCalorieDataSource
+import com.example.foodnote.data.databaseRoom.dao.DaoDB
 import com.example.foodnote.data.datasource.diary_item_detail_repository.DiaryItemDetailDatasource
 import com.example.foodnote.data.datasource.diary_item_detail_repository.DiaryItemDetailDatasourceImpl
+import com.example.foodnote.data.datasource.recipes_datasource.RepositoryRecipesImpl
 import com.example.foodnote.data.interactor.calorie_interactor.CalorieCalculatorInteractor
 import com.example.foodnote.data.interactor.calorie_interactor.CalorieCalculatorInteractorImpl
 import com.example.foodnote.data.interactor.diary_item_detail_interactor.DiaryItemDetailInteractor
 import com.example.foodnote.data.interactor.diary_item_detail_interactor.DiaryItemDetailInteractorImpl
+import com.example.foodnote.data.interactor.settings_interactor.SettingInteractor
+import com.example.foodnote.data.interactor.settings_interactor.SettingInteractorImpl
 import com.example.foodnote.data.repository.calorie_repository.CalorieRepository
 import com.example.foodnote.data.repository.calorie_repository.CalorieRepositoryImpl
 import com.example.foodnote.data.repository.datastore_pref_repository.UserPreferencesRepository
 import com.example.foodnote.data.repository.datastore_pref_repository.UserPreferencesRepositoryImpl
 import com.example.foodnote.data.repository.diary_item_detail_repository.DiaryItemDetailRepository
 import com.example.foodnote.data.repository.diary_item_detail_repository.DiaryItemDetailRepositoryImpl
+import com.example.foodnote.data.repository.settings_repository.SettingRepository
+import com.example.foodnote.data.repository.settings_repository.SettingRepositoryImpl
 import com.example.foodnote.ui.auth_fragment.viewModel.AuthViewModel
+import com.example.foodnote.ui.base.viewModel.MainViewModel
+import com.example.foodnote.ui.calorie_calculator_fragment.sub_fragments.composeUi.ViewModelWaterFragmentCompose
 import com.example.foodnote.ui.calorie_calculator_fragment.viewModel.CalorieCalculatorViewModel
 import com.example.foodnote.ui.diary_item_detail_fragment.viewModel.DiaryItemDetailViewModel
 import com.example.foodnote.ui.noteBook.viewModel.ViewModelConstructorFragment
+import com.example.foodnote.ui.noteBook.viewModel.ViewModelNotesFragment
+import com.example.foodnote.ui.recipes_fragment.RecipesViewModel
+import com.example.foodnote.ui.recipes_fragment.ViewModelDonatViewCompose
+import com.example.foodnote.ui.recipes_favorite_fragment.viewModel.FavoriteRecipesViewModel
 import com.example.foodnote.ui.splash_screen_fragment.viewModel.SplashScreenViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
@@ -37,21 +49,25 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val applicationModule = module {
-    single(named(NAME_DATASOURCE_REMOTE)) { RetrofitImpl() }
-    // Получаем сервис
-    single(named(NAME_DATASOURCE_REMOTE_SERVICE)) {
-        get<RetrofitImpl>(qualifier = named(NAME_DATASOURCE_REMOTE)).getService()
-    }
+
 
     // FireStore db
     single(named(NAME_DATASOURCE_FIREBASE)) {
         FirebaseFirestore.getInstance()
     }
 
-    single(named(DATA_BASE)) { (context: Context) ->
-        Room.databaseBuilder(context, DataBase::class.java, DATA_BASE_NAME).build().dataBase()
+    single(named(DATA_BASE)) {
+        Room.databaseBuilder(androidContext(), DataBase::class.java, DATA_BASE_NAME).build().dataBase()
     }
+    single(named(DATA_BASE_RECIPES)) {
+        Room.databaseBuilder(androidContext(), DataBase::class.java, DATA_BASE_NAME).build().getDBRecipes()
+    }
+}
 
+val activityMainScreenModule = module {
+    viewModel {
+        MainViewModel(get(named(NAME_PREF_APP_REPOSITORY)))
+    }
 }
 val splashScreenModule = module {
     viewModel {
@@ -73,8 +89,9 @@ val dataStoreModule = module {
     }
 }
 val calorieCalculatorScreenModule = module {
-    factory<FirebaseCalorieDataSource> {
-        FireBaseCalorieDataSourceImpl(get(named(NAME_DATASOURCE_FIREBASE)))
+
+factory<FirebaseDataSource> {
+        FireBaseDataSourceImpl(get(named(NAME_DATASOURCE_FIREBASE)))
     }
 
     factory<CalorieRepository> {
@@ -87,6 +104,9 @@ val calorieCalculatorScreenModule = module {
     viewModel {
         CalorieCalculatorViewModel(get(), get(named(NAME_PREF_APP_REPOSITORY)))
     }
+
+    viewModel { ViewModelWaterFragmentCompose() }
+    viewModel { ViewModelDonatViewCompose() }
 }
 
 val authScreenModule = module {
@@ -97,8 +117,14 @@ val authScreenModule = module {
 
 
 val diaryItemDetailScreenModule = module {
-    factory<FirebaseCalorieDataSource> {
-        FireBaseCalorieDataSourceImpl(get(named(NAME_DATASOURCE_FIREBASE)))
+    factory(named(NAME_DATASOURCE_REMOTE)) { RetrofitImpl() }
+
+    // Получаем сервис
+    factory(named(NAME_DATASOURCE_REMOTE_SERVICE)) {
+        get<RetrofitImpl>(qualifier = named(NAME_DATASOURCE_REMOTE)).getService()
+    }
+    factory<FirebaseDataSource> {
+        FireBaseDataSourceImpl(get(named(NAME_DATASOURCE_FIREBASE)))
     }
 
     factory<DiaryItemDetailDatasource> {
@@ -117,9 +143,46 @@ val diaryItemDetailScreenModule = module {
         DiaryItemDetailViewModel(get(named(NAME_PREF_APP_REPOSITORY)), get())
     }
 }
-    
+
 val noteBookModule = module {
     viewModel {
         ViewModelConstructorFragment()
+    }
+
+    viewModel(named(VIEW_MODEL_NOTES)) { (dao: DaoDB) ->
+        ViewModelNotesFragment(dao)
+    }
+}
+
+val recipesModule = module {
+    single(named(DATASOURCE_RECIPES)) { RetrofitRecipesImpl() }
+
+    factory(named(REPOSITORY_RECIPES)) {
+        RepositoryRecipesImpl(get(named(DATASOURCE_RECIPES)))
+    }
+
+    viewModel {
+        RecipesViewModel(
+            get(named(NAME_PREF_APP_REPOSITORY)), get(named(REPOSITORY_RECIPES)),get(named(
+                DATA_BASE_RECIPES)))
+    }
+}
+
+val settingScreenModule = module {
+    factory<FirebaseDataSource> {
+        FireBaseDataSourceImpl(get(named(NAME_DATASOURCE_FIREBASE)))
+    }
+
+    factory<SettingRepository> {
+        SettingRepositoryImpl(get())
+    }
+
+    factory<SettingInteractor> {
+        SettingInteractorImpl(get())
+    }
+
+    viewModel {
+        FavoriteRecipesViewModel(get(named(NAME_PREF_APP_REPOSITORY)), get(),get(named(
+            DATA_BASE_RECIPES)))
     }
 }

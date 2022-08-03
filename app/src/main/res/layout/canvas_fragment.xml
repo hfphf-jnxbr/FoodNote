@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FBFBFB"
+    android:background="#FFFFFF"
     android:elevation="100dp">
 
     <TextView
@@ -238,18 +238,18 @@
         android:id="@+id/brushCircles"
         android:layout_width="@dimen/squareColor_24dp"
         android:layout_height="@dimen/squareColor_24dp"
-        app:cardCornerRadius="0dp"
         android:layout_marginStart="6dp"
+        app:cardCornerRadius="0dp"
         app:layout_constraintBottom_toBottomOf="@+id/brushPen"
         app:layout_constraintStart_toEndOf="@+id/brushPen"
         app:strokeColor="#A6A6A6"
-        app:strokeWidth="1dp" >
+        app:strokeWidth="1dp">
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginVertical="4dp"
-            android:src="@drawable/paint_brush"/>
+            android:src="@drawable/paint_brush" />
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -262,13 +262,13 @@
         app:layout_constraintBottom_toBottomOf="@+id/pic"
         app:layout_constraintStart_toStartOf="parent"
         app:strokeColor="#A6A6A6"
-        app:strokeWidth="1dp" >
+        app:strokeWidth="1dp">
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginVertical="4dp"
-            android:src="@drawable/icon_pen"/>
+            android:src="@drawable/icon_pen" />
 
     </com.google.android.material.card.MaterialCardView>
 

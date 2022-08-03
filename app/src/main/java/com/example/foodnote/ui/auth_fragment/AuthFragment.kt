@@ -86,7 +86,7 @@ class AuthFragment : BaseViewBindingFragment<FragmentAuthBinding>(FragmentAuthBi
 
     private fun navigateToMainScreen() {
         val navController = findNavController()
-        val action = AuthFragmentDirections.actionAuthFragmentToNotesFragment()
+        val action = AuthFragmentDirections.actionAuthFragmentToSettingsFragment()
         navController.navigate(action)
     }
 
@@ -123,7 +123,6 @@ class AuthFragment : BaseViewBindingFragment<FragmentAuthBinding>(FragmentAuthBi
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithCredential:success")
-                    val user = auth.currentUser
                     navigateToMainScreen()
                 }
             }

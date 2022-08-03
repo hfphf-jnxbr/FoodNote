@@ -7,7 +7,21 @@ import android.os.Build
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import com.example.foodnote.R
+import kotlin.math.pow
 
 fun View.show() {
     visibility = View.VISIBLE
@@ -51,4 +65,44 @@ fun Context.isNetworkAvailable(): Boolean {
         }
     }
     return false
+}
+
+@Composable
+fun Context.ViewComposeProgressBar() {
+    val transition = rememberInfiniteTransition()
+    val parameter = transition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(animation = tween(durationMillis = 3000, easing = { x ->  easeInOutBack(x) })),
+    )
+
+    Card(
+        modifier = Modifier.padding(all = 8.dp),
+        shape = RoundedCornerShape(180.dp),
+        elevation = 5.dp,
+        border = BorderStroke(2.dp, Color.LightGray)
+    ) {
+        Column(
+            Modifier.padding(all = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) { Image(
+            painter = painterResource(id = R.drawable.donat_anim),
+            contentDescription = "",
+            modifier = Modifier
+                .rotate(parameter.value)
+                .size(width = 200.dp, height = 200.dp))
+        }
+    }
+}
+
+fun easeInOutBack(x: Float) : Float {
+    val c1 = 1.70158
+    val c2 = c1 * 1.525
+
+    return if(x < 0.5) {
+        (((2 * x).pow(2f) * ((c2 + 1) * 2 * x - c2)) / 2).toFloat()
+    }  else {
+        (((2 * x - 2).pow(2f) * ((c2 + 1) * (x * 2 - 2) + c2) + 2) / 2).toFloat()
+    }
 }

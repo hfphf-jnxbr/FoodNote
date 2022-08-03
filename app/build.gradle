@@ -1,10 +1,11 @@
 plugins {
     id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-android'
     id 'kotlin-kapt'
     id 'com.google.gms.google-services'
     id 'kotlin-parcelize'
     id "androidx.navigation.safeargs"
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
@@ -23,11 +24,20 @@ android {
         Properties properties = new Properties()
         properties.load(project.rootProject.file("app_edadim.properties").newDataInputStream())
         def appId  = properties.getProperty("EDADIM_APP_ID", "")
+        def translateServiceApiKey = properties.getProperty("TRANSLATE_SERVICE_API_KEY", "")
         def appKey  = properties.getProperty("EDADIM_APP_KEY", "")
+        def appIdRecipes  = properties.getProperty("EDADIM_APP_ID_RECIPES", "")
+        def appKeyRecipes  = properties.getProperty("EDADIM_APP_KEY_RECIPES", "")
         def baseURl  = properties.getProperty("BASE_URL", "")
+        def baseUrlTranslateService = properties.getProperty("BASE_URL_TRANSLATE_SERVICE", "")
+
+        it.buildConfigField "String", "TRANSLATE_SERVICE_API_KEY", translateServiceApiKey
         it.buildConfigField "String", "EDADIM_APP_Id", appId
         it.buildConfigField "String", "EDADIM_APP_KEY", appKey
+        it.buildConfigField "String", "EDADIM_APP_ID_RECIPES", appIdRecipes
+        it.buildConfigField "String", "EDADIM_APP_KEY_RECIPES", appKeyRecipes
         it.buildConfigField "String", "BASE_URL", baseURl
+        it.buildConfigField "String", "BASE_URL_TRANSLATE_SERVICE", baseUrlTranslateService
     }
     buildTypes {
         release {
@@ -42,7 +52,14 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-    buildFeatures.viewBinding = true
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.3.0-beta01"
+    }
+    buildFeatures {
+        compose true
+        viewBinding true
+    }
 }
 
 dependencies {
@@ -95,4 +112,32 @@ dependencies {
     //di
     implementation"io.insert-koin:koin-core:$koin_version"
     implementation "io.insert-koin:koin-android:$koin_version"
+
+    implementation"androidx.viewpager2:viewpager2:$view_pager_version"
+
+
+    //--------------Compose-----------------///
+
+    // Integration with activities
+    implementation 'androidx.activity:activity-compose:1.5.0'
+    // Compose Material Design
+    implementation 'androidx.compose.material:material:1.1.1'
+    // Animations
+    implementation 'androidx.compose.animation:animation:1.1.1'
+    // Tooling support (Previews, etc.)
+    implementation 'androidx.compose.ui:ui-tooling:1.1.1'
+    // Integration with ViewModels
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.0'
+    // UI Tests
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.1.1'
+    // When using a MDC theme
+    implementation "com.google.android.material:compose-theme-adapter:1.1.14"
+    // When using a AppCompat theme
+    implementation "com.google.accompanist:accompanist-appcompat-theme:0.16.0"
+
+    implementation "androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha03"
+
+    debugImplementation "androidx.compose.ui:ui-tooling:1.1.1"
+    implementation "androidx.compose.ui:ui-tooling-preview:1.1.1"
+
 }

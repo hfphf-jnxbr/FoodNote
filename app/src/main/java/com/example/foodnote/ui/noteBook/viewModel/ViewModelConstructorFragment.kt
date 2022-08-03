@@ -3,10 +3,13 @@ package com.example.foodnote.ui.noteBook.viewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.foodnote.ui.noteBook.stateData.StateData
+import com.example.foodnote.ui.noteBook.viewModel.VievModelInterfaces.ViewModelConstructorInterface
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class ViewModelConstructorFragment() : ViewModel() , ViewModelConstructorInterface{
+class ViewModelConstructorFragment : ViewModel() , ViewModelConstructorInterface {
+
     private val liveData = MutableLiveData<StateData>()
 
     override fun getLiveData() = liveData
@@ -16,17 +19,12 @@ class ViewModelConstructorFragment() : ViewModel() , ViewModelConstructorInterfa
         viewModelScope.launch {
             kotlin.runCatching {
 
-                delay(200)
+                var sum = 0
+                weights.forEach { e -> sum += e.toInt() }
+                "$sum gm"
 
-                "3600cals"
             }.onSuccess {
-
-                // response.isSuccessful && response.body() != null
-                if (true) {
-                    liveData.value = StateData.Success(it)
-                } else {
-                    liveData.value = StateData.Error(Throwable("Not Found"))
-                }
+                liveData.value = StateData.Success(it)
             }.onFailure {
                 liveData.value = StateData.Error(Throwable("NetWork ERROR"))
             }

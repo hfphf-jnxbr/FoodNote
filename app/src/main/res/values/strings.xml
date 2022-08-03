@@ -55,7 +55,7 @@
     <string name="network_error_mess">Network ERROR</string>
     <string name="general">General:</string>
     <string name="search">search</string>
-    <string name="recipe_search">recipe search</string>
+    <string name="recipe_search">Recipe search</string>
     <string name="color_selection">color selection</string>
     <string name="alpha">alpha</string>
     <string name="ok">OK</string>
@@ -64,10 +64,11 @@
     <string name="exit">выйти</string>
     <string name="type_name_product">Введите название продукта</string>
     <string name="count_products">%d шт</string>
-    <string name="count_protein">Белки %.2f г</string>
-    <string name="count_fats">Жиры %.2f г</string>
-    <string name="count_carbohydrates">Углеводы %.2f г</string>
-    <string name="count_calorie">Количество  ккал %.2f</string>
+    <string name="count_protein">Белки %d г</string>
+    <string name="count_fats">Жиры %d г</string>
+    <string name="format_time">%02d:%02d</string>
+    <string name="count_carbohydrates">Углеводы %d г</string>
+    <string name="count_calorie">Количество  ккал %d</string>
     <string name="create_notes">Создаение заметки</string>
     <string name="save">Сохранить</string>
     <string name="disabled">Отменить</string>
@@ -75,11 +76,32 @@
     <string name="type_height">Введите рост</string>
     <string name="male">М</string>
     <string name="female">Ж</string>
-    <string name="select_meta">Выберите цель</string>
+    <string name="select_meta">Ваша цель</string>
+    <string name="select_weight">Выберите вес</string>
+    <string name="select_height">Выберите рост</string>
     <string-array name="type_modes">
         <item>Похудеть</item>
         <item>Набрать вес</item>
     </string-array>
     <string name="pix_0">Pix 0</string>
     <string name="alpha_0">Alpha 0</string>
+    <string name="alpha_string">Alpha</string>
+    <string name="pix_string">Pix</string>
+    <string name="water">Вода</string>
+    <string name="select_sex">Выберите пол</string>
+    <string name="name_splash_app">FoodNote</string>
+    <string name="loading_splash">Loading ...</string>
+    <string name="night_theme">Night theme</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="you_profile">You profile</string>
+    <string name="profile">Profile</string>
+    <string name="profile_header">Ваш профиль</string>
+    <string name="save_profile">Сохранить профиль</string>
+    <string name="info_app">Info app</string>
+    <string name="changing_account">Changing account</string>
+    <string name="account">Account</string>
+    <string name="log_in_to_your_account">Log in to your account</string>
+    <string name="type_age">Введите возраст</string>
+    <string name="recipes_for_you">Recipes for you</string>
+    <string name="favorite">Favorite</string>
 </resources>
