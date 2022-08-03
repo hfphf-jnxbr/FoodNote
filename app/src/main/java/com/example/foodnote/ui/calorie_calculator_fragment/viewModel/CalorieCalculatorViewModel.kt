@@ -74,7 +74,7 @@ class CalorieCalculatorViewModel(
     fun saveDiary(item: DiaryItem) {
         viewModelScope.launch {
             interactor.saveDiary(item).collect {
-                stateLiveData.value = it
+                stateLiveData.value = AppState.Success(diaryList)
             }
         }
     }

@@ -12,12 +12,7 @@ class CalorieCalculatorAdapter(private val itemClickListener: ItemClickListener)
     private var list = mutableListOf<DiaryItem>()
     fun setItems(newList: MutableList<DiaryItem>) {
         list = newList
-        notifyItemRangeInserted(0, list.size)
-    }
-
-    fun addItem(item: DiaryItem) {
-        list.add(item)
-        notifyItemInserted(list.size)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiaryViewHolder {
