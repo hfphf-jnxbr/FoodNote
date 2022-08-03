@@ -7,6 +7,8 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.foodnote.R
 import com.example.foodnote.data.model.food.FoodDto
 import com.example.foodnote.databinding.DiaryProductItemBinding
+import com.example.foodnote.utils.hide
+import com.example.foodnote.utils.show
 
 class DiaryProductPlaceHolder(item: View) : RecyclerView.ViewHolder(item) {
     private val binding = DiaryProductItemBinding.bind(item)
@@ -30,6 +32,17 @@ class DiaryProductPlaceHolder(item: View) : RecyclerView.ViewHolder(item) {
             context.getString(R.string.count_carbohydrates, item.carbohydrate)
         if (item.count > 0) {
             countProductTextView.text = context.getString(R.string.count_products, item.count)
+            addIntoDiaryButton.hide()
+            addImageButton.show()
+            deleteImageButton.show()
+        } else {
+            addIntoDiaryButton.show()
+            addImageButton.hide()
+            deleteImageButton.hide()
+        }
+
+        addIntoDiaryButton.setOnClickListener {
+            itemClickListener.addProduct(item, adapterPosition)
         }
         addImageButton.setOnClickListener {
             itemClickListener.addProduct(item, adapterPosition)

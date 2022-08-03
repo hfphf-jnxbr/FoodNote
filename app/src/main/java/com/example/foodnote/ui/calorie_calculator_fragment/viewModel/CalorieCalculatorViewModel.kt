@@ -5,46 +5,25 @@ import androidx.lifecycle.viewModelScope
 import com.example.foodnote.data.base.AppState
 import com.example.foodnote.data.interactor.calorie_interactor.CalorieCalculatorInteractor
 import com.example.foodnote.data.model.DiaryItem
+import com.example.foodnote.data.model.food.TotalFoodResult
+import com.example.foodnote.data.model.profile.Profile
 import com.example.foodnote.data.repository.datastore_pref_repository.UserPreferencesRepository
 import com.example.foodnote.ui.base.viewModel.BaseViewModel
+import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.random.Random
 
 class CalorieCalculatorViewModel(
     private val interactor: CalorieCalculatorInteractor,
     dataStorePref: UserPreferencesRepository
 ) :
     BaseViewModel<AppState<*>>(dataStorePref) {
-    private val diaryList = ArrayList<DiaryItem>()
+    private var diaryList = mutableListOf<DiaryItem>()
+    private var profileData: Profile? = null
     private val currentDate = SimpleDateFormat("dd.MMMM.YYYY").format(Date())
-    fun initCalorie() {
-        viewModelScope.launch {
-            kotlin.runCatching {
-                Triple(
-                    Pair(
-                        Random.nextInt(0, 150),
-                        Random.nextInt(150, 200)
-                    ),
-                    Pair(
-                        Random.nextInt(0, 150),
-                        Random.nextInt(150, 200)
-                    ),
-                    Pair(
-                        Random.nextInt(0, 150),
-                        Random.nextInt(150, 200)
-                    ),
-                )
-            }.onSuccess {
-                stateLiveData.value = AppState.Success(it)
-            }.onFailure {
-                stateLiveData.value = AppState.Error<Throwable>(it)
-            }
-        }
-    }
 
-    fun generateRandomItem(idUser: String, time: String, name: String): DiaryItem {
+    fun generateItem(idUser: String, time: String, name: String): DiaryItem {
         val item = DiaryItem(
             name,
             0,
@@ -59,35 +38,43 @@ class CalorieCalculatorViewModel(
 
     fun getDiary(idUser: String) {
         viewModelScope.launch {
-            interactor
+            val diaryItems = interactor
                 .getDiaryCollection(
                     currentDate,
                     idUser
-                ).collect {
-                    stateLiveData.value = it
+                )
+            val userItem = interactor.getProfile(idUser)
+            diaryItems.zip(userItem) { diaries, user ->
+                stateLiveData.value = diaries
+                val totalResult = when {
+                    diaries is AppState.Success && user is AppState.Success -> {
+                        diaryList = diaries.data
+                        profileData = user.data
+                        AppState.Success(calculateTotalData())
+                    }
+                    else -> {
+                        AppState.Error<Throwable>(null)
+                    }
                 }
+                totalResult
+            }.collect {
+                stateLiveData.value = it
+            }
         }
     }
 
 
-    fun calculateTotalData() {
-        viewModelScope.launch {
-            kotlin.runCatching {
-                diaryList.let {
-                    interactor.calculateTotalData(it)
-                }
-            }.onSuccess {
-                stateLiveData.value = AppState.Success(it)
-            }.onFailure {
-                stateLiveData.value = AppState.Error<Throwable>(it)
-            }
+    private suspend fun calculateTotalData(): TotalFoodResult? {
+        if (diaryList.isNotEmpty() && profileData != null) {
+            return interactor.calculateTotalData(diaryList, profileData!!)
         }
+        return null
     }
 
     fun saveDiary(item: DiaryItem) {
         viewModelScope.launch {
             interactor.saveDiary(item).collect {
-                stateLiveData.value = it
+                stateLiveData.value = AppState.Success(diaryList)
             }
         }
     }

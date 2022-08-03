@@ -16,6 +16,7 @@ class DiaryItemDetailViewModel(
 ) :
     BaseViewModel<AppState<*>>(dataStorePref) {
     private var diaryItem: DiaryItem? = null
+    private var listItem = ArrayList<FoodDto>()
     fun saveDiaryItem(item: DiaryItem) {
         diaryItem = item
     }
@@ -34,6 +35,7 @@ class DiaryItemDetailViewModel(
 
     fun saveFood(item: FoodDto) {
         viewModelScope.launch {
+            calculateTotalData(listItem)
             interactor.saveDiaryItem(diaryItem!!, item).collect {
                 when (it) {
                     is AppState.Error -> stateLiveData.value = it
@@ -45,7 +47,7 @@ class DiaryItemDetailViewModel(
     }
 
 
-    fun calculateTotalData(list: List<FoodDto>) {
+    private fun calculateTotalData(list: List<FoodDto>) {
         viewModelScope.launch {
             kotlin.runCatching {
                 interactor.calculateTotalData(list)
@@ -61,7 +63,7 @@ class DiaryItemDetailViewModel(
         viewModelScope.launch {
             kotlin.runCatching {
                 val diaryItem = diaryItem!!.apply {
-                    calories = item.calorieSum.toLong()
+                    calories = item.calorieSum
                     proteinSum = item.proteinSum
                     fatSum = item.fatSum
                     carbSum = item.carbohydrateSum
@@ -85,11 +87,6 @@ class DiaryItemDetailViewModel(
 
     }
 
-
-    fun calculateTotalData() {
-
-    }
-
     fun getSavedFoodCollection(idUser: String, dbId: String) {
         viewModelScope.launch {
             interactor.getSavedFoodCollection(idUser, dbId).collect {
@@ -102,6 +99,8 @@ class DiaryItemDetailViewModel(
                     }
                     is AppState.Success -> {
                         stateLiveData.value = it
+                        listItem = it.data as ArrayList
+                        calculateTotalData(listItem)
                     }
                 }
             }

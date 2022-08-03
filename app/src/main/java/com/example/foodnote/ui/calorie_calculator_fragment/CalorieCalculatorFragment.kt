@@ -3,8 +3,8 @@ package com.example.foodnote.ui.calorie_calculator_fragment
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.ScrollCaptureCallback
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
@@ -22,12 +22,12 @@ import com.example.foodnote.ui.base.viewModel.MainViewModel
 import com.example.foodnote.ui.calorie_calculator_fragment.adapter.rc_view_adapter.CalorieCalculatorAdapter
 import com.example.foodnote.ui.calorie_calculator_fragment.adapter.rc_view_adapter.ItemClickListener
 import com.example.foodnote.ui.calorie_calculator_fragment.adapter.view_pager_adapter.TotalViewAdapter
-import com.example.foodnote.ui.calorie_calculator_fragment.const.FragmentIndex
 import com.example.foodnote.ui.calorie_calculator_fragment.viewModel.CalorieCalculatorViewModel
+import com.example.foodnote.utils.hide
+import com.example.foodnote.utils.invisible
+import com.example.foodnote.utils.show
 import com.example.foodnote.utils.showToast
-import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.launch
-import org.koin.androidx.scope.scopeActivity
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.time.LocalDate
@@ -58,9 +58,14 @@ class CalorieCalculatorFragment :
         viewModel.getStateLiveData().observe(viewLifecycleOwner) { appState: AppState<*> ->
             setState(appState)
         }
-        mainViewModel.getStateLiveData().observe(viewLifecycleOwner) { String ->
-
+        mainViewModel.getStateLiveData().observe(viewLifecycleOwner) { str ->
+            Log.d("tag", str.toString())
         }
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         if (idUser.isEmpty()) {
             uiScope.launch {
                 getUserId()
@@ -68,11 +73,6 @@ class CalorieCalculatorFragment :
         } else {
             initStartData()
         }
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         totalViewAdapter = TotalViewAdapter(this)
         initView()
     }
@@ -93,21 +93,24 @@ class CalorieCalculatorFragment :
         viewModel.getDiary(idUser)
         binding.addDiaryButton.setOnClickListener {
             showDialog { time, name ->
-                val diaryItem = viewModel.generateRandomItem(idUser, time, name)
+                val diaryItem = viewModel.generateItem(idUser, time, name)
                 viewModel.saveDiary(diaryItem)
             }
         }
     }
 
     private fun initPager() = with(binding) {
-        viewModel.initCalorie()
         pager.adapter = totalViewAdapter
 
         diagrams.elevation = 20f
         buttonRight.setOnClickListener {
             if(pager.currentItem != 1) {
-                pager.setCurrentItem(1,true)
-                customTextView.setText("Water")
+                pager.setCurrentItem(1, true)
+                customTextView.setText(
+                    resources.getString(
+                        R.string.water
+                    )
+                )
             }
         }
 
@@ -115,9 +118,17 @@ class CalorieCalculatorFragment :
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 if(position == 0) {
-                    customTextView.setText("Calories")
+                    customTextView.setText(
+                        resources.getString(
+                            R.string.calorie
+                        )
+                    )
                 } else {
-                    customTextView.setText("Water")
+                    customTextView.setText(
+                        resources.getString(
+                            R.string.water
+                        )
+                    )
                 }
             }
         })
@@ -125,7 +136,11 @@ class CalorieCalculatorFragment :
         buttonLeft.setOnClickListener {
             if(pager.currentItem != 0) {
                 pager.setCurrentItem(0, true)
-                customTextView.setText("Calories")
+                customTextView.setText(
+                    resources.getString(
+                        R.string.calorie
+                    )
+                )
             }
         }
     }
@@ -140,44 +155,51 @@ class CalorieCalculatorFragment :
         dayWeekMaterialTextView.text = date
     }
 
-    private fun initCalories(protein: Pair<Int, Int>, fat: Pair<Int, Int>, carb: Pair<Int, Int>) =
+    private fun initCalories(total: TotalFoodResult) =
         with(binding) {
             protainValueTextView.text =
-                resources.getString(R.string.format_challenge, protein.first, protein.second)
+                resources.getString(
+                    R.string.format_challenge,
+                    total.proteinSum,
+                    total.proteinSumMax
+                )
             fatsValueTextView.text =
-                resources.getString(R.string.format_challenge, fat.first, fat.second)
+                resources.getString(R.string.format_challenge, total.fatSum, total.fatSumMax)
             carbohydratesValueTextView.text =
-                resources.getString(R.string.format_challenge, carb.first, carb.second)
-            val total = TotalFoodResult(
-                calorieSum = kotlin.random.Random.nextDouble(300.0, 3000.0),
-                calorieSumMax = kotlin.random.Random.nextDouble(1500.0, 3000.0),
-                proteinSumMax = protein.second.toDouble(),
-                proteinSum = protein.first.toDouble(),
-                fatSum = fat.first.toDouble(),
-                fatSumMax = fat.second.toDouble(),
-                carbohydrateSumMax = 0.0,
-                carbohydrateSum = 0.0
-            )
+                resources.getString(
+                    R.string.format_challenge,
+                    total.carbohydrateSum,
+                    total.carbohydrateSumMax
+                )
             mainViewModel.initCircle(total)
         }
-
 
     private fun setState(state: AppState<*>) {
         when (state) {
             is AppState.Error -> context?.showToast(state.error?.message)
-            is AppState.Loading -> context?.showToast("LOADING")
+            is AppState.Loading -> {
+                binding.mainContainerNestedScroll.hide()
+                binding.progressBar.show()
+            }
             is AppState.Success -> {
+                binding.mainContainerNestedScroll.show()
+                binding.progressBar.hide()
                 when (val item = state.data) {
                     is List<*> -> {
                         when (item.firstOrNull()) {
                             is DiaryItem -> {
+                                binding.diaryCardView.show()
+                                binding.containerStateCardView.show()
                                 initRcView(state.data as MutableList<DiaryItem>)
+                            }
+                            else -> {
+                                binding.diaryCardView.invisible()
+                                binding.containerStateCardView.invisible()
                             }
                         }
                     }
-                    is Triple<*, *, *> -> {
-                        item as Triple<Pair<Int, Int>, Pair<Int, Int>, Pair<Int, Int>>
-                        initCalories(item.first, item.second, item.third)
+                    is TotalFoodResult -> {
+                        initCalories(item)
                     }
                 }
             }
@@ -195,7 +217,6 @@ class CalorieCalculatorFragment :
 
     private fun showDialog(callback: (time: String, name: String) -> Unit) {
         val builder = AlertDialog.Builder(context)
-        // Set the dialog title
         val inflater = requireActivity().layoutInflater
         val view = inflater.inflate(R.layout.diary_create_dialog, null)
         val editText = view.findViewById<EditText>(R.id.name_diary_title_text_view)
@@ -207,7 +228,8 @@ class CalorieCalculatorFragment :
                 R.string.save
             ) { _, _ ->
                 val text = editText.text.toString()
-                val time = String.format("%02d:%02d", timePicker.hour, timePicker.minute)
+                val time =
+                    resources.getString(R.string.format_time, timePicker.hour, timePicker.minute)
                 callback(time, text)
             }
             .setNegativeButton(
