@@ -1,11 +1,9 @@
 package com.example.foodnote.data.databaseRoom.entities
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import com.example.foodnote.data.model.recipes.RecipesListImages
-import com.squareup.moshi.Json
+import androidx.room.*
+import com.google.common.reflect.TypeToken
+import com.google.gson.Gson
+
 
 @Entity(tableName = "recipesFavorite")
 data class EntitiesRecipes(
@@ -13,18 +11,28 @@ data class EntitiesRecipes(
     @ColumnInfo(name = "label") val label: String,
     @ColumnInfo(name = "image") val image: String,
    // @ColumnInfo(name = "images") val images: RecipesListImages,
-    @TypeConverters(convert::class)
-    //@ColumnInfo(name = "ingredientLines") val ingredientLines: List<String>,
+   // @TypeConverters(Converters::class)
+    @ColumnInfo(name = "ingredientLines") val ingredientLines:String,
     @ColumnInfo(name = "calories") val calories: String,
     @ColumnInfo(name = "totalTime") val totalTime: String,
     @ColumnInfo(name = "totalWeight") val totalWeight: String
 )
 
-class convert{
-    fun toListR(){
-        
+/*
+@ProvidedTypeConverter
+class Converters(private val jsonParser: JsonParser) {
+    @TypeConverter
+    fun toStringJson(meaning: List<String>) : String {
+        return jsonParser.toJson(
+            meaning,
+            object : TypeToken<ArrayList<String>>(){}.type
+        ) ?: "[]"
     }
-    fun toStringR(){
-
+    @TypeConverter
+    fun fromStringJson(json: String): List<String>{
+        return jsonParser.fromJson<ArrayList<String>>(
+            json,
+            object: TypeToken<ArrayList<String>>(){}.type
+        ) ?: emptyList()
     }
-}
+}*/

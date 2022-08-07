@@ -2,6 +2,7 @@
     <string name="app_name">FoodNote</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="notebook">NoteBook</string>
+    <string name="recipes_favorite">Favorites</string>
     <string name="add_note">+ Add Note</string>
     <string name="value_30_100">value 30–100%</string>
     <string name="background_card">Background Card</string>
@@ -104,4 +105,5 @@
     <string name="type_age">Введите возраст</string>
     <string name="recipes_for_you">Recipes for you</string>
     <string name="favorite">Favorite</string>
+    <string name="empty_list_favorite_recipes">Список избранных рецептов пуст</string>
 </resources>

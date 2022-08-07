@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key.Companion.K
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -119,18 +120,22 @@ class RecipesFragment :
         viewModel.listRecipes.observe(viewLifecycleOwner) { list ->
             if (list.hints.isNotEmpty()) { adapterRecipes.submitList(list.hints) }
         }
+        viewModel.successAddRecipes.observe(viewLifecycleOwner){
+            if(it) Toast.makeText(requireContext(),"Рецепт успешно добавлен в избранное",Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun initListener() {
+        binding.searchViewRecipes.isSubmitButtonEnabled = true
         binding.searchViewRecipes.setOnQueryTextListener (object :SearchView.OnQueryTextListener,
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
+                if(query?.trim() != null)
+                viewModel.searchRecipesByIngr(query.trim())
+                return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                if(newText?.trim() != null)
-                viewModel.searchRecipesByIngr(newText.trim())
                 return false
             }
 

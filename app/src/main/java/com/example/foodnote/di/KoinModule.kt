@@ -4,6 +4,7 @@ import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
+import androidx.room.Database
 import androidx.room.Room
 import com.example.foodnote.data.base.RetrofitImpl
 import com.example.foodnote.data.base.RetrofitRecipesImpl
@@ -11,6 +12,8 @@ import com.example.foodnote.data.base.firebase.FireBaseDataSourceImpl
 import com.example.foodnote.data.base.firebase.FirebaseDataSource
 import com.example.foodnote.data.databaseRoom.DataBase
 import com.example.foodnote.data.databaseRoom.dao.DaoDB
+
+
 import com.example.foodnote.data.datasource.diary_item_detail_repository.DiaryItemDetailDatasource
 import com.example.foodnote.data.datasource.diary_item_detail_repository.DiaryItemDetailDatasourceImpl
 import com.example.foodnote.data.datasource.recipes_datasource.RepositoryRecipesImpl
@@ -47,6 +50,7 @@ import kotlinx.coroutines.SupervisorJob
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
+import org.koin.core.scope.get
 import org.koin.dsl.module
 
 val applicationModule = module {
@@ -56,12 +60,14 @@ val applicationModule = module {
     single(named(NAME_DATASOURCE_FIREBASE)) {
         FirebaseFirestore.getInstance()
     }
-
+    single{
+        Room.databaseBuilder(androidContext(), DataBase::class.java, DATA_BASE_NAME).fallbackToDestructiveMigration().build()
+    }
     single(named(DATA_BASE)) {
-        Room.databaseBuilder(androidContext(), DataBase::class.java, DATA_BASE_NAME).fallbackToDestructiveMigration().build().dataBase()
+        get<DataBase>().dataBase()
     }
     single(named(DATA_BASE_RECIPES)) {
-        Room.databaseBuilder(androidContext(), DataBase::class.java, DATA_BASE_NAME).fallbackToDestructiveMigration().build().getDBRecipes()
+        get<DataBase>().getDBRecipes()
     }
 }
 

@@ -1,5 +1,6 @@
 package com.example.foodnote.ui.recipes_fragment
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -25,6 +26,8 @@ class RecipesViewModel(
     val listRecipes: LiveData<RecipesList>
         get() = _listRecipes
 
+    val successAddRecipes = MutableLiveData<Boolean>()
+
 
     fun searchRecipesByIngr(ingr: String) {
         viewModelScope.launch {
@@ -35,7 +38,12 @@ class RecipesViewModel(
 
     fun addRecipesInDatabase(recipes: Recipes){
         viewModelScope.launch(Dispatchers.IO) {
-            dataBase.addRecipesFavorite(recipes.totoEntityRecipes())
+            if(dataBase.getAllRecipesFavorite().filter { item ->
+                    (item == recipes.totoEntityRecipes())
+                }.isEmpty()) {
+                dataBase.addRecipesFavorite(recipes.totoEntityRecipes())
+                successAddRecipes.postValue( true)
+            }
         }
     }
 
