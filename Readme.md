@@ -4,19 +4,21 @@
 ## UX
 
 # Заметки
-![App Screenshot](Screenshot_20220810_193438.png)
+![App Screenshot](Screenshot_20220810_194315.png)
 # Калькулятор калорий
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![App Screenshot](Screenshot_20220810_193752.png)
+# Поиск продуктов
+![App Screenshot](Screenshot_20220810_193752.png)
 # Избранное
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![App Screenshot](Screenshot_20220810_193933.png)
 # Рецепты
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![App Screenshot](Screenshot_20220810_193901.png)
 # Профиль
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![App Screenshot](Screenshot_20220810_193613.png)
 
 
 ## Authors
 
-- [@katherinepeterson](https://www.github.com/octokatherine)
-- [@katherinepeterson](https://www.github.com/octokatherine)
-- [@katherinepeterson](https://www.github.com/octokatherine)
+- [@NikitaRybakov21](https://github.com/NikitaRybakov21)
+- [@D1maD1m0nd](https://github.com/D1maD1m0nd)
+- [@BernikovAD](https://github.com/BernikovAD)
