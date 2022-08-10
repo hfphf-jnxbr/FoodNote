@@ -30,7 +30,7 @@ class DiaryItemDetailInteractorImpl(private val repo: DiaryItemDetailRepository)
     override suspend fun calculateTotalData(list: List<FoodDto>): TotalFoodResult {
         return withContext(Dispatchers.Default) {
             val calorieSum = list.sumOf {
-                it.kiloCalories * list.size
+                it.kiloCalories * it.count
             }
             val proteinSum = list.sumOf {
                 it.protein * it.count
