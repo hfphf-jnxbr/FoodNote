@@ -19,12 +19,8 @@ class AdapterFavoriteRecipes(private var glide: RequestManager) : ListAdapter<En
                 oldItem == newItem
         }
     }
-    lateinit var listener: FavoriteRecipesListener
-    fun setListenerRecipes(listener: FavoriteRecipesListener){
-        this.listener = listener
-    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)=
-        FavoriteRecipesViewHolder(listener,
+        FavoriteRecipesViewHolder(
             ItemFavoriteRecipesBinding.inflate(LayoutInflater.from(parent.context), parent, false),glide
         )
 

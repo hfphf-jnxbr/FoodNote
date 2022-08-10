@@ -5,6 +5,7 @@ import com.example.foodnote.data.model.food.Food
 import com.example.foodnote.data.model.food.FoodDto
 import com.example.foodnote.data.model.food.FoodFireBase
 import com.example.foodnote.data.model.recipes.Recipes
+import com.google.gson.Gson
 
 fun Food.toFoodListDto(): List<FoodDto> {
     val foods = this.parsed.map {
@@ -46,17 +47,18 @@ fun Recipes.totoEntityRecipes(): EntitiesRecipes {
         image = this.image ?: "",
         calories = this.calories ?: "",
         totalTime = this.totalTime ?: "",
-        totalWeight = this.totalWeight ?: ""
+        totalWeight = this.totalWeight ?: "",
+        ingredientLines = Gson().toJson(this.ingredientLines) ?:""
     )
 }
 
-/*
-fun EntitiesRecipes.totoRecipes(): Recipes {
+/*fun EntitiesRecipes.toRecipes(): Recipes {
     return Recipes(
         label = this.label ?: "",
         image = this.image ?: "",
         calories = this.calories ?: "",
         totalTime = this.totalTime ?: "",
-        totalWeight = this.totalWeight ?: ""
+        totalWeight = this.totalWeight ?: "",
+        ingredientLines =
     )
 }*/

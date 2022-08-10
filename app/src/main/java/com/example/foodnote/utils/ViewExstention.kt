@@ -7,13 +7,19 @@ import android.os.Build
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -91,7 +97,8 @@ fun Context.ViewComposeProgressBar() {
             contentDescription = "",
             modifier = Modifier
                 .rotate(parameter.value)
-                .size(width = 200.dp, height = 200.dp))
+                .size(width = 100.dp, height = 100.dp)
+        )
         }
     }
 }

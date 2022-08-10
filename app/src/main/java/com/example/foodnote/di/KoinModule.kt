@@ -4,6 +4,7 @@ import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
+import androidx.room.Database
 import androidx.room.Room
 import com.example.foodnote.data.base.RetrofitImpl
 import com.example.foodnote.data.base.RetrofitRecipesImpl
@@ -11,6 +12,8 @@ import com.example.foodnote.data.base.firebase.FireBaseDataSourceImpl
 import com.example.foodnote.data.base.firebase.FirebaseDataSource
 import com.example.foodnote.data.databaseRoom.DataBase
 import com.example.foodnote.data.databaseRoom.dao.DaoDB
+
+
 import com.example.foodnote.data.datasource.diary_item_detail_repository.DiaryItemDetailDatasource
 import com.example.foodnote.data.datasource.diary_item_detail_repository.DiaryItemDetailDatasourceImpl
 import com.example.foodnote.data.datasource.recipes_datasource.RepositoryRecipesImpl
@@ -35,9 +38,10 @@ import com.example.foodnote.ui.calorie_calculator_fragment.viewModel.CalorieCalc
 import com.example.foodnote.ui.diary_item_detail_fragment.viewModel.DiaryItemDetailViewModel
 import com.example.foodnote.ui.noteBook.viewModel.ViewModelConstructorFragment
 import com.example.foodnote.ui.noteBook.viewModel.ViewModelNotesFragment
+import com.example.foodnote.ui.recipes_favorite_fragment.viewModel.FavoriteRecipesViewModel
 import com.example.foodnote.ui.recipes_fragment.RecipesViewModel
 import com.example.foodnote.ui.recipes_fragment.ViewModelDonatViewCompose
-import com.example.foodnote.ui.recipes_favorite_fragment.viewModel.FavoriteRecipesViewModel
+import com.example.foodnote.ui.settings_fragment.viewModel.SettingsViewModel
 import com.example.foodnote.ui.splash_screen_fragment.viewModel.SplashScreenViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
@@ -46,6 +50,7 @@ import kotlinx.coroutines.SupervisorJob
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
+import org.koin.core.scope.get
 import org.koin.dsl.module
 
 val applicationModule = module {
@@ -55,12 +60,14 @@ val applicationModule = module {
     single(named(NAME_DATASOURCE_FIREBASE)) {
         FirebaseFirestore.getInstance()
     }
-
+    single{
+        Room.databaseBuilder(androidContext(), DataBase::class.java, DATA_BASE_NAME).fallbackToDestructiveMigration().build()
+    }
     single(named(DATA_BASE)) {
-        Room.databaseBuilder(androidContext(), DataBase::class.java, DATA_BASE_NAME).build().dataBase()
+        get<DataBase>().dataBase()
     }
     single(named(DATA_BASE_RECIPES)) {
-        Room.databaseBuilder(androidContext(), DataBase::class.java, DATA_BASE_NAME).build().getDBRecipes()
+        get<DataBase>().getDBRecipes()
     }
 }
 
@@ -168,7 +175,7 @@ val recipesModule = module {
     }
 }
 
-val settingScreenModule = module {
+val favoriteScreenModule = module {
     factory<FirebaseDataSource> {
         FireBaseDataSourceImpl(get(named(NAME_DATASOURCE_FIREBASE)))
     }
@@ -182,7 +189,30 @@ val settingScreenModule = module {
     }
 
     viewModel {
-        FavoriteRecipesViewModel(get(named(NAME_PREF_APP_REPOSITORY)), get(),get(named(
-            DATA_BASE_RECIPES)))
+        FavoriteRecipesViewModel(
+            get(named(NAME_PREF_APP_REPOSITORY)), get(), get(
+                named(
+                    DATA_BASE_RECIPES
+                )
+            )
+        )
+    }
+}
+
+val settingsScreenModule = module {
+    factory<FirebaseDataSource> {
+        FireBaseDataSourceImpl(get(named(NAME_DATASOURCE_FIREBASE)))
+    }
+
+    factory<SettingRepository> {
+        SettingRepositoryImpl(get())
+    }
+
+    factory<SettingInteractor> {
+        SettingInteractorImpl(get())
+    }
+
+    viewModel {
+        SettingsViewModel(get(named(NAME_PREF_APP_REPOSITORY)), get())
     }
 }

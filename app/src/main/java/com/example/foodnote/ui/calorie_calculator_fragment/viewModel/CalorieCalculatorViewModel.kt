@@ -22,7 +22,6 @@ class CalorieCalculatorViewModel(
     private var diaryList = mutableListOf<DiaryItem>()
     private var profileData: Profile? = null
     private val currentDate = SimpleDateFormat("dd.MMMM.YYYY").format(Date())
-
     fun generateItem(idUser: String, time: String, name: String): DiaryItem {
         val item = DiaryItem(
             name,

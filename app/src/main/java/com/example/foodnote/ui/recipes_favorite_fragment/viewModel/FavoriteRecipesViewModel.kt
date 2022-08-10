@@ -19,19 +19,25 @@ class FavoriteRecipesViewModel(
     dataStorePref: UserPreferencesRepository,
     val interactor: SettingInteractor,
     private val dataBase:RecipesDao
-) :
-    BaseViewModel<AppState<*>>(dataStorePref) {
-    private val _listFavoriteRecipes = MutableLiveData<List<EntitiesRecipes>>()
-    val listFavoriteRecipes: LiveData<List<EntitiesRecipes>>
-        get() = _listFavoriteRecipes
+) : BaseViewModel<AppState<*>>(dataStorePref) {
+
     init {
         getFavoriteRecipes()
     }
 
-    fun getFavoriteRecipes(){
+    private fun getFavoriteRecipes(){
+        stateLiveData.value = AppState.Loading<List<EntitiesRecipes>>()
         viewModelScope.launch(Dispatchers.IO) {
-            _listFavoriteRecipes.postValue(dataBase.getAllRecipesFavorite())
+
+            stateLiveData.postValue(AppState.Success(dataBase.getAllRecipesFavorite()))
         }
 
+    }
+
+    fun removeRecipes(recipes: EntitiesRecipes) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dataBase.removeRecipesFavorite(recipes)
+            stateLiveData.postValue(AppState.Success(dataBase.getAllRecipesFavorite()))
+        }
     }
 }

@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TimePicker
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
@@ -23,10 +25,7 @@ import com.example.foodnote.ui.calorie_calculator_fragment.adapter.rc_view_adapt
 import com.example.foodnote.ui.calorie_calculator_fragment.adapter.rc_view_adapter.ItemClickListener
 import com.example.foodnote.ui.calorie_calculator_fragment.adapter.view_pager_adapter.TotalViewAdapter
 import com.example.foodnote.ui.calorie_calculator_fragment.viewModel.CalorieCalculatorViewModel
-import com.example.foodnote.utils.hide
-import com.example.foodnote.utils.invisible
-import com.example.foodnote.utils.show
-import com.example.foodnote.utils.showToast
+import com.example.foodnote.utils.*
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -40,7 +39,6 @@ import java.util.*
 class CalorieCalculatorFragment :
     BaseViewBindingFragment<FragmentCalorieCalculatorBinding>(FragmentCalorieCalculatorBinding::inflate),
     ItemClickListener {
-
     private val viewModel: CalorieCalculatorViewModel by viewModel()
     private val mainViewModel: MainViewModel by sharedViewModel()
 
@@ -64,8 +62,16 @@ class CalorieCalculatorFragment :
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    private fun initComposeProgressBar() {
+        binding.progressBar.setContent {
+            val isVisible by viewModel.getComposeLiveData().observeAsState()
+            if (isVisible == true) {
+                context?.ViewComposeProgressBar()
+            }
+        }
+    }
+
+    override fun onStart() {
         if (idUser.isEmpty()) {
             uiScope.launch {
                 getUserId()
@@ -73,6 +79,13 @@ class CalorieCalculatorFragment :
         } else {
             initStartData()
         }
+        initComposeProgressBar()
+        super.onStart()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         totalViewAdapter = TotalViewAdapter(this)
         initView()
     }
@@ -178,12 +191,12 @@ class CalorieCalculatorFragment :
         when (state) {
             is AppState.Error -> context?.showToast(state.error?.message)
             is AppState.Loading -> {
+                viewModel.showProgressBar()
                 binding.mainContainerNestedScroll.hide()
-                binding.progressBar.show()
             }
             is AppState.Success -> {
                 binding.mainContainerNestedScroll.show()
-                binding.progressBar.hide()
+                viewModel.hideProgressBar()
                 when (val item = state.data) {
                     is List<*> -> {
                         when (item.firstOrNull()) {

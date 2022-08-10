@@ -1,9 +1,6 @@
 package com.example.foodnote.data.databaseRoom.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.example.foodnote.data.databaseRoom.entities.EntitiesNotesFood
 import com.example.foodnote.data.databaseRoom.entities.EntitiesNotesPaint
 import com.example.foodnote.data.databaseRoom.entities.EntitiesNotesStandard
@@ -17,4 +14,6 @@ interface RecipesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addRecipesFavorite(entitiesRecipes : EntitiesRecipes)
 
+    @Delete
+    fun removeRecipesFavorite(entitiesRecipes : EntitiesRecipes)
 }
