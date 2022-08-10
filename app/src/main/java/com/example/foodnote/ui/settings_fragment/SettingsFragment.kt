@@ -91,12 +91,14 @@ class SettingsFragment :
                                 }
                             }
                             SettingColumnRequire.SUCCESS_DATA -> {
+                                val age = binding.ageTextInput.text.toString()
                                 val height = binding.heightTextInput.text.toString()
                                 val weight = binding.weightTextInput.text.toString()
                                 val types = binding.modeAutoCompleteTextView.text.toString()
                                 val isFemale = binding.femaleRadioButton.isChecked
                                 val isMale = binding.maleRadioButton.isChecked
                                 viewModel.saveProfileData(
+                                    age,
                                     types,
                                     weight,
                                     height,
@@ -139,6 +141,7 @@ class SettingsFragment :
     }
 
     private fun setRequireColumns(profile: Profile) {
+        binding.ageTextInput.setText(profile.age.toString())
         binding.heightTextInput.setText(profile.height.toString())
         binding.weightTextInput.setText(profile.weight.toString())
         binding.modeAutoCompleteTextView.setText(profile.meta.toString())

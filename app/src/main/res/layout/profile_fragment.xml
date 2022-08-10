@@ -78,7 +78,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/foto_profile" />
+                    android:src="@drawable/man" />
 
             </com.google.android.material.card.MaterialCardView>
 

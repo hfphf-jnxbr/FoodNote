@@ -46,6 +46,7 @@ class SettingsViewModel(
     }
 
     fun saveProfileData(
+        age: String,
         type: String,
         weight: String,
         height: String,
@@ -55,6 +56,7 @@ class SettingsViewModel(
     ) {
         viewModelScope.launch {
             val profile = Profile(
+                age = age.toInt(),
                 weight = weight.toInt(),
                 height = height.toInt(),
                 meta = type,
